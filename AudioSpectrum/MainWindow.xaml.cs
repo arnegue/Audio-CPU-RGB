@@ -91,7 +91,7 @@ namespace AudioSpectrum {
                 if (CkbSerial.IsChecked == true) {
                     Comports.IsEnabled = false;
                     _port = new SerialPort((Comports.Items[Comports.SelectedIndex] as string));
-                    _port.BaudRate = 9600;
+                    _port.BaudRate = 115200;
                     _port.StopBits = StopBits.One;
                     _port.Parity = Parity.None;
                     _port.DataBits = 8;
