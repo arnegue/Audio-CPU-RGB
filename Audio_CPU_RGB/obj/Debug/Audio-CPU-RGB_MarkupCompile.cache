@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-F:\Git\Privat\audio-cpu-rgb\AudioSpectrum\obj\Debug\
+F:\Git\Privat\audio-cpu-rgb\Test\obj\Debug\
 AudioCPURGB
 none
 false
 DEBUG;TRACE
-F:\Git\Privat\audio-cpu-rgb\AudioSpectrum\App.xaml
+F:\Git\Privat\audio-cpu-rgb\Test\App.xaml
 3-44426397
 
 101457235585
-16202215967
+16-1974308455
 MainWindow.xaml;MyRangeSlider.xaml;Spectrum.xaml;
 
 False
