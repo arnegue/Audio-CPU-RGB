@@ -17,3 +17,4 @@ F:\Git\Privat\audio-cpu-rgb\Audio_CPU_RGB\obj\Release\AudioCPURGB.Properties.Res
 F:\Git\Privat\audio-cpu-rgb\Audio_CPU_RGB\obj\Release\Audio-CPU-RGB.csproj.GenerateResource.Cache
 F:\Git\Privat\audio-cpu-rgb\Audio_CPU_RGB\obj\Release\Audio-CPU-RGB.exe
 F:\Git\Privat\audio-cpu-rgb\Audio_CPU_RGB\obj\Release\Audio-CPU-RGB.pdb
+F:\Git\Privat\audio-cpu-rgb\Audio_CPU_RGB\obj\Release\Audio-CPU-RGB.csprojResolveAssemblyReference.cache
