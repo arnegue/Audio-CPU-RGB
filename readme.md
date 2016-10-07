@@ -10,7 +10,7 @@ Attention: A very big part of this code is copied from: ` [www.codeproject.com]
 
 ## Used libraries
 - OpenHardwareMonitorLib: [ohm]
-- BassNet: http://www.un4seen.com/
+- bass.dll, Bass.Net.dll, basswasapi.dll: [bass]
 
 
 
