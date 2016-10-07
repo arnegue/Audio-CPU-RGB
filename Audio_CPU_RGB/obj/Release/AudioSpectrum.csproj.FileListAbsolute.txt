@@ -1,8 +1,0 @@
-C:\Users\Frosty\Downloads\AudioSpectrum\AudioSpectrum\bin\Release\AudioSpectrum.exe.config
-C:\Users\Frosty\Downloads\AudioSpectrum\AudioSpectrum\obj\Release\Spectrum.baml
-C:\Users\Frosty\Downloads\AudioSpectrum\AudioSpectrum\obj\Release\MainWindow.g.cs
-C:\Users\Frosty\Downloads\AudioSpectrum\AudioSpectrum\obj\Release\Spectrum.g.cs
-C:\Users\Frosty\Downloads\AudioSpectrum\AudioSpectrum\obj\Release\App.g.cs
-C:\Users\Frosty\Downloads\AudioSpectrum\AudioSpectrum\obj\Release\GeneratedInternalTypeHelper.g.cs
-C:\Users\Frosty\Downloads\AudioSpectrum\AudioSpectrum\obj\Release\AudioSpectrum_MarkupCompile.cache
-C:\Users\Frosty\Downloads\AudioSpectrum\AudioSpectrum\obj\Release\AudioSpectrum_MarkupCompile.lref
