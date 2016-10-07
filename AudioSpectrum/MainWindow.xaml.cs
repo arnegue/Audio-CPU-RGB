@@ -15,6 +15,10 @@ using System.Windows.Shapes;
 using System.IO.Ports;
 using System.Threading;
 
+/**
+ * Attention: A very big part of this code is copied from: http://www.codeproject.com/Articles/797537/Making-an-Audio-Spectrum-analyzer-with-Bass-dll-Cs
+ * I only extended this code by my needs and do not claim that it's mine. I just wanted to contribute my code to other with similar ideas! 
+ */
 namespace AudioSpectrum {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
