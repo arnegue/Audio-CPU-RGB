@@ -9,9 +9,15 @@ Attention: A very big part of this code is copied from: ` [www.codeproject.com]
 ## CPU-Temperature
 How do you devide a temperature by 3 color values?
 Well, i thought, blue is cold, green is medium and red is hot. Simply as that i said blue is 30 °C, green is 50 °C and red is 70 °C.
+
 So i wrote down a small
+
 ![Diagram](CPUTempEquation_Diagram/CPU_Temp_Diagram.png)
-For creating a small equation i wrote down a small diagram  
+
+
+The mathematical equations for these are: 
+
+![RGB(t)](CPUTempEquation_Diagram/CPU_Equation.png)
 
 
 ## Used software
