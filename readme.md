@@ -5,6 +5,15 @@ This (private created( Windows-Programm (Visual-Studio C# Project) deals with de
 Attention: A very big part of this code is copied from: ` [www.codeproject.com]
 `I only extended this code by my needs and do not claim that it's mine. I just wanted to contribute my code to other with similar ideas!`
 
+
+## CPU-Temperature
+How do you devide a temperature by 3 color values?
+Well, i thought, blue is cold, green is medium and red is hot. Simply as that i said blue is 30 °C, green is 50 °C and red is 70 °C.
+So i wrote down a small
+![Diagram](CPUTempEquation_Diagram/CPU_Temp_Diagram.png)
+For creating a small equation i wrote down a small diagram  
+
+
 ## Used software
 - Visual Studio 2015
 

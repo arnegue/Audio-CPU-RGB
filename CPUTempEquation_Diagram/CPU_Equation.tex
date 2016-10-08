@@ -1,0 +1,39 @@
+\documentclass{article}
+\usepackage{amssymb}
+\usepackage[overload]{empheq}
+
+\newcommand{\m}{\text{12.75}}
+
+\begin{document}
+
+\begin{equation*}
+    R(t)=
+    \begin{cases}
+      0				& t < 30 \\
+      0				& 30 \leq t < 50 \\
+      \m t-637.5	& 50 \leq t < 70 \\
+      255			& 70 \leq t
+    \end{cases}
+\end{equation*}
+
+\begin{equation*}
+    G(t)=
+    \begin{cases}
+      0				& t < 30 \\
+      \m t-382.5	& 30 \leq t < 50 \\
+      -\m t+892.5	& 50 \leq t < 70 \\
+      0			& 70 \leq t
+    \end{cases}
+\end{equation*}
+
+\begin{equation*}
+    B(t)=
+    \begin{cases}
+      255			& t < 30 \\
+      -\m t-637.5	& 30 \leq t < 50 \\
+      0				& 50 \leq t < 70 \\
+      0				& 70 \leq t
+    \end{cases}
+\end{equation*}
+
+\end{document} 
