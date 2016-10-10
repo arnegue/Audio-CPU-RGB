@@ -173,12 +173,6 @@ namespace AudioSpectrum {
 
             // Now convert these 16 lines (from 0 to 255) to 3 RGB-Colours (from 0 to 255)
             // 16 / 3 is not that good, so i will use 5, 6, 5 and calculate the average value
-
-            /* // Whole Spectrum
-            r = (specArray[0] + specArray[1] + specArray[2] + specArray[3] + specArray[4]) / 5;
-            g = (specArray[5] + specArray[6] + specArray[7] + specArray[8] + specArray[9] + specArray[10]) / 6;
-            b = (specArray[11] + specArray[12] + specArray[13] + specArray[14] + specArray[15]) / 5;
-            */
             int right = ((int)_mrs.RangeMax) + 1;
             int left = (int)_mrs.RangeMin;
 
