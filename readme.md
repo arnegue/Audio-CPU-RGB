@@ -7,7 +7,7 @@ Attention: A very big part of this code is copied from: ` [www.codeproject.com]
 
 # Starting the Application
 As I mentioned this is a Windows-Application and as far as I know the Bass-library supports Vista but not below.
-The Exe is located in ``\Audio_CPU_RGB\bin\Release\`` and is called ``Audio-CPU-RGB.exe``
+The binary is located in ``\Audio_CPU_RGB\bin\Release\`` and is called ``Audio-CPU-RGB.exe``
 
 ## CPU-Temperature to RGB
 I is rather hard to get the CPU-Temperature from default Windows libraries. I tried one which only worked on my Laptop but not on my desktop PC. So i downloaded OpenHardwareMonitorLib and now it seems to work.
