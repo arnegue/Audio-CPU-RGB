@@ -138,51 +138,49 @@ namespace AudioSpectrum {
             }
         }
 
-        private const double m = 12.75;
+        private const float m = 12.75F;
         RGBValue lastRGB = new RGBValue(0, 0, 0);
         private CPU_Temperature cput;
 
         private void showCPUTempToRGB(float temp) {
             // Calculate Colours to temperature
-            double r, g, b;
-            if (temp < 30) {
-                r = 0.0;
-                g = 0.0;
-                b = 255;
+            float r, g, b;
+            if (temp < 30F) {
+                r = 0F;
+                g = 0F;
+                b = 255F;
             }
-            else if (temp >= 30 && temp < 50) {
+            else if (temp >= 30F && temp < 50F) {
                 r = 0;
-                g = m * temp - 382.5;
-                b = -m * temp + 637.5;
+                g = m * temp - 382.5F;
+                b = -m * temp + 637.5F;
             }
-            else if (temp >= 50 && temp < 70) {
-                r = m * temp - 637.5;
-                g = -m * temp + 892.5;
-                b = 0.0;
+            else if (temp >= 50F && temp < 70F) {
+                r = m * temp - 637.5F;
+                g = -m * temp + 892.5F;
+                b = 0F;
 
             }
             else //temp >= 70
             {
-                r = 255;
-                g = 0;
-                b = 0;
+                r = 255F;
+                g = 0F;
+                b = 0F;
             }
-
-            RGBValue newRGB = new RGBValue((int)r, (int)g, (int)b);
-
+            
             // Now fade to that color
             int rFactor = 1;
             int gFactor = 1;
             int bFactor = 1;
 
             // Look if decrement or increment
-            if (lastRGB.r > newRGB.r) {
+            if (lastRGB.r > r) {
                 rFactor = -1;
             }
-            if (lastRGB.g > newRGB.g) {
+            if (lastRGB.g > g) {
                 gFactor = -1;
             }
-            if (lastRGB.b > newRGB.b) {
+            if (lastRGB.b > b) {
                 bFactor = -1;
             }
 
@@ -190,14 +188,15 @@ namespace AudioSpectrum {
             int lastG = lastRGB.g;
             int lastB = lastRGB.b;
 
+            RGBValue newRGB = new RGBValue((int)r, (int)g, (int)b);
             while (!lastRGB.Equals(newRGB)) {
-                if (lastR != newRGB.r) {
+                if (lastR != r) {
                     lastR += rFactor;
                 }
-                if (lastG != newRGB.g) {
+                if (lastG != g) {
                     lastG += gFactor;
                 }
-                if (lastB != newRGB.b) {
+                if (lastB != b) {
                     lastB += bFactor;
                 }
 
@@ -211,6 +210,7 @@ namespace AudioSpectrum {
                     // Seems normal when switching on/off
                 }
                 lastRGB = rgb;
+                Thread.Sleep(100)
             }
         }
     }
