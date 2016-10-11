@@ -35,6 +35,8 @@ As I told the main part of getting the audio was not my work, but I continued it
 - OpenHardwareMonitorLib: [ohm]
 - bass.dll, Bass.Net.dll, basswasapi.dll: [bass]
 
+## Compiling
+Attention: When compiling to a new Solution Configuration ("Debug", "Relase", etc.) be aware that you copy the 4 dlls ("bass.dll", "Bass.Net.dll", "basswasapi.dll" and "OpenHardwareMonitorLib.dll" into the folders ``\Audio_CPU_RGB\bin\<SolutionName>`` and ``\Audio_CPU_RGB\obj\<SolutionName>)``!
 
 
    [www.codeproject.com]: <http://www.codeproject.com/Articles/797537/Making-an-Audio-Spectrum-analyzer-with-Bass-dll-Cs>
