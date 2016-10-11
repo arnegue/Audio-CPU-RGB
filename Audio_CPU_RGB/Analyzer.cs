@@ -50,9 +50,9 @@ namespace AudioCPURGB {
             _initialized = false;
             _mrs = mrs;
 
-            algoChoser.Items.Add(new AudioAlgorithm("Algo 1", () => showAudioToRGBA1()));
-            algoChoser.Items.Add(new AudioAlgorithm("Algo 2", () => showAudioToRGBA2()));
-            //algoChoser.SelectedIndex = 1;
+            algoChoser.Items.Add(new AudioAlgorithm("Algorithm 1", () => showAudioToRGBA1()));
+            algoChoser.Items.Add(new AudioAlgorithm("Algorithm 2", () => showAudioToRGBA2()));
+            // TODO algoChoser.SelectedIndex = 0;
 
             Init();
         }
