@@ -19,7 +19,7 @@ using System.Threading;
  * Attention: A very big part of this code is copied from: http://www.codeproject.com/Articles/797537/Making-an-Audio-Spectrum-analyzer-with-Bass-dll-Cs
  * I only extended this code by my needs and do not claim that it's mine. I just wanted to contribute my code to other with similar ideas! 
  */
-namespace AudioSpectrum {
+namespace AudioCPURGB {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -30,11 +30,7 @@ namespace AudioSpectrum {
         public MainWindow() {
             InitializeComponent();
             cput = CPU_Temperature.getInstance();
-
-            // Some stupid workaround...
-            MyRangeSlider mrs = (MyRangeSlider)FindName("RangeSlider");
-
-            _analyzer = new Analyzer(PbL, PbR, Spectrum, DeviceBox, mrs);
+            _analyzer = new Analyzer(PbL, PbR, Spectrum, DeviceBox, AlgoChoice, SpectrumSlider);
 
             Thread displayTempThread = new Thread(displayCPUTemp);
 
@@ -47,7 +43,7 @@ namespace AudioSpectrum {
             CPU_Temperature cput = CPU_Temperature.getInstance();
             while (true) {
                 float temp = cput.getCPUTemperature();
-                if (_analyzer.Serial != null && _analyzer.cpuNotAudio) {
+                if (_analyzer._serial != null && _analyzer.cpuNotAudio) {
                     showCPUTempToRGB(temp);
                 }
                 try {
@@ -101,12 +97,12 @@ namespace AudioSpectrum {
                     _port.DataBits = 8;
                     _port.DtrEnable = true;
                     _port.Open();
-                    _analyzer.Serial = _port;
+                    _analyzer._serial = _port;
                     _port.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
                 }
                 else {
                     Comports.IsEnabled = true;
-                    _analyzer.Serial = null;
+                    _analyzer._serial = null;
                     if (_port != null) {
                         _port.Close();
                         _port.Dispose();
@@ -167,7 +163,7 @@ namespace AudioSpectrum {
                 g = 0F;
                 b = 0F;
             }
-            
+
             // Now fade to that color
             int rFactor = 1;
             int gFactor = 1;
@@ -203,15 +199,37 @@ namespace AudioSpectrum {
                 RGBValue rgb = new RGBValue(lastR, lastG, lastB);
 
                 try {
-                    _analyzer.Serial.WriteLine(rgb.ToString());
+                    _analyzer._serial.WriteLine(rgb.ToString());
                     System.Diagnostics.Debug.WriteLine(rgb.ToString());
                 }
-                catch (System.NullReferenceException e) {
+                catch (System.NullReferenceException) {
                     // Seems normal when switching on/off
                 }
                 lastRGB = rgb;
-                Thread.Sleep(100)
+                Thread.Sleep(100);
             }
+        }
+
+        private void MinSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            Slider slider = sender as Slider;
+            _analyzer.minSliderValue = (int)slider.Value;
+        }
+
+        private void AlgoChoice_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            AudioAlgorithm audioAlgo = (AudioAlgorithm)AlgoChoice.SelectedItem;
+            _analyzer.activeAlgo = audioAlgo._method;
+        }
+
+        private void RelAbs_Click(object sender, RoutedEventArgs e) {
+            if (RelAbs.IsChecked.Value == true) {
+                _analyzer.absNotRel = true;
+            } else {
+                _analyzer.absNotRel = false;
+            }
+        }
+
+        private void Alwaystp_Checked(object sender, RoutedEventArgs e) {
+
         }
     }
 }

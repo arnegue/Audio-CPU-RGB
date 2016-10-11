@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Controls;
 
-namespace AudioSpectrum
-{
+namespace AudioCPURGB {
     /// <summary>
     /// Interaction logic for Spectrum.xaml
     /// </summary>

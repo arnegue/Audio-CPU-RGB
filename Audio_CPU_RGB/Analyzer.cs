@@ -9,7 +9,7 @@ using System.Text;
 using Un4seen.BassWasapi;
 using System.Threading;
 
-namespace AudioSpectrum {
+namespace AudioCPURGB {
 
     internal class Analyzer {
         private bool _enable;               //enabled status
@@ -26,9 +26,10 @@ namespace AudioSpectrum {
         private int devindex;               //used device index
         private MyRangeSlider _mrs;
 
+
         private int _lines = 16;            // number of spectrum lines
         //ctor
-        public Analyzer(ProgressBar left, ProgressBar right, Spectrum spectrum, ComboBox devicelist, MyRangeSlider mrs) {
+        public Analyzer(ProgressBar left, ProgressBar right, Spectrum spectrum, ComboBox devicelist, ComboBox algoChoser, MyRangeSlider mrs) {
             _fft = new float[1024];
             _lastlevel = 0;
             _hanctr = 0;
@@ -48,15 +49,22 @@ namespace AudioSpectrum {
             _devicelist = devicelist;
             _initialized = false;
             _mrs = mrs;
-            
+
+            algoChoser.Items.Add(new AudioAlgorithm("Algo 1", () => showAudioToRGBA1()));
+            algoChoser.Items.Add(new AudioAlgorithm("Algo 2", () => showAudioToRGBA2()));
+            //algoChoser.SelectedIndex = 1;
+
             Init();
         }
 
         public Boolean cpuNotAudio { get; set; }
         private CPU_Temperature cput;
+        public int minSliderValue { get; set; }
+        public Action activeAlgo { get; set; }
+        public Boolean absNotRel { get; set; }
 
         // Serial port for arduino output
-        public SerialPort Serial { get; set; }
+        public SerialPort _serial { get; set; }
 
         // flag for display enable
         bool DisplayEnable = true;
@@ -102,6 +110,8 @@ namespace AudioSpectrum {
             if (!result) throw new Exception("Init Error");
             cput = CPU_Temperature.getInstance();
             cpuNotAudio = false;
+            absNotRel = false;
+            minSliderValue = 0;
         }
 
         //timer 
@@ -128,10 +138,8 @@ namespace AudioSpectrum {
 
             if (DisplayEnable) _spectrum.Set(_spectrumdata);
 
-            if (Serial != null) {
-                if (!cpuNotAudio) {
-                    showAudioToRGB();
-                }
+            if (_serial != null && !cpuNotAudio && activeAlgo != null) {
+                activeAlgo();
             }
             _spectrumdata.Clear();
 
@@ -166,36 +174,71 @@ namespace AudioSpectrum {
             Bass.BASS_Free();
         }
 
+        // ###### AUDIO-ALGORITHMS ######
         const int colors = 3;
-        private void showAudioToRGB() {
+
+        // Average
+        private void showAudioToRGBA1() {
             byte[] specArray = _spectrumdata.ToArray();
             int[] rgb = new int[colors];
 
             // Now convert these 16 lines (from 0 to 255) to 3 RGB-Colours (from 0 to 255)
-            // 16 / 3 is not that good, so i will use 5, 6, 5 and calculate the average value
             int right = ((int)_mrs.RangeMax) + 1;
             int left = (int)_mrs.RangeMin;
 
             int stepsPerColor = (right - left) / 3;
-            // int mod = (right - left) % 3;
 
-            //IF check je nach algo
-             for (int rgbIndex = 0; rgbIndex < colors; rgbIndex++) {
-                 for (int i = left + (stepsPerColor * rgbIndex); i < left + (stepsPerColor * rgbIndex) + stepsPerColor; i++) {
-                     rgb[rgbIndex] += specArray[i];
-                 }
-                 rgb[rgbIndex] /= stepsPerColor;
-             }
-             // else
-           /* int rCount = 0, gCount = 0, bCount = 0;
+            for (int rgbIndex = 0; rgbIndex < colors; rgbIndex++) {
+                for (int i = left + (stepsPerColor * rgbIndex); i < left + (stepsPerColor * rgbIndex) + stepsPerColor; i++) {
+                    // Only take values that are higher than that value given by the vertical slider
+                    if (specArray[i] > minSliderValue) {
+                        rgb[rgbIndex] += specArray[i];
+                    }
+                }
+
+                int avg = rgb[rgbIndex] / stepsPerColor; // Calculate Average
+
+                if (!absNotRel && minSliderValue != 0) { // Now Relativize them with steps
+                    if (minSliderValue == 255) {
+                        minSliderValue = 254;
+                    }
+                    rgb[rgbIndex] = (255 * (avg - minSliderValue)) / (255 - minSliderValue);
+                    System.Diagnostics.Debug.WriteLine("Abs");
+                } else {
+                    rgb[rgbIndex] = avg;
+                    System.Diagnostics.Debug.WriteLine("Rel");
+                }
+            }
+
+            RGBValue rgbv = new RGBValue(rgb[0], rgb[1], rgb[2]);
+            try {
+                _serial.WriteLine(rgbv.ToString());
+            }
+            catch (System.NullReferenceException) {
+                // Seems normal when switching on/off
+            }
+        }
+
+        // Move the 2-Point-Slider to show only the colours from R-G-B 
+        private void showAudioToRGBA2() {
+            byte[] specArray = _spectrumdata.ToArray();
+            int[] rgb = new int[colors];
+
+            // Now convert these lines (from 0 to 255) to 3 RGB-Colours (from 0 to 255)
+            int right = ((int)_mrs.RangeMax) + 1;
+            int left = (int)_mrs.RangeMin;
+
+            int rCount = 0, gCount = 0, bCount = 0;
             for (int i = left; i < right; i++) {
                 if (i < 5) {
                     rgb[0] += specArray[i];
                     rCount++;
-                } else if (i < 10) {
+                }
+                else if (i < 10) {
                     rgb[1] += specArray[i];
                     gCount++;
-                } else {
+                }
+                else {
                     rgb[2] += specArray[i];
                     bCount++;
                 }
@@ -208,26 +251,16 @@ namespace AudioSpectrum {
             }
             if (bCount != 0) {
                 rgb[2] /= bCount;
-            }*/
-            // if else check ende
-
-
-            /*  // First 9 lines
-              r = (specArray[0] + specArray[1] + specArray[2]) / 3;
-              g = (specArray[3] + specArray[4] + specArray[5]) / 3;
-              b = (specArray[6] + specArray[7] + specArray[8]) / 3;
-              // TODO: maybe without objectcreation it will get faster?*/
-
-
-
-
+            }
 
             RGBValue rgbv = new RGBValue(rgb[0], rgb[1], rgb[2]);
             try {
-                Serial.WriteLine(rgbv.ToString());
-            } catch (System.NullReferenceException e) {
+                _serial.WriteLine(rgbv.ToString());
+            }
+            catch (System.NullReferenceException) {
                 // Seems normal when switching on/off
             }
         }
+
     }
 }

@@ -17,7 +17,7 @@ using System.IO.Ports;
 using System.Threading;
 
 
-namespace AudioSpectrum {
+namespace AudioCPURGB {
     /// <summary>
     /// Interaction logic for MyRangeSlider.xaml
     /// </summary>

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
+﻿using System.Threading;
 using OpenHardwareMonitor.Hardware;
 
-namespace AudioSpectrum {
+namespace AudioCPURGB {
     class CPU_Temperature {
         private static readonly CPU_Temperature instance = new CPU_Temperature(1000);
 

@@ -80,6 +80,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Analyzer.cs" />
+    <Compile Include="AudioAlgorithm.cs" />
     <Compile Include="CPU_Temperature.cs" />
     <Compile Include="MyRangeSlider.xaml.cs">
       <DependentUpon>MyRangeSlider.xaml</DependentUpon>
