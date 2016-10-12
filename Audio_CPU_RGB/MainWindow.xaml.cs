@@ -185,7 +185,7 @@ namespace AudioCPURGB {
             int lastB = lastRGB.b;
 
             RGBValue newRGB = new RGBValue((int)r, (int)g, (int)b);
-            while (!lastRGB.Equals(newRGB)) {
+            while (!lastRGB.Equals(newRGB) && _analyzer.cpuNotAudio && _analyzer.Enable == true) {
                 if (lastR != r) {
                     lastR += rFactor;
                 }
@@ -206,7 +206,7 @@ namespace AudioCPURGB {
                     // Seems normal when switching on/off
                 }
                 lastRGB = rgb;
-                Thread.Sleep(100);
+                Thread.Sleep(10);
             }
         }
 
@@ -217,19 +217,15 @@ namespace AudioCPURGB {
 
         private void AlgoChoice_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             AudioAlgorithm audioAlgo = (AudioAlgorithm)AlgoChoice.SelectedItem;
-            _analyzer.activeAlgo = audioAlgo._method;
+            _analyzer.activeAlgo = audioAlgo;
         }
 
         private void RelAbs_Click(object sender, RoutedEventArgs e) {
             if (RelAbs.IsChecked.Value == true) {
-                _analyzer.absNotRel = true;
-            } else {
                 _analyzer.absNotRel = false;
+            } else {
+                _analyzer.absNotRel = true;
             }
-        }
-
-        private void Alwaystp_Checked(object sender, RoutedEventArgs e) {
-
         }
     }
 }

@@ -60,7 +60,7 @@ namespace AudioCPURGB {
         public Boolean cpuNotAudio { get; set; }
         private CPU_Temperature cput;
         public int minSliderValue { get; set; }
-        public Action activeAlgo { get; set; }
+        public AudioAlgorithm activeAlgo { get; set; }
         public Boolean absNotRel { get; set; }
 
         // Serial port for arduino output
@@ -139,7 +139,7 @@ namespace AudioCPURGB {
             if (DisplayEnable) _spectrum.Set(_spectrumdata);
 
             if (_serial != null && !cpuNotAudio && activeAlgo != null) {
-                activeAlgo();
+                activeAlgo._method();
             }
             _spectrumdata.Clear();
 
@@ -203,10 +203,8 @@ namespace AudioCPURGB {
                         minSliderValue = 254;
                     }
                     rgb[rgbIndex] = (255 * (avg - minSliderValue)) / (255 - minSliderValue);
-                    System.Diagnostics.Debug.WriteLine("Abs");
                 } else {
                     rgb[rgbIndex] = avg;
-                    System.Diagnostics.Debug.WriteLine("Rel");
                 }
             }
 
