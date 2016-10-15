@@ -24,7 +24,7 @@ namespace AudioCPURGB {
         private void cpuTempThread() {
             while (true) {
                 try {
-                    cpuTemp = thread_getCPUTemp();
+                    cpuTemp = getCPUTemp();
                     Thread.Sleep(ms_sleepInterval);
                 }
                 catch (System.Threading.Tasks.TaskCanceledException) {
@@ -34,7 +34,7 @@ namespace AudioCPURGB {
             }
         }
 
-        private float thread_getCPUTemp() {
+        private float getCPUTemp() {
             float value = 0;
             Computer myComputer = new Computer();
             myComputer.Open();
@@ -46,7 +46,7 @@ namespace AudioCPURGB {
                         return sensor.Value.GetValueOrDefault();
                     }
                     else {
-                        // I think it maybe return then the temperature of the last iterated  cpu-core
+                        // I think it maybe return then the temperature of the last iterated cpu-core
                         value = sensor.Value.GetValueOrDefault();
                     }
                 }
