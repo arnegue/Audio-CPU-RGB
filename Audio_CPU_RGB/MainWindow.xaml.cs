@@ -172,28 +172,28 @@ namespace AudioCPURGB {
         /// <param name="temp">CPU-Temperature in Celsius</param>
         private void showCPUTempToRGB(float temp) {
             // Calculate Colours to temperature
-            float r, g, b;
-            if (temp < 30F) {
-                r = 0F;
-                g = 0F;
-                b = 255F;
+            int r, g, b;
+            if (temp < 30) {
+                r = 0;
+                g = 0;
+                b = 255;
             }
             else if (temp >= 30F && temp < 50F) {
                 r = 0;
-                g = m * temp - 382.5F;
-                b = -m * temp + 637.5F;
+                g = (int)(m * temp - 382.5F);
+                b = (int)(-m * temp + 637.5F);
             }
             else if (temp >= 50F && temp < 70F) {
-                r = m * temp - 637.5F;
-                g = -m * temp + 892.5F;
-                b = 0F;
+                r = (int)(m * temp - 637.5F);
+                g = (int)(-m * temp + 892.5F);
+                b = 0;
 
             }
             else //temp >= 70
             {
-                r = 255F;
-                g = 0F;
-                b = 0F;
+                r = 255;
+                g = 0;
+                b = 0;
             }
 
             // Now fade to that color
@@ -216,7 +216,7 @@ namespace AudioCPURGB {
             int lastG = lastRGB.g;
             int lastB = lastRGB.b;
 
-            RGBValue newRGB = new RGBValue((int)r, (int)g, (int)b);
+            RGBValue newRGB = new RGBValue(r, g, b);
             while (!lastRGB.Equals(newRGB) && _analyzer.cpuNotAudio && _analyzer.Enable == true) {
                 // TODO. Falscher algorithmus irgendwie wieder!
                 if (lastR != r) {
