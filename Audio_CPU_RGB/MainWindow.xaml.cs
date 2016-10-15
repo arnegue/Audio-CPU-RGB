@@ -39,6 +39,9 @@ namespace AudioCPURGB {
 
         }
 
+        /// <summary>
+        /// Thread which permanently checks the cpu-temperature and shows it to gui and to serial if it's checkbox is checked
+        /// </summary>
         private void displayCPUTemp() {
             CPU_Temperature cput = CPU_Temperature.getInstance();
             while (true) {
@@ -47,6 +50,7 @@ namespace AudioCPURGB {
                     showCPUTempToRGB(temp);
                 }
                 try {
+                    System.Diagnostics.Debug.WriteLine("Try to show new CPU-Temp: " + temp);
                     this.Dispatcher.Invoke(new Action(() => {
                         cpuTemp.Text = temp + " °";
                     }));
@@ -59,6 +63,11 @@ namespace AudioCPURGB {
             }
         }
 
+        /// <summary>
+        /// Method which is called when the enable-button was clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnEnable_Click(object sender, RoutedEventArgs e) {
             if (BtnEnable.IsChecked == true) {
                 BtnEnable.Content = "Disable";
@@ -71,12 +80,22 @@ namespace AudioCPURGB {
             }
         }
 
+        /// <summary>
+        /// Method which is called when the comport-choser changed it's value
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Comports_DropDownOpened(object sender, EventArgs e) {
             Comports.Items.Clear();
             var ports = SerialPort.GetPortNames();
             foreach (var port in ports) Comports.Items.Add(port);
         }
 
+        /// <summary>
+        /// Small handler which receives data from serial
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private static void DataReceivedHandler(
                     object sender,
                     SerialDataReceivedEventArgs e) {
@@ -86,6 +105,11 @@ namespace AudioCPURGB {
             System.Diagnostics.Debug.WriteLine(indata);
         }
 
+        /// <summary>
+        /// Method which is called when checkbox for serial enable is called
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CkbSerial_Click(object sender, RoutedEventArgs e) {
             try {
                 if (CkbSerial.IsChecked == true) {
@@ -115,10 +139,14 @@ namespace AudioCPURGB {
             }
         }
 
+        /// <summary>
+        /// Method which is called when the radioButton for chosing between CPU-Temperature and Audio changed it's value
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RadioButton_Checked(object sender, RoutedEventArgs e) {
             // ... Get RadioButton reference.
             var button = sender as RadioButton;
-
 
             if (button.Content != null) {
                 String radioButtonName = button.Content.ToString();
@@ -138,6 +166,10 @@ namespace AudioCPURGB {
         RGBValue lastRGB = new RGBValue(0, 0, 0);
         private CPU_Temperature cput;
 
+        /// <summary>
+        /// Method which calculates the RGB-Values on given temperature and afterwards sends it to serial
+        /// </summary>
+        /// <param name="temp">CPU-Temperature in Celsius</param>
         private void showCPUTempToRGB(float temp) {
             // Calculate Colours to temperature
             float r, g, b;
@@ -186,6 +218,7 @@ namespace AudioCPURGB {
 
             RGBValue newRGB = new RGBValue((int)r, (int)g, (int)b);
             while (!lastRGB.Equals(newRGB) && _analyzer.cpuNotAudio && _analyzer.Enable == true) {
+                // TODO. Falscher algorithmus irgendwie wieder!
                 if (lastR != r) {
                     lastR += rFactor;
                 }
@@ -200,7 +233,7 @@ namespace AudioCPURGB {
 
                 try {
                     _analyzer._serial.WriteLine(rgb.ToString());
-                    System.Diagnostics.Debug.WriteLine(rgb.ToString());
+                    System.Diagnostics.Debug.WriteLine("CPU-RGB: " + rgb.ToString());
                 }
                 catch (System.NullReferenceException) {
                     // Seems normal when switching on/off
@@ -210,16 +243,31 @@ namespace AudioCPURGB {
             }
         }
 
+        /// <summary>
+        /// Method which is called when the Trigger-Slider changed it's value
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MinSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             Slider slider = sender as Slider;
             _analyzer.minSliderValue = (int)slider.Value;
         }
 
+        /// <summary>
+        /// Method which is called when the Algorithm-Choser changed it's value
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AlgoChoice_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             AudioAlgorithm audioAlgo = (AudioAlgorithm)AlgoChoice.SelectedItem;
             _analyzer.activeAlgo = audioAlgo;
         }
 
+        /// <summary>
+        /// Method which is called when the Rel/Abs-Checkobx changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RelAbs_Click(object sender, RoutedEventArgs e) {
             if (RelAbs.IsChecked.Value == true) {
                 _analyzer.absNotRel = false;
