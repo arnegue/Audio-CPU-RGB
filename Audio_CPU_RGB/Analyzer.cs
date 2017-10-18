@@ -217,6 +217,8 @@ namespace AudioCPURGB {
             }
         }
 
+        RGBValue _oldRGBValue = new RGBValue(0, 0, 0);
+
         // Move the 2-Point-Slider to show only the colours from R-G-B 
         private void showAudioToRGBA2() {
             byte[] specArray = _spectrumdata.ToArray();
@@ -252,11 +254,31 @@ namespace AudioCPURGB {
             }
 
             RGBValue rgbv = new RGBValue(rgb[0], rgb[1], rgb[2]);
-            try {
-                _serial.WriteLine(rgbv.ToString());
-            }
-            catch (System.NullReferenceException) {
-                // Seems normal when switching on/off
+            if (!rgbv.Equals(_oldRGBValue))
+            {
+                // Finally, try to send the Value via Serial
+                try
+                {
+                    String sendToSerial = rgbv.ToString();
+                    _oldRGBValue = rgbv;
+                    System.Diagnostics.Debug.Write("Trying to send to RGB: " + sendToSerial[0] + (int)sendToSerial[1] + sendToSerial[2] + (int)sendToSerial[3] + sendToSerial[4] + (int)sendToSerial[5] + sendToSerial[6] + sendToSerial[7]);
+                    if (sendToSerial.Length == 8)
+                    {
+                        System.Diagnostics.Debug.WriteLine(" - completed");
+                        _serial.WriteLine(sendToSerial);
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine(" - failed");
+                    }
+                }
+                catch (System.NullReferenceException)
+                {
+                    // Seems normal when switching on/off
+                }
+            } else
+            {
+                System.Diagnostics.Debug.WriteLine("Did not send Value, because it's the same as the old one");
             }
         }
 

@@ -4,7 +4,7 @@
         public int r;
         public int g;
         public int b;
-
+        // Better be safe than sorry (normaly Convert.ToChar would check that, but maybe the code will change later)
         public RGBValue(int r, int g, int b)
         {
             if (r > 255)
@@ -38,7 +38,13 @@
         // Convert rgb to (rrr,ggg,bbb) with leading 0
         public override string ToString()
         {
-            return "(" + ($"{r:D3}") + "," + ($"{g:D3}") + "," + ($"{b:D3}") + ")";
+            string sendString = "(" + System.Convert.ToChar(r) + "," + System.Convert.ToChar(g) + "," + System.Convert.ToChar(b) + ")" + "\n";
+
+            return sendString;
+            //return "(" + ($"{r:D3}") + "," + ($"{g:D3}") + "," + ($"{b:D3}") + ")";
+            //return "(" + (char) r + "," + (char) g + "," + (char) b + ")" + "\n";
+            //  return sendString;
+            //return "(F,F,F)\n";
         }
 
         public override bool Equals(object obj)
