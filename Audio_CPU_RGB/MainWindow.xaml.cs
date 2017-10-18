@@ -50,7 +50,6 @@ namespace AudioCPURGB {
                     showCPUTempToRGB(temp);
                 }
                 try {
-                    System.Diagnostics.Debug.WriteLine("Try to show new CPU-Temp: " + temp);
                     this.Dispatcher.Invoke(new Action(() => {
                         cpuTemp.Text = temp + " °";
                     }));
