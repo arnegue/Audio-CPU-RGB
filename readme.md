@@ -43,3 +43,6 @@ Attention: When compiling to a new Solution Configuration ("Debug", "Relase", et
    [dill]: <https://github.com/joemccann/dillinger>
    [ohm]: <openhardwaremonitor.org>
    [bass]: <http://www.un4seen.com/>
+   
+#  Example
+An example for how both programs interact can be found on [Youtube](https://youtu.be/dFWHwqLQKIw)
