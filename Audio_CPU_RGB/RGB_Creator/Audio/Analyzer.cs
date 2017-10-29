@@ -56,9 +56,7 @@ namespace AudioCPURGB {
 
             Init();
         }
-
-        public Boolean cpuNotAudio { get; set; }
-        private CPU_Temperature cput;
+        
         public int minSliderValue { get; set; }
         public AudioAlgorithm activeAlgo { get; set; }
         public Boolean absNotRel { get; set; }
@@ -70,27 +68,38 @@ namespace AudioCPURGB {
         bool DisplayEnable = true;
 
         //flag for enabling and disabling program functionality
-        public bool Enable {
+        public bool startBassWasapi
+        {
             get { return _enable; }
-            set {
+            set
+            {
                 _enable = value;
-                if (value) {
-                    if (!_initialized) {
+                if (value)
+                {
+                    if (!_initialized)
+                    {
                         var array = (_devicelist.Items[_devicelist.SelectedIndex] as string).Split(' ');
                         devindex = Convert.ToInt32(array[0]);
                         bool result = BassWasapi.BASS_WASAPI_Init(devindex, 0, 0, BASSWASAPIInit.BASS_WASAPI_BUFFER, 1f, 0.05f, _process, IntPtr.Zero);
-                        if (!result) {
+                        if (!result)
+                        {
                             var error = Bass.BASS_ErrorGetCode();
                             MessageBox.Show(error.ToString());
                         }
-                        else {
+                        else
+                        {
                             _initialized = true;
                             _devicelist.IsEnabled = false;
                         }
                     }
                     BassWasapi.BASS_WASAPI_Start();
                 }
-                else BassWasapi.BASS_WASAPI_Stop(true);
+                else
+                {
+                    BassWasapi.BASS_WASAPI_Stop(true);
+                    BassWasapi.BASS_WASAPI_Free();
+                    _initialized = false;
+                }
                 _t.IsEnabled = value;
             }
         }
@@ -108,8 +117,7 @@ namespace AudioCPURGB {
             Bass.BASS_SetConfig(BASSConfig.BASS_CONFIG_UPDATETHREADS, false);
             result = Bass.BASS_Init(0, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
             if (!result) throw new Exception("Init Error");
-            cput = CPU_Temperature.getInstance();
-            cpuNotAudio = false;
+     
             absNotRel = false;
             minSliderValue = 0;
         }
@@ -136,9 +144,11 @@ namespace AudioCPURGB {
                 _spectrumdata.Add((byte)y);
             }
 
-            if (DisplayEnable) _spectrum.Set(_spectrumdata);
-
-            if (_serial != null && !cpuNotAudio && activeAlgo != null) {
+            if (DisplayEnable) {
+                _spectrum.Set(_spectrumdata);
+            }
+            
+            if (activeAlgo != null) {
                 activeAlgo._method();
             }
             _spectrumdata.Clear();
@@ -159,7 +169,7 @@ namespace AudioCPURGB {
                 Free();
                 Bass.BASS_Init(0, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
                 _initialized = false;
-                Enable = true;
+                startBassWasapi = true;
             }
         }
 
@@ -208,7 +218,7 @@ namespace AudioCPURGB {
                 }
             }
 
-            RGBValue rgbv = new RGBValue(rgb[0], rgb[1], rgb[2]);
+            RGB_Value rgbv = new RGB_Value(rgb[0], rgb[1], rgb[2]);
             try {
                 _serial.WriteLine(rgbv.ToString());
             }
@@ -217,12 +227,13 @@ namespace AudioCPURGB {
             }
         }
 
-        RGBValue _oldRGBValue = new RGBValue(0, 0, 0);
+        RGB_Value _oldRGBValue = new RGB_Value();
 
         // Move the 2-Point-Slider to show only the colours from R-G-B 
         private void showAudioToRGBA2() {
             byte[] specArray = _spectrumdata.ToArray();
-            int[] rgb = new int[colors];
+            RGB_Value rgbv = new RGB_Value();
+           // int[] rgb = new int[colors];
 
             // Now convert these lines (from 0 to 255) to 3 RGB-Colours (from 0 to 255)
             int right = ((int)_mrs.RangeMax) + 1;
@@ -231,29 +242,28 @@ namespace AudioCPURGB {
             int rCount = 0, gCount = 0, bCount = 0;
             for (int i = left; i < right; i++) {
                 if (i < 5) {
-                    rgb[0] += specArray[i];
+                    rgbv.r += specArray[i];
                     rCount++;
                 }
                 else if (i < 10) {
-                    rgb[1] += specArray[i];
+                    rgbv.g += specArray[i];
                     gCount++;
                 }
                 else {
-                    rgb[2] += specArray[i];
+                    rgbv.b += specArray[i];
                     bCount++;
                 }
             }
             if (rCount != 0) {
-                rgb[0] /= rCount;
+                rgbv.r /= rCount;
             }
             if (gCount != 0) {
-                rgb[1] /= gCount;
+                rgbv.g /= gCount;
             }
             if (bCount != 0) {
-                rgb[2] /= bCount;
+                rgbv.b /= bCount;
             }
-
-            RGBValue rgbv = new RGBValue(rgb[0], rgb[1], rgb[2]);
+            
             if (!rgbv.Equals(_oldRGBValue))
             {
                 // Finally, try to send the Value via Serial

@@ -13,6 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -25,7 +26,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -38,6 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -71,6 +72,9 @@
   <PropertyGroup>
     <ApplicationIcon>rgb.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>AudioSpectrum.App</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Bass.Net, Version=2.4.10.3, Culture=neutral, PublicKeyToken=b7566c273e6ef480, processorArchitecture=MSIL" />
     <Reference Include="OpenHardwareMonitorLib">
@@ -97,33 +101,35 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Analyzer.cs" />
-    <Compile Include="AudioAlgorithm.cs" />
-    <Compile Include="CPU_Temperature.cs" />
-    <Compile Include="MyRangeSlider.xaml.cs">
+    <Compile Include="RGB_Creator\Audio\Analyzer.cs" />
+    <Compile Include="RGB_Creator\Audio\AudioAlgorithm.cs" />
+    <Compile Include="RGB_Creator\CPU_Temp\CPU_Temperature.cs" />
+    <Compile Include="RGB_Creator\Audio\MyRangeSlider.xaml.cs">
       <DependentUpon>MyRangeSlider.xaml</DependentUpon>
     </Compile>
-    <Compile Include="RGBValue.cs" />
-    <Compile Include="Spectrum.xaml.cs">
+    <Compile Include="RGB_Output\Serial\Serial_RGB_Output.cs" />
+    <Compile Include="RGB_Value.cs" />
+    <Compile Include="RGB_Creator\Audio\Spectrum.xaml.cs">
       <DependentUpon>Spectrum.xaml</DependentUpon>
     </Compile>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
+    <Compile Include="RGB_Creator\RGB_Creator_Interface.cs" />
+    <Compile Include="RGB_Output\RGB_Output_Interface.cs" />
+    <Compile Include="TabMainWindow.xaml.cs">
+      <DependentUpon>TabMainWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="MyRangeSlider.xaml">
+    <Page Include="RGB_Creator\Audio\MyRangeSlider.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Spectrum.xaml">
+    <Page Include="RGB_Creator\Audio\Spectrum.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TabMainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -169,6 +175,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="RGB_Creator\ScreenShot\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

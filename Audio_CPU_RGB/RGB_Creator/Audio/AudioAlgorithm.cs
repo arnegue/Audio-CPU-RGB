@@ -16,5 +16,6 @@ namespace AudioCPURGB {
         public override String ToString() {
             return _name;
         }
+
     }
 }

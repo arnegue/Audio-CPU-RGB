@@ -1,11 +1,18 @@
 ﻿namespace AudioCPURGB {
-    class RGBValue
+    class RGB_Value
     {
         public int r;
         public int g;
         public int b;
-        // Better be safe than sorry (normaly Convert.ToChar would check that, but maybe the code will change later)
-        public RGBValue(int r, int g, int b)
+
+        public RGB_Value()
+        {
+            r = 0;
+            g = 0;
+            b = 0;
+        }
+
+        public RGB_Value(int r, int g, int b)
         {
             if (r > 255)
             {
@@ -35,8 +42,9 @@
             this.g = g;
             this.b = b;
         }
+
         // Convert rgb to (rrr,ggg,bbb) with leading 0
-        public override string ToString()
+     /*   public override string ToString()
         {
             string sendString = "(" + System.Convert.ToChar(r) + "," + System.Convert.ToChar(g) + "," + System.Convert.ToChar(b) + ")" + "\n";
 
@@ -46,12 +54,12 @@
             //  return sendString;
             //return "(F,F,F)\n";
         }
-
+        */
         public override bool Equals(object obj)
         {
             if (obj.GetType() == this.GetType())
             {
-                RGBValue that = (RGBValue)obj;
+                RGB_Value that = (RGB_Value)obj;
                 if (this.r == that.r && this.g == that.g && this.b == that.b)
                 {
                     return true;
