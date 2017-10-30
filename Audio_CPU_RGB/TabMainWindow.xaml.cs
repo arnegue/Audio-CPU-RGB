@@ -22,13 +22,16 @@ namespace AudioCPURGB
         RGB_Output.RGB_Output_Interface _rgbOutputI;
         RGB_Creator.RGB_Creator_Interface _rgbCreatorI;
 
-        RGB_Creator.CPU_Temperature _cpuRgbCreator;
+        RGB_Creator.CPU_Temperature_RGB_Creator _cpuRgbCreator;
+        RGB_Creator.Audio_RGB_Creator _audioRgbCreator;
         
         public TabMainWindow()
         {
             InitializeComponent();
             
-            _cpuRgbCreator = new RGB_Creator.CPU_Temperature();
+            _cpuRgbCreator = new RGB_Creator.CPU_Temperature_RGB_Creator(cpuTempTB);
+            _audioRgbCreator = new RGB_Creator.Audio_RGB_Creator(PbL, PbR, Spectrum, DeviceBox, AlgoChoice, SpectrumSlider);
+            _rgbOutputI = new RGB_Output.Serial.Serial_RGB_Output();
             // _rgbCreator = RGB_Creator. // TODO: Audioalgo is first algo
         }
 
@@ -45,11 +48,12 @@ namespace AudioCPURGB
                 
                 switch (tabControl.SelectedIndex) {
                     case 0: // Audio
-                        // Todo
+                        _rgbCreatorI = _audioRgbCreator;
+                        System.Diagnostics.Debug.WriteLine("Changed tab to: _audioRgbCreator");
                         break;
                     case 1: // CPU-Temp
                         _rgbCreatorI = _cpuRgbCreator;
-                        System.Diagnostics.Debug.WriteLine("Changed tab to: CPU-Temperature");
+                        System.Diagnostics.Debug.WriteLine("Changed tab to: _cpuRgbCreator");
                         // TODO
                         break;
                     case 2: // Image
@@ -62,7 +66,7 @@ namespace AudioCPURGB
 
                 if (_rgbCreatorI != null)
                 {
-                    _rgbCreatorI.start(); // pause current rgbCreator
+                    _rgbCreatorI.start(); // start new rgbCreator
                 }
             }
         }
@@ -80,7 +84,6 @@ namespace AudioCPURGB
             {
                 if (CkbSerial.IsChecked == true)
                 {
-                    _rgbOutputI = new RGB_Output.Serial.Serial_RGB_Output();
                     _rgbOutputI.initialize(Comports.Items[Comports.SelectedIndex] as string);
                 }
                 else
@@ -105,6 +108,7 @@ namespace AudioCPURGB
             if (BtnEnable.IsChecked == true)
             {
                 BtnEnable.Content = "Disable";
+                _rgbCreatorI.start();
                 // TODO _analyzer.Enable = true;
             }
             else
@@ -123,8 +127,12 @@ namespace AudioCPURGB
         private void Comports_DropDownOpened(object sender, EventArgs e)
         {
             Comports.Items.Clear();
-            // TODO var ports = SerialPort.GetPortNames();
-            // TODO foreach (var port in ports) Comports.Items.Add(port);
+            var ports = _rgbOutputI.getAvailableOutputList();
+
+            foreach (var port in ports) {
+                Comports.Items.Add(port);
+            }
+
         }
 
 

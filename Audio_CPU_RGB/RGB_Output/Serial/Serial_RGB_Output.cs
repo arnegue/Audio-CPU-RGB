@@ -11,23 +11,26 @@ namespace AudioCPURGB.RGB_Output.Serial
     class Serial_RGB_Output : RGB_Output_Interface
     {
         private SerialPort _port;
-
-        public void initialize(String param)
+        
+        public void initialize(String output)
         {
-            _port = new SerialPort(param);
+            _port = new SerialPort(output);
             _port.BaudRate = 115200; //
             _port.StopBits = StopBits.One;
             _port.Parity = Parity.None;
             _port.DataBits = 8;
             _port.DtrEnable = true;
             _port.Open();
+
             _port.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
         }
 
         public void showRGB(RGB_Value rgb)
         {
             String sendToSerial = "(" + System.Convert.ToChar(rgb.r) + "," + System.Convert.ToChar(rgb.g) + "," + System.Convert.ToChar(rgb.b) + ")";
+            _port.Write(sendToSerial);
         }
+
         public void shutdown()
         {
             _port.Close();
@@ -44,6 +47,10 @@ namespace AudioCPURGB.RGB_Output.Serial
             string indata = sp.ReadExisting();
             System.Diagnostics.Debug.Write("Data Received: ");
             System.Diagnostics.Debug.WriteLine(indata);
+        }
+
+        public string[] getAvailableOutputList() {
+           return SerialPort.GetPortNames();
         }
     }
 }

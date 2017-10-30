@@ -10,7 +10,10 @@ namespace AudioCPURGB.RGB_Output
     {
         void showRGB(RGB_Value rgb);
 
-        void initialize(String param);
+        void initialize(String output);
+
         void shutdown();
+
+        String[] getAvailableOutputList();
     }
 }

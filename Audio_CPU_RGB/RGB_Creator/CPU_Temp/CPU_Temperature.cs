@@ -2,33 +2,36 @@
 using System.Threading;
 using AudioCPURGB.RGB_Output;
 using OpenHardwareMonitor.Hardware;
+using System.Windows.Controls;
 
 namespace AudioCPURGB.RGB_Creator
 {
-    class CPU_Temperature : RGB_Creator_Interface
+    class CPU_Temperature_RGB_Creator : RGB_Creator_Interface
     {
-        private int _ms_sleepInterval;
         private Thread _workerThread;
         private ManualResetEvent _pauseEvent = new ManualResetEvent(false);
         private RGB_Output_Interface _rgbOutput;
 
-        private RGB_Value _lastRGB; // last RGB_Value needed for fading
+        private TextBlock _temperatureTextBlock;
+
+        private RGB_Value _lastRGB = new RGB_Value(); // last RGB_Value needed for fading
         private const float m = 12.75F; // Constant needed for Algo1
-        private const int ms_sleepInterval = 1000;
+        private const int _ms_sleepInterval = 1000;
 
         private ISensor _cpuPackageSensor;
         private IHardware _cpuHardware;
 
-        public CPU_Temperature() {
-            _lastRGB = new RGB_Value(0, 0, 0);
-            _ms_sleepInterval = ms_sleepInterval;
-            
+        public CPU_Temperature_RGB_Creator(TextBlock temperatureTextBlock) {           
+            _temperatureTextBlock = temperatureTextBlock;
+                   
+            // Create a new Thread
             _workerThread = new Thread(cpuTempThread);
             _workerThread.IsBackground = true;
 
-            _pauseEvent.Reset();
-            _workerThread.Start();
+            _pauseEvent.Reset(); // Don't let the thread run
+            _workerThread.Start(); // But start it (until it comes to the pauseEvent)
             
+            // Iterate throught the sensors, to get the CPU-Package-Sensor
             Computer myComputer = new Computer();
             myComputer.Open();
 
@@ -51,7 +54,7 @@ namespace AudioCPURGB.RGB_Creator
                 System.Diagnostics.Debug.WriteLine("No \"CPU Package\" was found.");
             }
         }
-
+       
 
         public void setRGBOutput(RGB_Output_Interface rgbOutput)
         {
@@ -78,6 +81,14 @@ namespace AudioCPURGB.RGB_Creator
                     float value = _cpuPackageSensor.Value ?? 0; // Get value from Sensor
 
                     System.Diagnostics.Debug.WriteLine("CPU-Temp: " + value);
+                    String tempString = value + " °C";
+        
+                    _temperatureTextBlock.Dispatcher.Invoke(new Action(() =>
+                    {
+                        _temperatureTextBlock.Text = tempString;
+                    }));
+                    
+
                     RGB_Value newRgb = calculateRGBValueAlgo1(value);
 
                     // Now fade to that color
@@ -123,7 +134,8 @@ namespace AudioCPURGB.RGB_Creator
                         {
                             _rgbOutput.showRGB(rgb);
                         }
-                        _lastRGB = rgb;
+                        _lastRGB = rgb;                 
+                       
                         // Wait 10 Millisec to fade to new Color
                         Thread.Sleep(10);
                     }

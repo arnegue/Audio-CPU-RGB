@@ -78,7 +78,7 @@
             </TabItem>
             <TabItem Header="CPU-Temperature">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <TextBlock  x:Name="cpuTemp" Text="0 °C" VerticalAlignment="Center" Margin="5,0"/>
+                    <TextBlock x:Name="cpuTempTB" Text="0 °C" VerticalAlignment="Center" Margin="5,0"/>
                 </StackPanel>
             </TabItem>
             <TabItem Header="Monitor-Average" />

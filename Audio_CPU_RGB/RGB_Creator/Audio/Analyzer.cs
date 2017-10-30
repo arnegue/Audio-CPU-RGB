@@ -7,13 +7,15 @@ using System.Windows.Threading;
 using Un4seen.Bass;
 using System.Text;
 using Un4seen.BassWasapi;
+using AudioCPURGB.RGB_Creator;
 using System.Threading;
+using AudioCPURGB.RGB_Output;
 
-namespace AudioCPURGB {
+namespace AudioCPURGB.RGB_Creator {
 
-    internal class Analyzer {
+    internal class Audio_RGB_Creator : RGB_Creator_Interface {
         private bool _enable;               //enabled status
-        private DispatcherTimer _t;         //timer that refreshes the display
+     //   private DispatcherTimer _t;         //timer that refreshes the display
         private float[] _fft;               //buffer for fft data
         private ProgressBar _l, _r;         //progressbars for left and right channel intensity
         private WASAPIPROC _process;        //callback function to obtain data
@@ -26,17 +28,22 @@ namespace AudioCPURGB {
         private int devindex;               //used device index
         private MyRangeSlider _mrs;
 
+        private Thread _workerThread;
+        private ManualResetEvent _pauseEvent = new ManualResetEvent(false);
+        private const int _ms_sleepInterval = 25;
+        private RGB_Output_Interface _rgbOutput;
+
 
         private int _lines = 16;            // number of spectrum lines
         //ctor
-        public Analyzer(ProgressBar left, ProgressBar right, Spectrum spectrum, ComboBox devicelist, ComboBox algoChoser, MyRangeSlider mrs) {
+        public Audio_RGB_Creator(ProgressBar left, ProgressBar right, Spectrum spectrum, ComboBox devicelist, ComboBox algoChoser, MyRangeSlider mrs) {
             _fft = new float[1024];
             _lastlevel = 0;
             _hanctr = 0;
-            _t = new DispatcherTimer();
-            _t.Tick += _t_Tick;
-            _t.Interval = TimeSpan.FromMilliseconds(25); //40hz refresh rate
-            _t.IsEnabled = false;
+          //  _t = new DispatcherTimer();
+           // _t.Tick += _t_Tick;
+         //   _t.Interval = TimeSpan.FromMilliseconds(25); //40hz refresh rate
+         //   _t.IsEnabled = false;
             _l = left;
             _r = right;
             _l.Minimum = 0;
@@ -49,20 +56,34 @@ namespace AudioCPURGB {
             _devicelist = devicelist;
             _initialized = false;
             _mrs = mrs;
+       
 
             algoChoser.Items.Add(new AudioAlgorithm("Algorithm 1", () => showAudioToRGBA1()));
             algoChoser.Items.Add(new AudioAlgorithm("Algorithm 2", () => showAudioToRGBA2()));
             // TODO algoChoser.SelectedIndex = 0;
 
+            // Create a new Thread
+            _workerThread = new Thread(cpuTempThread);
+            _workerThread.IsBackground = true;
+
+            _pauseEvent.Reset(); // Don't let the thread run
+            _workerThread.Start(); // But start it (until it comes to the pauseEvent)
+
             Init();
         }
-        
+
+        public void start() {
+            _pauseEvent.Set();
+        }
+
+        public void pause() {
+            _pauseEvent.Reset();
+        }
+
         public int minSliderValue { get; set; }
         public AudioAlgorithm activeAlgo { get; set; }
         public Boolean absNotRel { get; set; }
-
-        // Serial port for arduino output
-        public SerialPort _serial { get; set; }
+        
 
         // flag for display enable
         bool DisplayEnable = true;
@@ -100,7 +121,7 @@ namespace AudioCPURGB {
                     BassWasapi.BASS_WASAPI_Free();
                     _initialized = false;
                 }
-                _t.IsEnabled = value;
+                //_t.IsEnabled = value;
             }
         }
 
@@ -122,54 +143,63 @@ namespace AudioCPURGB {
             minSliderValue = 0;
         }
 
+
+        // TODO: das ist nachher der Thread (vorher start-methode ausfuehren)
         //timer 
-        private void _t_Tick(object sender, EventArgs e) {
-            int ret = BassWasapi.BASS_WASAPI_GetData(_fft, (int)BASSData.BASS_DATA_FFT2048); //get channel fft data
-            if (ret < -1) return;
-            int x, y;
-            int b0 = 0;
+       // private void _t_Tick(object sender, EventArgs e) {
+            private void cpuTempThread() {
+            while (true) {
+                _pauseEvent.WaitOne();
 
-            //computes the spectrum data, the code is taken from a bass_wasapi sample.
-            for (x = 0; x < _lines; x++) {
-                float peak = 0;
-                int b1 = (int)Math.Pow(2, x * 10.0 / (_lines - 1));
-                if (b1 > 1023) b1 = 1023;
-                if (b1 <= b0) b1 = b0 + 1;
-                for (; b0 < b1; b0++) {
-                    if (peak < _fft[1 + b0]) peak = _fft[1 + b0];
+                int ret = BassWasapi.BASS_WASAPI_GetData(_fft, (int)BASSData.BASS_DATA_FFT2048); //get channel fft data
+                if (ret < -1) return;
+                int x, y;
+                int b0 = 0;
+
+                //computes the spectrum data, the code is taken from a bass_wasapi sample.
+                for (x = 0; x < _lines; x++) {
+                    float peak = 0;
+                    int b1 = (int)Math.Pow(2, x * 10.0 / (_lines - 1));
+                    if (b1 > 1023) b1 = 1023;
+                    if (b1 <= b0) b1 = b0 + 1;
+                    for (; b0 < b1; b0++) {
+                        if (peak < _fft[1 + b0]) peak = _fft[1 + b0];
+                    }
+                    y = (int)(Math.Sqrt(peak) * 3 * 255 - 4);
+                    if (y > 255) y = 255;
+                    if (y < 0) y = 0;
+                    _spectrumdata.Add((byte)y);
                 }
-                y = (int)(Math.Sqrt(peak) * 3 * 255 - 4);
-                if (y > 255) y = 255;
-                if (y < 0) y = 0;
-                _spectrumdata.Add((byte)y);
-            }
 
-            if (DisplayEnable) {
-                _spectrum.Set(_spectrumdata);
-            }
-            
-            if (activeAlgo != null) {
-                activeAlgo._method();
-            }
-            _spectrumdata.Clear();
+                if (DisplayEnable) {
+                    _spectrum.Set(_spectrumdata);
+                }
+
+                if (activeAlgo != null) {
+                    activeAlgo._method();
+                }
+                _spectrumdata.Clear();
 
 
-            int level = BassWasapi.BASS_WASAPI_GetLevel();
-            _l.Value = Utils.LowWord32(level);
-            _r.Value = Utils.HighWord32(level);
-            if (level == _lastlevel && level != 0) _hanctr++;
-            _lastlevel = level;
+                int level = BassWasapi.BASS_WASAPI_GetLevel();
+                _l.Value = Utils.LowWord32(level);
+                _r.Value = Utils.HighWord32(level);
+                if (level == _lastlevel && level != 0) _hanctr++;
+                _lastlevel = level;
 
-            //Required, because some programs hang the output. If the output hangs for a 75ms
-            //this piece of code re initializes the output so it doesn't make a gliched sound for long.
-            if (_hanctr > 3) {
-                _hanctr = 0;
-                _l.Value = 0;
-                _r.Value = 0;
-                Free();
-                Bass.BASS_Init(0, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
-                _initialized = false;
-                startBassWasapi = true;
+                //Required, because some programs hang the output. If the output hangs for a 75ms
+                //this piece of code re initializes the output so it doesn't make a gliched sound for long.
+                if (_hanctr > 3) {
+                    _hanctr = 0;
+                    _l.Value = 0;
+                    _r.Value = 0;
+                    Free();
+                    Bass.BASS_Init(0, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
+                    _initialized = false;
+                    startBassWasapi = true;
+                }
+
+                Thread.Sleep(_ms_sleepInterval);
             }
         }
 
@@ -196,7 +226,7 @@ namespace AudioCPURGB {
             int right = ((int)_mrs.RangeMax) + 1;
             int left = (int)_mrs.RangeMin;
 
-            int stepsPerColor = (right - left) / 3;
+            int stepsPerColor = (right - left) / colors;
 
             for (int rgbIndex = 0; rgbIndex < colors; rgbIndex++) {
                 for (int i = left + (stepsPerColor * rgbIndex); i < left + (stepsPerColor * rgbIndex) + stepsPerColor; i++) {
@@ -220,7 +250,7 @@ namespace AudioCPURGB {
 
             RGB_Value rgbv = new RGB_Value(rgb[0], rgb[1], rgb[2]);
             try {
-                _serial.WriteLine(rgbv.ToString());
+                _rgbOutput.showRGB(rgbv);
             }
             catch (System.NullReferenceException) {
                 // Seems normal when switching on/off
@@ -275,7 +305,7 @@ namespace AudioCPURGB {
                     if (sendToSerial.Length == 8)
                     {
                         System.Diagnostics.Debug.WriteLine(" - completed");
-                        _serial.WriteLine(sendToSerial);
+                        _rgbOutput.showRGB(rgbv);
                     }
                     else
                     {
@@ -292,5 +322,8 @@ namespace AudioCPURGB {
             }
         }
 
+        public void setRGBOutput(RGB_Output_Interface rgbOutput) {
+            _rgbOutput = rgbOutput;
+        }
     }
 }
