@@ -18,4 +18,13 @@ namespace AudioCPURGB {
         }
 
     }
+
+    class AudioAlgorithm2
+    {
+        // TODO maybe not the values, but the gui-elements?
+        public RGB_Value my_callback(byte[] specArray, int min_slider, int max_slider, int min_trigger, bool absNotRel)
+        {
+            return new RGB_Value(0, 0, 0);
+        }
+    }
 }
