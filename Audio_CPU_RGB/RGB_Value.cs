@@ -1,9 +1,24 @@
 ﻿namespace AudioCPURGB {
+    // TODO: set r,g,b, functioms
     class RGB_Value
     {
-        public int r;
-        public int g;
-        public int b;
+        public byte r;
+        /*{
+            get { return r; }
+            set
+            {
+                if (r > 255)
+                {
+                    r = 255;
+                }
+                else if (r < 0)
+                {
+                    r = 0;
+                }
+            }
+        }*/
+        public byte g;
+        public byte b;
 
         public RGB_Value()
         {
@@ -12,37 +27,43 @@
             b = 0;
         }
 
-        public RGB_Value(int r, int g, int b)
-        {
-            if (r > 255)
+        public RGB_Value(byte rn, byte gn, byte bn)
+        {            
+            if (rn > 255)
             {
                 r = 255;
             }
-            else if (r < 0)
+            else if (rn < 0)
             {
                 r = 0;
             }
-            if (g > 255)
+            if (gn > 255)
             {
                 g = 255;
             }
-            else if (g < 0)
+            else if (gn < 0)
             {
                 g = 0;
             }
-            if (b > 255)
+            if (bn > 255)
             {
                 b = 255;
             }
-            else if (b < 0)
+            else if (bn < 0)
             {
                 b = 0;
             }
-            this.r = r;
-            this.g = g;
-            this.b = b;
+            this.r = rn;
+            this.g = gn;
+            this.b = bn;
         }
 
+        public void copy_values(RGB_Value rgb)
+        {
+            this.r = rgb.r;
+            this.g = rgb.g;
+            this.b = rgb.b;
+        }
         // Convert rgb to (rrr,ggg,bbb) with leading 0
      /*   public override string ToString()
         {
