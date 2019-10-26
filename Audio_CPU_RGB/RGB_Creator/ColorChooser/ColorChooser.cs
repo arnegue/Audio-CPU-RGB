@@ -15,9 +15,7 @@ using AudioCPURGB.RGB_Creator;
 namespace AudioCPURGB
 {
     class ColorChooser : RGB_Creator_Interface
-    {
-        private RGB_Output_Interface _rgbOutput;
-
+    {        
 
         public void rgbChanged(int r, int g, int b)
         {
@@ -27,20 +25,9 @@ namespace AudioCPURGB
             _rgbOutput.showRGB(rgb);
         }
 
-        public void start()
+        protected override void callback()
         {
-            //_pauseEvent.Set();
-        }
 
-        public void pause()
-        {
-           // _pauseEvent.Reset();
         }
-
-        public void setRGBOutput(RGB_Output_Interface rgbOutput)
-        {
-            _rgbOutput = rgbOutput;
-        }
-
     }
 }

@@ -150,6 +150,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="RGB_Creator\Audio\AudioAlgorithms.cs" />
     <Compile Include="RGB_Creator\Audio\Audio_RGB_Creator.cs" />
     <Compile Include="RGB_Creator\Audio\AudioAlgorithm.cs" />
     <Compile Include="RGB_Creator\ColorChooser\ColorChooser.cs" />

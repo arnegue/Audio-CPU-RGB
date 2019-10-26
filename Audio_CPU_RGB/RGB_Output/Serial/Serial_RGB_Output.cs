@@ -14,9 +14,18 @@ namespace AudioCPURGB.RGB_Output.Serial
         private SerialPort _port;
         private bool _enabled;
         private int _rgbs;
+        public String _name = "";
+        private Mutex _ser_mutex;
+
+        public Serial_RGB_Output()
+        {
+            _ser_mutex = new Mutex();
+            _enabled = false;
+        }
 
         public void initialize(String output)
         {
+            _name = output;
             _port = new SerialPort(output);
              _port.BaudRate = 115200; 
           // _port.BaudRate = 500000;
@@ -26,11 +35,14 @@ namespace AudioCPURGB.RGB_Output.Serial
             _port.DtrEnable = true;
             _rgbs = 0;
 
-
+            _ser_mutex.WaitOne();
             _port.Open();      
             _port.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
+            _enabled = false;
+            _ser_mutex.ReleaseMutex();
+
             // Wait till COM-port returns Amount of LEDS
-            while(_rgbs == 0)
+            while (_rgbs == 0)
             {
                 Thread.Sleep(10);
             }
@@ -38,7 +50,11 @@ namespace AudioCPURGB.RGB_Output.Serial
             {
                 // TODO: ERROR
             }
-            _enabled = false;
+        }
+
+        public String getName()
+        {
+            return _name;
         }
 
         public int getAmountRGBs()
@@ -48,6 +64,7 @@ namespace AudioCPURGB.RGB_Output.Serial
 
         public void showRGBs(RGB_Value[] rgbs)
         {
+            _ser_mutex.WaitOne();
             if (_enabled)
             {
                 String sendToSerial = "(";
@@ -88,10 +105,12 @@ namespace AudioCPURGB.RGB_Output.Serial
                     }
                 }*/
             }
+            _ser_mutex.ReleaseMutex();
         }
 
         public void showRGB(RGB_Value rgb)
         {
+            _ser_mutex.WaitOne();
             if (_enabled)
             {
                 byte[] bytes = { System.Convert.ToByte('('), rgb.r, System.Convert.ToByte(','), rgb.g, System.Convert.ToByte(','), rgb.b, System.Convert.ToByte(')') };
@@ -106,11 +125,14 @@ namespace AudioCPURGB.RGB_Output.Serial
                     // ignore problems sending
                 }
             }
+            _ser_mutex.ReleaseMutex();
         }
 
         public void shutdown()
         {
+            _ser_mutex.WaitOne();
             _port.Close();
+            _ser_mutex.ReleaseMutex();
         }
 
         /// <summary>
@@ -155,22 +177,24 @@ namespace AudioCPURGB.RGB_Output.Serial
 
         public void setEnable(bool enable)
         {
+            _ser_mutex.WaitOne();
             _enabled = enable;
+            _ser_mutex.ReleaseMutex();
         }
 
         public bool isEnabled()
         {
-            return _enabled;
+            bool en;
+            _ser_mutex.WaitOne();
+             en = _enabled;
+            _ser_mutex.ReleaseMutex();
+            return en;
         }
 
         public void fade(RGB_Value oldValue, RGB_Value newValue, int fade_time_ms=50)
         {
             RGB_Value lastRGB = new RGB_Value();
             lastRGB.copy_values(oldValue);
-
-            byte lastR = lastRGB.r;
-            byte lastG = lastRGB.g;
-            byte lastB = lastRGB.b;
             
             int rFactor = 1;
             int gFactor = 1;
@@ -190,25 +214,23 @@ namespace AudioCPURGB.RGB_Output.Serial
                 bFactor = -1;
             }
 
+            showRGB(lastRGB);
             while (!lastRGB.Equals(newValue))
             {
-                if (lastR != newValue.r)
+                if (lastRGB.r != newValue.r)
                 {
-                    lastR += (byte)rFactor;
+                    lastRGB.r += (byte)rFactor;
                 }
-                if (lastG != newValue.g)
+                if (lastRGB.g != newValue.g)
                 {
-                    lastG += (byte)gFactor;
+                    lastRGB.g += (byte)gFactor;
                 }
-                if (lastB != newValue.b)
+                if (lastRGB.b != newValue.b)
                 {
-                    lastB += (byte)bFactor;
+                    lastRGB.b += (byte)bFactor;
                 }
 
-
-                RGB_Value rgb = new RGB_Value(lastR, lastG, lastB);
-                showRGB(rgb);                
-                lastRGB = rgb;
+                showRGB(lastRGB);
 
                 // Wait a few Millisec to fade to new Color
                 Thread.Sleep(fade_time_ms);

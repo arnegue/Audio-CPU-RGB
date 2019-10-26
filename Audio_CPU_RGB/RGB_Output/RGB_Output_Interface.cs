@@ -12,6 +12,8 @@ namespace AudioCPURGB.RGB_Output
 
         void showRGBs(RGB_Value[] rgbs);
 
+        String getName();
+
         int getAmountRGBs();
 
         void initialize(String output);

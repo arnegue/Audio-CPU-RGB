@@ -10,74 +10,36 @@ namespace AudioCPURGB
 {
     class Stroboscope : RGB_Creator_Interface
     {
-        private Thread _workerThread;
-        private ManualResetEvent _pauseEvent = new ManualResetEvent(false);
-        private RGB_Output_Interface _rgbOutput;
-        RGB_Value _empty; 
+        RGB_Value _empty;
         RGB_Value _white;
-        int _freq;
+        int half_freq;
 
         public Stroboscope()
         {
-            _freq = 0;
+            half_freq = 0;
             _empty = new RGB_Value();
             _white = new RGB_Value();
             _white.r = 255;
             _white.g = 255;
             _white.b = 255;
-            // Create a new Thread
-            _workerThread = new Thread(cpuTempThread);
-            _workerThread.IsBackground = true;
-
-            
-
-            _pauseEvent.Reset(); // Don't let the thread run
-            _workerThread.Start(); // But start it (until it comes to the pauseEvent)         
         }
-
-
-        public void setRGBOutput(RGB_Output_Interface rgbOutput)
+        
+        protected override void callback()
         {
-            _rgbOutput = rgbOutput;
-        }
-
-        public void start()
-        {
-            _pauseEvent.Set();
-        }
-
-        public void pause()
-        {
-            _pauseEvent.Reset();
-        }
-
-  
-        private void cpuTempThread()
-        {
-            while (true)
+            if (half_freq != 0)
             {
-                _pauseEvent.WaitOne();
-                if (_freq != 0)
-                {
-                    try
-                    {
-                        _rgbOutput.showRGB(_white);
-                        Thread.Sleep(_freq);
-                        _rgbOutput.showRGB(_empty);
-                        Thread.Sleep(_freq);
-                    }
-                    catch (System.Threading.Tasks.TaskCanceledException)
-                    {
-                        // Don't do any
-                        break;
-                    }
-                }
+                // Thats only half the truth since showRGB takes time, which should result in less sleep time
+                _rgbOutput.showRGB(_white);
+                Thread.Sleep(half_freq);
+                _rgbOutput.showRGB(_empty);
+                Thread.Sleep(half_freq);
             }
         }
 
-        public void setFrequency(int freq)
+        public void setFrequency(int frequency)
         {
-            _freq = freq;
+            // Calculate half the sleep time in ms
+            half_freq = Math.Abs((int)(float)((1.0 / (float)frequency * 1000.0) / 2.0));
         }
     }
 }

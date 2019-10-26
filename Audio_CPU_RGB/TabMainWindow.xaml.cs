@@ -22,6 +22,7 @@ namespace AudioCPURGB
     {
         RGB_Output.RGB_Output_Interface _rgbOutputI;
         RGB_Creator.RGB_Creator_Interface _rgbCreatorI;
+        RGB_Creator.RGB_Creator_Interface _selectedMisc;
 
         CPU_Temperature_RGB_Creator _cpuRgbCreator;
         Audio_RGB_Creator _audioRgbCreator;
@@ -36,6 +37,10 @@ namespace AudioCPURGB
 
         public TabMainWindow()
         {
+            // Initialize these before gui... i know bad
+            _rainbow = new Rainbow();
+            _runningDot = new RunningColorChangingDot();
+
             try
             {
                 InitializeComponent();
@@ -58,9 +63,6 @@ namespace AudioCPURGB
             _screenAnalyzer = new ScreenAnalyzer();
             _colorChooser = new ColorChooser();
             _stroboscope = new Stroboscope();
-            _rainbow = new Rainbow();
-            _runningDot = new RunningColorChangingDot();
-            
 
 
             _rgbOutputI = new RGB_Output.Serial.Serial_RGB_Output();
@@ -81,22 +83,17 @@ namespace AudioCPURGB
 
             Application.Current.MainWindow.Activate();
             Application.Current.MainWindow.Focus();
-            Application.Current.MainWindow.ShowDialog();
-
-            ///minSliderBindValue = 2;
-            // _rgbCreator = RGB_Creator. // TODO: Audioalgo is first algo
+            Application.Current.MainWindow.ShowDialog();            
         }
-
-
+        
+      
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             TabControl tabControl = sender as TabControl;
             if (e.Source is TabControl) //if this event fired from TabControl then enter
             {
-                if (_rgbCreatorI != null)
-                {
-                    _rgbCreatorI.pause(); // pause current rgbCreator
-                }
+                RGB_Creator.RGB_Creator_Interface new_rgb_creator;
+
 
                 if (tabControl.SelectedIndex != 0)
                 {
@@ -108,35 +105,65 @@ namespace AudioCPURGB
                 switch (tabControl.SelectedIndex)
                 {
                     case 0: // Audio
-                        _rgbCreatorI = _audioRgbCreator;
+                        new_rgb_creator = _audioRgbCreator;
                         break;
                     case 1: // CPU-Temp
-                        _rgbCreatorI = _cpuRgbCreator;
+                        new_rgb_creator = _cpuRgbCreator;
                         // TODO
                         break;
                     case 2: // Image
-                        _rgbCreatorI = _screenAnalyzer;
+                        new_rgb_creator = _screenAnalyzer;
                         break;
                     case 3: // Color-Chooser
-                        _rgbCreatorI = _colorChooser;
+                        new_rgb_creator = _colorChooser;
                         break;
                     case 4: // Stroboscope
-                        _rgbCreatorI = _stroboscope;
+                        new_rgb_creator = _stroboscope;
                         break;
-                  //  case 5: // Misc
-                    //    _
-
+                    case 5:
+                        new_rgb_creator = _selectedMisc;
+                        break;
+                    default:
+                        return;
                 }
+                set_new_rgb_creator(new_rgb_creator);
+            }
+        }
 
-                if (_rgbCreatorI != null && _rgbOutputI != null)
-                {
-                    //if(_rgbCreatorI == _audioRgbCreator && BtnEnable.IsChecked != true )
-                    //  {
-                    //     return;
-                    // }
-                    _rgbCreatorI.setRGBOutput(_rgbOutputI);
-                    _rgbCreatorI.start(); // start new rgbCreator
-                }
+        private void set_new_rgb_creator(RGB_Creator.RGB_Creator_Interface new_rgb_creator)
+        {
+            if (_rgbCreatorI != null)
+            {
+                _rgbCreatorI.pause(); // pause current rgbCreator
+            }
+
+            if (new_rgb_creator != null && _rgbOutputI != null)
+            {
+                new_rgb_creator.setRGBOutput(_rgbOutputI);
+                new_rgb_creator.start(); // start new rgbCreator
+            }
+            _rgbCreatorI = new_rgb_creator;
+        }
+
+        private void RadioButtonChanged(object sender, RoutedEventArgs e)
+        {
+            RadioButton li = (sender as RadioButton);
+            if (li.Name == "RunningDot")
+            {
+                _selectedMisc = _runningDot;
+
+            } else if(li.Name == "Rainbow")
+            {
+                _selectedMisc = _rainbow;
+            } else
+            {
+                System.Diagnostics.Debug.Print("Weird radio button selected");
+            }
+
+            // If a misc rgbcreator is currrently  running
+            if (_rgbCreatorI == _runningDot || _rgbCreatorI == _rainbow)
+            {
+                set_new_rgb_creator(_selectedMisc);
             }
         }
 
@@ -149,6 +176,7 @@ namespace AudioCPURGB
         /// <param name="e"></param>
         private void CkbSerial_Click(object sender, RoutedEventArgs e)
         {
+            // TODO 'System.IO.IOException'  --> pause
             try
             {
                 if (CkbSerial.IsChecked == true)
@@ -204,11 +232,17 @@ namespace AudioCPURGB
             {
                 if (CkbSerial.IsChecked == true  )
                 {
-                    _rgbOutputI.shutdown();
-                    _rgbOutputI.setEnable(false);
+                    String newPort = Comports.Items[Comports.SelectedIndex] as string;
+                    if (_rgbOutputI.getName() != newPort)
+                    {
+                        _rgbCreatorI.pause();
+                        _rgbOutputI.shutdown();
+                        _rgbOutputI.setEnable(false);
 
-                    _rgbOutputI.initialize(Comports.Items[Comports.SelectedIndex] as string);
-                    _rgbOutputI.setEnable(true);
+                        _rgbOutputI.initialize(newPort);
+                        _rgbOutputI.setEnable(true);
+                        _rgbCreatorI.start();
+                    }
                 }             
             }
         }
@@ -227,17 +261,11 @@ namespace AudioCPURGB
             {
                 BtnEnable.Content = "Disable";
                 _audioRgbCreator.enableClick(true);
-                //_rgbCreatorI.start();
-
-                // TODO _analyzer.Enable = true;
             }
             else
             {
-                //  _audioRgbCreator.audioEnable = false;
-                // TODO _analyzer.Enable = false;
                 BtnEnable.Content = "Enable";
                 _audioRgbCreator.enableClick(false);
-                // _rgbCreatorI.pause();
             }
         }
 
@@ -366,7 +394,7 @@ namespace AudioCPURGB
 
         private void Frequency_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            _stroboscope.setFrequency(100 - (int)Frequency.Value);
+            _stroboscope.setFrequency((int)Frequency.Value);
         }
 
         private void Emphaser_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

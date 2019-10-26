@@ -11,37 +11,33 @@ namespace AudioCPURGB
 {
     class Rainbow : RGB_Creator_Interface
     {
-        private RGB_Output_Interface _rgbOutput;
-        private ManualResetEvent _pauseEvent = new ManualResetEvent(false);
+        RGB_Value[] rgbs = null;
+        int amount_rgbs = 0;
+        RGB_Value empty_rgb = new RGB_Value();
 
-        public Rainbow()
-        {
-            _pauseEvent.Reset(); // Don't let the thread run
-        }
+        Random random = new Random();
 
-        public void pause()
+        protected override void callback()
         {
-            throw new NotImplementedException();
-        }
-
-        public void setRGBOutput(RGB_Output_Interface rgbOutput)
-        {
-            _rgbOutput = rgbOutput;
-        }
-
-        public void start()
-        {
-            while (true)
+            int new_amount_rgbs = _rgbOutput.getAmountRGBs(); // TODO this is used in new_audio-agortihm too
+            // In case the amount of RGBs changed create new array (usually if output changes)
+            if (rgbs == null || amount_rgbs != new_amount_rgbs)
             {
-                _pauseEvent.WaitOne();
-                if (_rgbOutput.isEnabled())
+                rgbs = new RGB_Value[new_amount_rgbs];
+                for (int led = 0; led < new_amount_rgbs; led++)
                 {
-                    int amount_rgbs = _rgbOutput.getAmountRGBs();
-                    // create n RGB_Values
-                    // set rainbow
-                    // walk rainow
+                    rgbs[led] = new RGB_Value();
                 }
+                amount_rgbs = new_amount_rgbs;
             }
+            
+            for (int i = 0; i < rgbs.Length; i++)
+            {
+                // TODO fade somehow?
+                rgbs[i].copy_values(new RGB_Value((byte)random.Next(0, 255), (byte)random.Next(0, 255), (byte)random.Next(0, 255)));                  
+            }
+            _rgbOutput.showRGBs(rgbs);
+            Thread.Sleep(250);
         }
     }
 }
