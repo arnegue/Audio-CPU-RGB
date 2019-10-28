@@ -26,7 +26,7 @@ namespace AudioCPURGB.RGB_Output.Serial
         {
             _name = output;
             _port = new SerialPort(output);
-             _port.BaudRate = 115200; 
+            _port.BaudRate = 115200;
             _port.StopBits = StopBits.One;
             _port.Parity = Parity.None;
             _port.DataBits = 8;
@@ -34,7 +34,7 @@ namespace AudioCPURGB.RGB_Output.Serial
             _rgbs = 0;
 
             _ser_mutex.WaitOne();
-            _port.Open();      
+            _port.Open();
             _port.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
             _enabled = false;
             _ser_mutex.ReleaseMutex();
@@ -44,7 +44,7 @@ namespace AudioCPURGB.RGB_Output.Serial
             {
                 Thread.Sleep(10);
             }
-            if(_rgbs == 0)
+            if (_rgbs == 0)
             {
                 // TODO: ERROR
             }
@@ -65,32 +65,36 @@ namespace AudioCPURGB.RGB_Output.Serial
             _ser_mutex.WaitOne();
             if (_enabled)
             {
-                String sendToSerial = "(";
+                byte[] bytes = new byte[(rgbs.Length * 3) + 2];
+                bytes[0] = System.Convert.ToByte('(');
+                RGB_Value rgb;
+                byte r, g, b;
+
+                int byte_index = 1;  // first byte is (
+
                 for (int i = 0; i < rgbs.Length; i++)
                 {
-                    char r, g, b;
-                    RGB_Value rgb = rgbs[i];
+                    rgb = rgbs[i];
                     if (rgb == null)
                     {
-                        r = '\0';
-                        g = '\0';
-                        b = '\0';
+                        r = 0;
+                        g = 0;
+                        b = 0;
                     }
                     else
                     {
-                        r = System.Convert.ToChar(rgb.r);
-                        g = System.Convert.ToChar(rgb.g);
-                        b = System.Convert.ToChar(rgb.b);
+                        r = System.Convert.ToByte(rgb.r);
+                        g = System.Convert.ToByte(rgb.g);
+                        b = System.Convert.ToByte(rgb.b);
                     }
-                    
-                    sendToSerial += r;
-                    sendToSerial += g;
-                    sendToSerial += b;
+
+                    bytes[byte_index] = r;
+                    bytes[byte_index + 1] = r;
+                    bytes[byte_index + 2] = r;
+                    byte_index += 3;
                 }
-                sendToSerial += ")";
-              
-                _port.Write(sendToSerial);
-                
+
+                bytes[bytes.Length - 1] = System.Convert.ToByte(')');
             }
             _ser_mutex.ReleaseMutex();
         }
@@ -108,7 +112,7 @@ namespace AudioCPURGB.RGB_Output.Serial
                 }
                 catch (Exception)
                 {
-                   // System.Diagnostics.Debug.Print("Exception\n!");
+                    // System.Diagnostics.Debug.Print("Exception\n!");
                     // ignore problems sending
                 }
             }
@@ -131,10 +135,11 @@ namespace AudioCPURGB.RGB_Output.Serial
         {
             SerialPort sp = (SerialPort)sender;
             string indata = sp.ReadExisting();
-            System.Diagnostics.Debug.Write("Data Received: ");
+           // System.Diagnostics.Debug.Write("Data Received: ");
             System.Diagnostics.Debug.WriteLine(indata);
             //  indata += _port.R ReadExisting();
-            if (_rgbs == 0) {
+            if (_rgbs == 0)
+            {
                 for (int i = 0; i < indata.Length; i++)
                 {
                     if (i + 2 < indata.Length)
@@ -146,7 +151,7 @@ namespace AudioCPURGB.RGB_Output.Serial
                             break;
                         }
                     }
-               }
+                }
             }
             /*if (_rgbs == 0 && /*indata[i] == '(' && indata[i +1] == ')')
             {
@@ -173,7 +178,7 @@ namespace AudioCPURGB.RGB_Output.Serial
         {
             bool en;
             _ser_mutex.WaitOne();
-             en = _enabled;
+            en = _enabled;
             _ser_mutex.ReleaseMutex();
             return en;
         }
@@ -222,18 +227,20 @@ namespace AudioCPURGB.RGB_Output.Serial
 
             for (int i = 0; i < newValues.Length; i++)
             {
-                if (!oldValues[i].Equals(newValues[i])) {
+                if (!oldValues[i].Equals(newValues[i]))
+                {
                     return false;
                 }
             }
             return true;
         }
 
-        public void fade(RGB_Value[] oldValues, RGB_Value[] newValues, int fade_time_ms=50)
+        public void fade(RGB_Value[] oldValues, RGB_Value[] newValues, int fade_time_ms = 50)
         {
             int s = 0;
-            while(!rgbs_are_equal(oldValues, newValues)) { 
-                for(int i = 0; i < newValues.Length; i++)
+            while (!rgbs_are_equal(oldValues, newValues))
+            {
+                for (int i = 0; i < newValues.Length; i++)
                 {
                     oldValues[i] = getNextFadeIteration(oldValues[i], newValues[i]);
                 }
@@ -242,11 +249,11 @@ namespace AudioCPURGB.RGB_Output.Serial
             }
         }
 
-        public void fade(RGB_Value oldValue, RGB_Value newValue, int fade_time_ms=50)
+        public void fade(RGB_Value oldValue, RGB_Value newValue, int fade_time_ms = 50)
         {
             RGB_Value lastRGB = new RGB_Value();
             lastRGB.copy_values(oldValue);
-            
+
             showRGB(lastRGB);
             while (!lastRGB.Equals(newValue))
             {
