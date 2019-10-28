@@ -158,6 +158,7 @@
     <Compile Include="RGB_Creator\Audio\MyRangeSlider.xaml.cs">
       <DependentUpon>MyRangeSlider.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RGB_Creator\Misc\ColorChanger.cs" />
     <Compile Include="RGB_Creator\Misc\Rainbow.cs" />
     <Compile Include="RGB_Creator\Misc\RunningColorChangingDot.cs" />
     <Compile Include="RGB_Creator\ScreenShot\ScreenAnalyzer.cs" />

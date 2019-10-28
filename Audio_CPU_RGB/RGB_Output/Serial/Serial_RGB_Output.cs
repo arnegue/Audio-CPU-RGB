@@ -8,7 +8,6 @@ using System.Threading;
 
 namespace AudioCPURGB.RGB_Output.Serial
 {
-
     class Serial_RGB_Output : RGB_Output_Interface
     {
         private SerialPort _port;
@@ -28,7 +27,6 @@ namespace AudioCPURGB.RGB_Output.Serial
             _name = output;
             _port = new SerialPort(output);
              _port.BaudRate = 115200; 
-          // _port.BaudRate = 500000;
             _port.StopBits = StopBits.One;
             _port.Parity = Parity.None;
             _port.DataBits = 8;
@@ -90,20 +88,9 @@ namespace AudioCPURGB.RGB_Output.Serial
                     sendToSerial += b;
                 }
                 sendToSerial += ")";
-
-               /* if (sendToSerial.Length == 128 && sendToSerial[0] == '(' && sendToSerial[127] == ')')
-                {
-                    try
-                    {*/
-                        _port.Write(sendToSerial);
-                    /*}
-                    catch (Exception e)
-                    {
-                        // System.Diagnostics.Debug.Print("Hallo Welt\n!");
-                        // ignore problems sending
-
-                    }
-                }*/
+              
+                _port.Write(sendToSerial);
+                
             }
             _ser_mutex.ReleaseMutex();
         }
@@ -191,47 +178,81 @@ namespace AudioCPURGB.RGB_Output.Serial
             return en;
         }
 
-        public void fade(RGB_Value oldValue, RGB_Value newValue, int fade_time_ms=50)
+        private RGB_Value getNextFadeIteration(RGB_Value oldValue, RGB_Value newValue)
         {
-            RGB_Value lastRGB = new RGB_Value();
-            lastRGB.copy_values(oldValue);
-            
             int rFactor = 1;
             int gFactor = 1;
             int bFactor = 1;
 
             // Look if decrement or increment
-            if (lastRGB.r > newValue.r)
+            if (oldValue.r > newValue.r)
             {
                 rFactor = -1;
             }
-            if (lastRGB.g > newValue.g)
+            if (oldValue.g > newValue.g)
             {
                 gFactor = -1;
             }
-            if (lastRGB.b > newValue.b)
+            if (oldValue.b > newValue.b)
             {
                 bFactor = -1;
             }
 
+            if (oldValue.r != newValue.r)
+            {
+                oldValue.r += (byte)rFactor;
+            }
+            if (oldValue.g != newValue.g)
+            {
+                oldValue.g += (byte)gFactor;
+            }
+            if (oldValue.b != newValue.b)
+            {
+                oldValue.b += (byte)bFactor;
+            }
+            return oldValue;
+        }
+
+        private bool rgbs_are_equal(RGB_Value[] oldValues, RGB_Value[] newValues)
+        {
+            if (oldValues.Length != newValues.Length)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < newValues.Length; i++)
+            {
+                if (!oldValues[i].Equals(newValues[i])) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public void fade(RGB_Value[] oldValues, RGB_Value[] newValues, int fade_time_ms=50)
+        {
+            int s = 0;
+            while(!rgbs_are_equal(oldValues, newValues)) { 
+                for(int i = 0; i < newValues.Length; i++)
+                {
+                    oldValues[i] = getNextFadeIteration(oldValues[i], newValues[i]);
+                }
+                showRGBs(oldValues);
+                Thread.Sleep(fade_time_ms);
+            }
+        }
+
+        public void fade(RGB_Value oldValue, RGB_Value newValue, int fade_time_ms=50)
+        {
+            RGB_Value lastRGB = new RGB_Value();
+            lastRGB.copy_values(oldValue);
+            
             showRGB(lastRGB);
             while (!lastRGB.Equals(newValue))
             {
-                if (lastRGB.r != newValue.r)
-                {
-                    lastRGB.r += (byte)rFactor;
-                }
-                if (lastRGB.g != newValue.g)
-                {
-                    lastRGB.g += (byte)gFactor;
-                }
-                if (lastRGB.b != newValue.b)
-                {
-                    lastRGB.b += (byte)bFactor;
-                }
+                getNextFadeIteration(lastRGB, newValue);
 
                 showRGB(lastRGB);
-
                 // Wait a few Millisec to fade to new Color
                 Thread.Sleep(fade_time_ms);
             }

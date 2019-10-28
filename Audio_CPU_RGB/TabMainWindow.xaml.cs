@@ -31,7 +31,8 @@ namespace AudioCPURGB
         Stroboscope _stroboscope;
         Rainbow _rainbow;
         RunningColorChangingDot _runningDot;
-        
+        ColorChanger _colorchanger;
+
 
         Cyotek.Windows.Forms.ColorWheel colorWheel;
 
@@ -63,6 +64,7 @@ namespace AudioCPURGB
             _screenAnalyzer = new ScreenAnalyzer();
             _colorChooser = new ColorChooser();
             _stroboscope = new Stroboscope();
+            _colorchanger = new ColorChanger();
 
 
             _rgbOutputI = new RGB_Output.Serial.Serial_RGB_Output();
@@ -148,20 +150,25 @@ namespace AudioCPURGB
         private void RadioButtonChanged(object sender, RoutedEventArgs e)
         {
             RadioButton li = (sender as RadioButton);
-            if (li.Name == "RunningDot")
-            {
-                _selectedMisc = _runningDot;
 
-            } else if(li.Name == "Rainbow")
+            switch (li.Name)
             {
-                _selectedMisc = _rainbow;
-            } else
-            {
-                System.Diagnostics.Debug.Print("Weird radio button selected");
-            }
+                case "RunningDot":
+                    _selectedMisc = _runningDot;
+                    break;
+                case "Rainbow":
+                    _selectedMisc = _rainbow;
+                    break;
+                case "ColorChanger":
+                    _selectedMisc = _colorchanger;
+                    break;
+                default:
+                    System.Diagnostics.Debug.Print("Weird radio button selected");
+                    break;
+            }            
 
             // If a misc rgbcreator is currrently  running
-            if (_rgbCreatorI == _runningDot || _rgbCreatorI == _rainbow)
+            if (_rgbCreatorI == _runningDot || _rgbCreatorI == _rainbow || _rgbCreatorI == _colorchanger)
             {
                 set_new_rgb_creator(_selectedMisc);
             }

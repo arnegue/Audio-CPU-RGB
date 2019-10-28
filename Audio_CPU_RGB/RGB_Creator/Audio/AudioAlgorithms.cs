@@ -146,10 +146,8 @@ namespace AudioCPURGB.RGB_Creator.Audio
             RGB_Value emptyRGB = new RGB_Value();
             RGB_Value setRGB = valueToRGB((byte)bass, min_trigger);
 
-            // TODO amount leds in gui
             for (int i = 0; i < amount_rgbs; i++)
             {
-                //rgbs[i] = new RGB_Value();
                 if (i <= leds)
                 {
                     rgbs[i] = setRGB;
@@ -312,7 +310,6 @@ namespace AudioCPURGB.RGB_Creator.Audio
         int bass_avg_Index = 0;
 
         public ShowAudioToRGB6() : base("Algorithm 6") { }
-
 
         protected override RGB_Value[] my_callback(byte[] specArray, int min_slider, int max_slider, int min_trigger) // TODO TRIGGER!?
         {

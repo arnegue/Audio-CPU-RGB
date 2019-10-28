@@ -154,6 +154,7 @@
                 <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <RadioButton x:Name="RunningDot" GroupName="MiscChoose" Content="RunningDot" Checked="RadioButtonChanged" IsChecked="True" />
                     <RadioButton x:Name="Rainbow" GroupName="MiscChoose" Content="Rainbow" Checked="RadioButtonChanged" />
+                    <RadioButton x:Name="ColorChanger" GroupName="MiscChoose" Content="ColorChanger" Checked="RadioButtonChanged" />                    
                 </StackPanel>
             </TabItem>
         </TabControl>

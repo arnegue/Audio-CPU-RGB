@@ -27,5 +27,7 @@ namespace AudioCPURGB.RGB_Output
         bool isEnabled();
 
         void fade(RGB_Value oldValue, RGB_Value newValue, int fade_time_ms);
+
+        void fade(RGB_Value[] oldValues, RGB_Value[] newValues, int fade_time_ms);
     }
 }
