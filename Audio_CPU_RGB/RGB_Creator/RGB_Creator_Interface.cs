@@ -11,6 +11,7 @@ namespace AudioCPURGB.RGB_Creator
         private ManualResetEvent _pauseEvent = new ManualResetEvent(false);
         protected RGB_Output.RGB_Output_Interface _rgbOutput;
         private Thread _workerThread;
+        private static Mutex _callback_mutex = new Mutex();
 
         public RGB_Creator_Interface()
         {
@@ -32,7 +33,9 @@ namespace AudioCPURGB.RGB_Creator
                 _pauseEvent.WaitOne();
                 if (_rgbOutput != null && _rgbOutput.isEnabled())
                 {
+                    _callback_mutex.WaitOne();
                     callback();
+                    _callback_mutex.ReleaseMutex();
                 }
             }
         }
