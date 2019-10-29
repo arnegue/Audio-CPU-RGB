@@ -39,7 +39,7 @@ namespace AudioCPURGB
             {
                 newRGBs[i].copy_values(new RGB_Value((byte)random.Next(0, 255), (byte)random.Next(0, 255), (byte)random.Next(0, 255)));
             }
-            _rgbOutput.fade(old_rgbs, newRGBs, 50);
+            _rgbOutput.fade(old_rgbs, newRGBs, 0);
             Thread.Sleep(250);
         }        
     }
