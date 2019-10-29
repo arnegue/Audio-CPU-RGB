@@ -31,6 +31,7 @@ namespace AudioCPURGB
             if (old_rgbs == null || amount_rgbs != new_amount_rgbs)
             {
                 old_rgbs = create_new_rgbs(new_amount_rgbs);
+                amount_rgbs = new_amount_rgbs;
             }
             RGB_Value[] newRGBs = create_new_rgbs(new_amount_rgbs);
             
@@ -40,6 +41,6 @@ namespace AudioCPURGB
             }
             _rgbOutput.fade(old_rgbs, newRGBs, 50);
             Thread.Sleep(250);
-        }
+        }        
     }
 }
