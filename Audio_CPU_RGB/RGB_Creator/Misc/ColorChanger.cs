@@ -6,7 +6,7 @@ using AudioCPURGB.RGB_Creator;
 namespace AudioCPURGB
 {
     /// <summary>
-    /// Fades from one random color to another fror every LED
+    /// Fades from one random color to another fror every LED (old Protocol)
     /// </summary>
     class ColorChanger : RGB_Creator_Interface
     {

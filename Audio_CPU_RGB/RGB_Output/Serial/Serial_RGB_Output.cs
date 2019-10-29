@@ -89,12 +89,14 @@ namespace AudioCPURGB.RGB_Output.Serial
                     }
 
                     bytes[byte_index] = r;
-                    bytes[byte_index + 1] = r;
-                    bytes[byte_index + 2] = r;
+                    bytes[byte_index + 1] = g;
+                    bytes[byte_index + 2] = b;
                     byte_index += 3;
                 }
 
                 bytes[bytes.Length - 1] = System.Convert.ToByte(')');
+
+                _port.Write(bytes, 0, bytes.Length);
             }
             _ser_mutex.ReleaseMutex();
         }
@@ -105,16 +107,8 @@ namespace AudioCPURGB.RGB_Output.Serial
             if (_enabled)
             {
                 byte[] bytes = { System.Convert.ToByte('('), rgb.r, System.Convert.ToByte(','), rgb.g, System.Convert.ToByte(','), rgb.b, System.Convert.ToByte(')') };
-                try
-                {
-                    _port.Write(bytes, 0, bytes.Length);
-                    /// TODO only allow sending if serial returned an acknowledge
-                }
-                catch (Exception)
-                {
-                    // System.Diagnostics.Debug.Print("Exception\n!");
-                    // ignore problems sending
-                }
+                
+                _port.Write(bytes, 0, bytes.Length);              
             }
             _ser_mutex.ReleaseMutex();
         }
@@ -135,9 +129,7 @@ namespace AudioCPURGB.RGB_Output.Serial
         {
             SerialPort sp = (SerialPort)sender;
             string indata = sp.ReadExisting();
-           // System.Diagnostics.Debug.Write("Data Received: ");
             System.Diagnostics.Debug.WriteLine(indata);
-            //  indata += _port.R ReadExisting();
             if (_rgbs == 0)
             {
                 for (int i = 0; i < indata.Length; i++)
@@ -153,11 +145,6 @@ namespace AudioCPURGB.RGB_Output.Serial
                     }
                 }
             }
-            /*if (_rgbs == 0 && /*indata[i] == '(' && indata[i +1] == ')')
-            {
-                _rgbs = indata[1];
-                System.Diagnostics.Debug.Print("RGBS: " + _rgbs);
-            }*/
         }
 
         public string[] getAvailableOutputList()
@@ -237,7 +224,6 @@ namespace AudioCPURGB.RGB_Output.Serial
 
         public void fade(RGB_Value[] oldValues, RGB_Value[] newValues, int fade_time_ms = 50)
         {
-            int s = 0;
             while (!rgbs_are_equal(oldValues, newValues))
             {
                 for (int i = 0; i < newValues.Length; i++)
