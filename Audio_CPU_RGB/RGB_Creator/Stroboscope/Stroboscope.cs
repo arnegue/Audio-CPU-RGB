@@ -38,8 +38,15 @@ namespace AudioCPURGB
 
         public void setFrequency(int frequency)
         {
-            // Calculate half the sleep time in ms
-            half_freq = Math.Abs((int)(float)((1.0 / (float)frequency * 1000.0) / 2.0));
+            if (frequency == 0)
+            {
+                half_freq = 0;
+            }
+            else
+            {
+                // Calculate half the sleep time in ms
+                half_freq = Math.Abs((int)(float)((1.0 / (float)frequency * 1000.0) / 2.0));
+            }
         }
     }
 }
