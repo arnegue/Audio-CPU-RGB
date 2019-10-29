@@ -111,7 +111,6 @@ namespace AudioCPURGB
                         break;
                     case 1: // CPU-Temp
                         new_rgb_creator = _cpuRgbCreator;
-                        // TODO
                         break;
                     case 2: // Image
                         new_rgb_creator = _screenAnalyzer;
