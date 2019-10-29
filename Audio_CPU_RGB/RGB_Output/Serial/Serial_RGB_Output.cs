@@ -122,6 +122,7 @@ namespace AudioCPURGB.RGB_Output.Serial
         public void shutdown()
         {
             _ser_mutex.WaitOne();
+            _enabled = false;
             _port.Close();
             _ser_mutex.ReleaseMutex();
         }
