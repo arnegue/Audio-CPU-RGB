@@ -60,6 +60,12 @@ namespace AudioCPURGB.RGB_Output.Serial
             return _rgbs;
         }
 
+        ~Serial_RGB_Output()
+        {
+            _ser_mutex.WaitOne();
+            _ser_mutex.ReleaseMutex();
+        }
+
         public void showRGBs(RGB_Value[] rgbs)
         {
             _ser_mutex.WaitOne();
