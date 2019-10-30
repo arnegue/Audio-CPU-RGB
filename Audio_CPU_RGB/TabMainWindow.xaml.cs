@@ -395,7 +395,10 @@ namespace AudioCPURGB
 
         private void ClrPicker_Changed(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
-            _colorChooser.rgbChanged(Clr_picker.SelectedColor.Value.R, Clr_picker.SelectedColor.Value.G, Clr_picker.SelectedColor.Value.B);
+            if (_colorChooser != null) // While initialization
+            {
+                _colorChooser.rgbChanged(Clr_picker.SelectedColor.Value.R, Clr_picker.SelectedColor.Value.G, Clr_picker.SelectedColor.Value.B);
+            }
         }
 
         private void Frequency_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

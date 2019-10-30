@@ -129,18 +129,13 @@
                         <TextBlock Text="Color Emphaser:"  Grid.Row="1" Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,7,0,6"/>
                         <Slider x:Name="ColorEmphaser" Grid.Row="1" Grid.Column="6" VerticalAlignment="Center" TickFrequency="0.1" Maximum="1.0" IsSnapToTickEnabled="True" ValueChanged="Emphaser_ValueChanged"/>
                         <TextBlock Grid.Row="2" Grid.Column="6" HorizontalAlignment="Center" TextWrapping="Wrap" Text="{Binding ElementName=ColorEmphaser, Path=Value, StringFormat='Empaser: {0}'}" VerticalAlignment="Top"/>
-                        <!-- 
-                        <Slider Grid.Row="0" x:Name="Frequency" TickFrequency="1" IsSnapToTickEnabled="True"  TickPlacement="BottomRight"  Minimum="0" Maximum="100"  HorizontalAlignment="Center" VerticalAlignment="Top" Width="618" Margin="10,0" ValueChanged="Frequency_ValueChanged"/>
-                        <TextBlock Grid.Row="1" x:Name="TextBox" HorizontalAlignment="Center" TextWrapping="Wrap" Text="{Binding ElementName=Frequency,Path=Value,  StringFormat='Frequency: {0} Hertz'}" VerticalAlignment="Top"/>
-                        -->
                     </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="Color-Chooser">
-                <xctk:ColorPicker Name="Clr_picker" HorizontalAlignment="Center" VerticalAlignment="Center" SelectedColorChanged="ClrPicker_Changed"/>
+                <xctk:ColorPicker Name="Clr_picker" SelectedColor="Black" HorizontalAlignment="Center" Height="22" Width="115" VerticalAlignment="Center" SelectedColorChanged="ClrPicker_Changed"/>
             </TabItem>
             <TabItem Header="Stroboscope">
-                <!--<StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Height="140" Margin="160,0,228,0" Width="250">-->
                 <Grid VerticalAlignment="Center">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="28"/>
@@ -162,7 +157,7 @@
             <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock VerticalAlignment="Center" Margin="5,0"><Run Text="Ch"/><Run Text="o"/><Run Text="ose "/><Run Text="Com Port:"/></TextBlock>
                 <ComboBox x:Name="Comports" Width="120" VerticalAlignment="Center" Margin="5,0" DropDownOpened="Comports_DropDownOpened" DropDownClosed="Comports_DropDownClosed"/>
-                <CheckBox x:Name="CkbSerial"  Content="Enable Serial output" VerticalAlignment="Center" Margin="5,0" Click="CkbSerial_Click"/>
+                <CheckBox x:Name="CkbSerial" Content="Enable Serial output" VerticalAlignment="Center" Margin="5,0" Click="CkbSerial_Click"/>
             </StackPanel>
         </Border>
     </Grid>
