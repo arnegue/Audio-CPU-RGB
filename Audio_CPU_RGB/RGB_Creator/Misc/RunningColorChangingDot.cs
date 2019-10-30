@@ -4,11 +4,14 @@ using AudioCPURGB.RGB_Creator;
 
 namespace AudioCPURGB
 {
+    /// <summary>
+    /// Lets one dot with random Colour run around the LED-Strip
+    /// </summary>
     class RunningColorChangingDot : IndividualRGBOutput
     {      
         RGB_Value empty_rgb = new RGB_Value();
         int last_rgb_index = 0;
-        bool direction = true;
+        int direction = 1;
         Random random = new Random();
 
         protected override RGB_Value[] callback(RGB_Value[] new_rgbs)
@@ -18,27 +21,20 @@ namespace AudioCPURGB
             {
                 if (i == last_rgb_index)
                 {
-                    new_rgbs[i].copy_values(new RGB_Value((byte)random.Next(0, 255), (byte)random.Next(0, 255), (byte)random.Next(0, 255)));
+                    new_rgbs[i] = new RGB_Value((byte)random.Next(0, 255), (byte)random.Next(0, 255), (byte)random.Next(0, 255));
                 }
                 else
                 {
-                    new_rgbs[i].copy_values(empty_rgb);
+                    new_rgbs[i] =  empty_rgb;
                 }
             }
-
-            // calculate next last_rgb_index
-            if (direction)
-            {
-                last_rgb_index++;
-            }
-            else
-            {
-                last_rgb_index--;
-            }
-            // Look if direction as to change
+            
+            last_rgb_index += direction;
+          
+            // Look if direction has to change
             if (last_rgb_index % amount_rgbs == 0)
             {
-                direction = !direction;
+                direction *= -1;
             }
 
             // Finally show them
