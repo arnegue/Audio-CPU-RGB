@@ -162,6 +162,7 @@
     <Compile Include="RGB_Creator\Misc\ColorChanger.cs" />
     <Compile Include="RGB_Creator\Misc\Rainbow.cs" />
     <Compile Include="RGB_Creator\Misc\RunningColorChangingDot.cs" />
+    <Compile Include="RGB_Creator\Misc\RunningColors.cs" />
     <Compile Include="RGB_Creator\ScreenShot\ScreenAnalyzer.cs" />
     <Compile Include="RGB_Creator\Stroboscope\Stroboscope.cs" />
     <Compile Include="RGB_Output\Serial\Serial_RGB_Output.cs" />

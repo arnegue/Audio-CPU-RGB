@@ -45,17 +45,17 @@ namespace AudioCPURGB.RGB_Creator
         /// </summary>
         protected abstract void callback();
 
-        public void setRGBOutput(RGB_Output.RGB_Output_Interface rgbOutput)
+        public virtual void setRGBOutput(RGB_Output.RGB_Output_Interface rgbOutput)
         {
             _rgbOutput = rgbOutput;
         }
 
-        public void start()
+        public virtual void start()
         {
             _pauseEvent.Set();
         }
 
-        public void pause()
+        public virtual void pause()
         {
             _pauseEvent.Reset();
             if (_workerThread.ThreadState == (System.Threading.ThreadState.Unstarted | System.Threading.ThreadState.Background))

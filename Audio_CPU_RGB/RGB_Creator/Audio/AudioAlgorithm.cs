@@ -29,7 +29,7 @@ namespace AudioCPURGB
 
         public abstract void showRGB(byte[] specArray, int min_slider, int max_slider, int min_trigger, bool absNotRel, RGB_Output.RGB_Output_Interface rgbOutput);
 
-        protected byte abs_check(byte b, int min_trigger)
+        protected byte rel_check(byte b, int min_trigger)
         {
             if (min_trigger == 255)
             {
@@ -39,6 +39,25 @@ namespace AudioCPURGB
             float val = (100 * b) / x;
             return (byte)val;
         }
+
+
+        /* protected RGB_Value rel_check(RGB_Value rgb, int min_trigger)
+         {
+             rgb.r = rel_check(rgb.r, min_trigger); // TODO input, not output!
+             rgb.r = rel_check(rgb.g, min_trigger);
+             rgb.r = rel_check(rgb.b, min_trigger);
+             return rgb;
+         }
+
+         protected RGB_Value abs_check(RGB_Value rgb, int min_trigger)
+         {
+             rgb.r = rgb.r < min_trigger ? (byte)0 : rgb.r;
+             rgb.g = rgb.g < min_trigger ? (byte)0 : rgb.g;
+             rgb.b = rgb.b < min_trigger ? (byte)0 : rgb.b;
+             return rgb;
+         }*/
+
+
         protected RGB_Value valueToRGB(byte value, int minTrigger)
         {
             if (minTrigger == 0)
@@ -69,13 +88,6 @@ namespace AudioCPURGB
             return new RGB_Value(r, g, b);
         }
 
-        protected RGB_Value abs_check(RGB_Value rgb, int min_trigger)
-        {
-            rgb.r = abs_check(rgb.r, min_trigger);
-            rgb.r = abs_check(rgb.g, min_trigger);
-            rgb.r = abs_check(rgb.b, min_trigger);
-            return rgb;
-        }
 
         /// <summary>
         /// Returns the index of the maximum peak
@@ -117,6 +129,20 @@ namespace AudioCPURGB
 
         public override void showRGB(byte[] specArray, int min_slider, int max_slider, int min_trigger, bool absNotRel, RGB_Output.RGB_Output_Interface rgbOutput)
         {
+            if (min_trigger != 0)
+            {
+                for (int i = 0; i < specArray.Length; i++)
+                {
+                    specArray[i] = specArray[i] < min_trigger ? (byte)0 : specArray[i];
+                }
+                if (!absNotRel)
+                {
+                    for (int i = 0; i < specArray.Length; i++)
+                    {
+                        specArray[i] = rel_check(specArray[i], min_trigger);
+                    }
+                }
+            }
             if (min_trigger < 0)
             {
                 min_trigger = 1;
@@ -124,11 +150,6 @@ namespace AudioCPURGB
             m = 765 / (double)min_trigger;
 
             _newRGBValue = my_callback(_newRGBValue, specArray, min_slider, max_slider, min_trigger);
-
-            if (!absNotRel && min_trigger != 0)
-            {
-                _newRGBValue = abs_check(_newRGBValue, min_trigger);
-            }
             sendRGBValue(rgbOutput);
         }
 
@@ -155,18 +176,35 @@ namespace AudioCPURGB
         protected int amount_rgbs = -1;
         public NewAudioAlgorithm(String name) : base(name)
         {
-
         }
 
         protected abstract RGB_Value[] my_callback(byte[] specArray, int min_slider, int max_slider, int min_trigger);
 
         public override void showRGB(byte[] specArray, int min_slider, int max_slider, int min_trigger, bool absNotRel, RGB_Output.RGB_Output_Interface rgbOutput)
         {
+            if (min_trigger != 0)
+            {
+                for (int i = 0; i < specArray.Length; i++)
+                {
+                    specArray[i] = specArray[i] < min_trigger ? (byte)0 : specArray[i];
+                }
+                if (!absNotRel)
+                {
+                    for (int i = 0; i < specArray.Length; i++)
+                    {
+                        specArray[i] = rel_check(specArray[i], min_trigger);
+                    }
+                }
+            }
+            // TODO still neded?
             if (min_trigger < 0)
             {
                 min_trigger = 1;
             }
+            // TODO end
             m = 765 / (double)min_trigger;
+
+
             int new_amount_rgbs = rgbOutput.getAmountRGBs();
 
             // In case the amount of RGBs changed create new array (usually if output changes)
@@ -181,14 +219,6 @@ namespace AudioCPURGB
             }
 
             rgbs = my_callback(specArray, min_slider, max_slider, min_trigger);
-
-            if (!absNotRel && min_trigger != 0)
-            {
-                foreach (RGB_Value rg_val in rgbs)
-                {
-                    abs_check(rg_val, min_trigger);
-                }
-            }
             rgbOutput.showRGBs(rgbs);
         }
     }

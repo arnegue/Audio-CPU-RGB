@@ -32,6 +32,7 @@ namespace AudioCPURGB
         Rainbow _rainbow;
         RunningColorChangingDot _runningDot;
         ColorChanger _colorchanger;
+        RunningColors _runningColors;
 
 
         Cyotek.Windows.Forms.ColorWheel colorWheel;
@@ -45,7 +46,8 @@ namespace AudioCPURGB
             try
             {
                 InitializeComponent();
-            }catch (Exception e)
+            }
+            catch (Exception e)
             {
                 System.Diagnostics.Debug.Print(e.ToString());
             }
@@ -65,6 +67,7 @@ namespace AudioCPURGB
             _colorChooser = new ColorChooser();
             _stroboscope = new Stroboscope();
             _colorchanger = new ColorChanger();
+            _runningColors = new RunningColors();
 
 
             _rgbOutputI = new RGB_Output.Serial.Serial_RGB_Output();
@@ -85,10 +88,10 @@ namespace AudioCPURGB
 
             Application.Current.MainWindow.Activate();
             Application.Current.MainWindow.Focus();
-            Application.Current.MainWindow.ShowDialog();            
+            Application.Current.MainWindow.ShowDialog();
         }
-        
-      
+
+
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             TabControl tabControl = sender as TabControl;
@@ -146,6 +149,7 @@ namespace AudioCPURGB
             _rgbCreatorI = new_rgb_creator;
         }
 
+
         private void RadioButtonChanged(object sender, RoutedEventArgs e)
         {
             RadioButton li = (sender as RadioButton);
@@ -161,16 +165,14 @@ namespace AudioCPURGB
                 case "ColorChanger":
                     _selectedMisc = _colorchanger;
                     break;
+                case "RunningColors":
+                    _selectedMisc = _runningColors;
+                    break;
                 default:
                     System.Diagnostics.Debug.Print("Weird radio button selected");
                     break;
-            }            
-
-            // If a misc rgbcreator is currrently  running
-            if (_rgbCreatorI == _runningDot || _rgbCreatorI == _rainbow || _rgbCreatorI == _colorchanger)
-            {
-                set_new_rgb_creator(_selectedMisc);
             }
+            set_new_rgb_creator(_selectedMisc);
         }
 
         /// ################################### Serial-Controll ################################### 
@@ -182,6 +184,7 @@ namespace AudioCPURGB
         /// <param name="e"></param>
         private void CkbSerial_Click(object sender, RoutedEventArgs e)
         {
+            CheckBox cb = sender as CheckBox;
             // TODO 'System.IO.IOException'  --> pause
             try
             {
@@ -200,7 +203,8 @@ namespace AudioCPURGB
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error");
+                cb.IsChecked = !cb.IsChecked; // Reset state                
+                MessageBox.Show(ex.Message, "Error setting COM-Port");
             }
         }
 
@@ -212,11 +216,11 @@ namespace AudioCPURGB
         /// <param name="e"></param>
         private void Comports_DropDownOpened(object sender, EventArgs e)
         {
-           String curComportName = Comports.Items[Comports.SelectedIndex] as String;
+            String curComportName = Comports.Items[Comports.SelectedIndex] as String;
 
             Comports.Items.Clear();
             var ports = _rgbOutputI.getAvailableOutputList();
-          //  ports.OrderBy("Foo asc");
+            //  ports.OrderBy("Foo asc");
 
             int newSelectedIndex = 0;
             for (int i = 0; i < ports.Length; i++) // foreach (var port in ports)
@@ -236,7 +240,7 @@ namespace AudioCPURGB
         {
             if (this.IsLoaded)
             {
-                if (CkbSerial.IsChecked == true  )
+                if (CkbSerial.IsChecked == true)
                 {
                     String newPort = Comports.Items[Comports.SelectedIndex] as string;
                     if (_rgbOutputI.getName() != newPort)
@@ -249,7 +253,7 @@ namespace AudioCPURGB
                         _rgbOutputI.setEnable(true);
                         _rgbCreatorI.start();
                     }
-                }             
+                }
             }
         }
 

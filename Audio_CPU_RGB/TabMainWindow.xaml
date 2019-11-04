@@ -149,13 +149,14 @@
                 <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <RadioButton x:Name="RunningDot" GroupName="MiscChoose" Content="RunningDot" Checked="RadioButtonChanged" IsChecked="True" />
                     <RadioButton x:Name="Rainbow" GroupName="MiscChoose" Content="Rainbow" Checked="RadioButtonChanged" />
-                    <RadioButton x:Name="ColorChanger" GroupName="MiscChoose" Content="ColorChanger" Checked="RadioButtonChanged" />                    
+                    <RadioButton x:Name="ColorChanger" GroupName="MiscChoose" Content="ColorChanger" Checked="RadioButtonChanged" />
+                    <RadioButton x:Name="RunningColors" GroupName="MiscChoose" Content="RunningColors" Checked="RadioButtonChanged" />                    
                 </StackPanel>
             </TabItem>
         </TabControl>
         <Border Background="LightGray" Margin="0,240,0,0" >
             <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock VerticalAlignment="Center" Margin="5,0"><Run Text="Ch"/><Run Text="o"/><Run Text="ose "/><Run Text="Com Port:"/></TextBlock>
+                <TextBlock VerticalAlignment="Center" Margin="5,0" Text="Choose Com Port:"/>
                 <ComboBox x:Name="Comports" Width="120" VerticalAlignment="Center" Margin="5,0" DropDownOpened="Comports_DropDownOpened" DropDownClosed="Comports_DropDownClosed"/>
                 <CheckBox x:Name="CkbSerial" Content="Enable Serial output" VerticalAlignment="Center" Margin="5,0" Click="CkbSerial_Click"/>
             </StackPanel>
