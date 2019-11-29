@@ -23,8 +23,11 @@ namespace AudioCPURGB
             copy_val.copy_values(new_rgb);
             new_rgb_mutex.ReleaseMutex();
 
-            _rgbOutput.fade(old_rgb, copy_val, 10);
-            old_rgb = copy_val;
+            if (!old_rgb.Equals(copy_val))
+            {
+                _rgbOutput.fade(old_rgb, copy_val, 10);
+                old_rgb = copy_val;
+            }
             Thread.Sleep(100);
         }
     }
