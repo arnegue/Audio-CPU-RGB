@@ -20,7 +20,12 @@ namespace AudioCPURGB
     /// </summary>
     public partial class TabMainWindow : Window
     {
-        RGB_Output.RGB_Output_Interface _rgbOutputI;
+        List<RGB_Output.RGB_Output_Interface> _available_interfaces = new List<RGB_Output.RGB_Output_Interface>();
+
+        RGB_Output.RGB_Output_Interface _current_interface;
+        RGB_Output.LogitechLEDSDK.Logitech_RGB_Output _mouse_output;
+        RGB_Output.Serial.Serial_RGB_Output _serial_output;
+
         RGB_Creator.RGB_Creator_Interface _rgbCreatorI;
         RGB_Creator.RGB_Creator_Interface _selectedMisc;
 
@@ -70,14 +75,11 @@ namespace AudioCPURGB
             _runningColors = new RunningColors();
 
 
-            _rgbOutputI = new RGB_Output.Serial.Serial_RGB_Output();
-
-            var ports = _rgbOutputI.getAvailableOutputList();
-            foreach (var port in ports)
-            {
-                Comports.Items.Add(port);
-            }
-            Comports.SelectedIndex = 0;
+            _serial_output = new RGB_Output.Serial.Serial_RGB_Output();
+            _mouse_output = new RGB_Output.LogitechLEDSDK.Logitech_RGB_Output();
+            _available_interfaces.Add(_serial_output);
+            _available_interfaces.Add(_mouse_output);
+            fill_comports_list();
 
             xSkipper.Text = _screenAnalyzer.xSkipper.ToString();
             ySkipper.Text = _screenAnalyzer.ySkipper.ToString();
@@ -90,7 +92,6 @@ namespace AudioCPURGB
             Application.Current.MainWindow.Focus();
             Application.Current.MainWindow.ShowDialog();
         }
-
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -141,9 +142,9 @@ namespace AudioCPURGB
                 _rgbCreatorI.pause(); // pause current rgbCreator
             }
 
-            if (new_rgb_creator != null && _rgbOutputI != null)
+            if (new_rgb_creator != null && _current_interface != null)
             {
-                new_rgb_creator.setRGBOutput(_rgbOutputI);
+                new_rgb_creator.setRGBOutput(_current_interface);
                 new_rgb_creator.start(); // start new rgbCreator
             }
             _rgbCreatorI = new_rgb_creator;
@@ -190,15 +191,15 @@ namespace AudioCPURGB
             {
                 if (CkbSerial.IsChecked == true)
                 {
-                    _rgbOutputI.initialize(Comports.Items[Comports.SelectedIndex] as string);
+                    _current_interface.initialize(Comports.Items[Comports.SelectedIndex] as string);
 
-                    _rgbOutputI.setEnable(true);
+                    _current_interface.setEnable(true);
                 }
                 else
                 {
-                    _rgbOutputI.shutdown();
+                    _current_interface.shutdown();
 
-                    _rgbOutputI.setEnable(false);
+                    _current_interface.setEnable(false);
                 }
             }
             catch (Exception ex)
@@ -219,15 +220,14 @@ namespace AudioCPURGB
             String curComportName = Comports.Items[Comports.SelectedIndex] as String;
 
             Comports.Items.Clear();
-            var ports = _rgbOutputI.getAvailableOutputList();
-            //  ports.OrderBy("Foo asc");
-
+            fill_comports_list();
+         
             int newSelectedIndex = 0;
-            for (int i = 0; i < ports.Length; i++) // foreach (var port in ports)
+
+            for (int i = 0; i < Comports.Items.Count; i++) // foreach (var port in ports)
             {
-                Comports.Items.Add(ports[i]);
                 // Get new Index of selected COM port before (if a new port was added)
-                if (ports[i] == curComportName)
+                if (Comports.Items[i] as string == curComportName)
                 {
                     newSelectedIndex = i;
                 }
@@ -235,22 +235,53 @@ namespace AudioCPURGB
             Comports.SelectedIndex = newSelectedIndex;
         }
 
+        private void fill_comports_list()
+        {
+            foreach (var out_put_intervace in _available_interfaces)
+            {
+                var ports = out_put_intervace.getAvailableOutputList();
+                foreach (var port in ports)
+                {
+                    Comports.Items.Add(port);
+                }
+            }
+            // TODO rename comports
+            Comports.SelectedIndex = 0;
+        }
+
 
         private void Comports_DropDownClosed(object sender, EventArgs e)
         {
             if (this.IsLoaded)
             {
+                string selected_name = Comports.Items[Comports.SelectedIndex] as string;
+                RGB_Output.RGB_Output_Interface new_interface = null;
+                foreach (RGB_Output.RGB_Output_Interface _interface in _available_interfaces)
+                {
+                    if (_interface.getName() == selected_name)
+                    {
+                        new_interface = _interface;
+                        break;
+                    }
+                }
+                if (new_interface == null)
+                {
+                    throw new Exception("Did not find Interface");
+                }
+
+                _current_interface = new_interface;
+
                 if (CkbSerial.IsChecked == true)
                 {
                     String newPort = Comports.Items[Comports.SelectedIndex] as string;
-                    if (_rgbOutputI.getName() != newPort)
+                    if (_current_interface.getName() != newPort)
                     {
                         _rgbCreatorI.pause();
-                        _rgbOutputI.shutdown();
-                        _rgbOutputI.setEnable(false);
+                        _current_interface.shutdown();
+                        _current_interface.setEnable(false);
 
-                        _rgbOutputI.initialize(newPort);
-                        _rgbOutputI.setEnable(true);
+                        _current_interface.initialize(newPort);
+                        _current_interface.setEnable(true);
                         _rgbCreatorI.start();
                     }
                 }

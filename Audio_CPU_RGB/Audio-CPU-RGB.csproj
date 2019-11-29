@@ -97,8 +97,14 @@
     <Prefer32Bit>true</Prefer32Bit>
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Bass.Net, Version=2.4.10.3, Culture=neutral, PublicKeyToken=b7566c273e6ef480, processorArchitecture=MSIL" />
+    <Reference Include="Bass.Net, Version=2.4.14.1, Culture=neutral, PublicKeyToken=b7566c273e6ef480, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\temp\externals\Bass.Net.dll</HintPath>
+    </Reference>
     <Reference Include="Cyotek.Windows.Forms.ColorPicker">
       <HintPath>externals\Cyotek.Windows.Forms.ColorPicker.dll</HintPath>
     </Reference>
@@ -165,6 +171,8 @@
     <Compile Include="RGB_Creator\Misc\RunningColors.cs" />
     <Compile Include="RGB_Creator\ScreenShot\ScreenAnalyzer.cs" />
     <Compile Include="RGB_Creator\Stroboscope\Stroboscope.cs" />
+    <Compile Include="RGB_Output\LogitechLEDSDK\LogitechGSDK.cs" />
+    <Compile Include="RGB_Output\LogitechLEDSDK\Logitech_RGB_Output.cs" />
     <Compile Include="RGB_Output\Serial\Serial_RGB_Output.cs" />
     <Compile Include="RGB_Value.cs" />
     <Compile Include="RGB_Creator\Audio\Spectrum.xaml.cs">
@@ -214,6 +222,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.manifest" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
