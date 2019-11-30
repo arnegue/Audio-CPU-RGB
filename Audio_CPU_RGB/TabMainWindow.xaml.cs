@@ -221,7 +221,7 @@ namespace AudioCPURGB
 
             Comports.Items.Clear();
             fill_comports_list();
-         
+
             int newSelectedIndex = 0;
 
             for (int i = 0; i < Comports.Items.Count; i++) // foreach (var port in ports)
@@ -258,29 +258,35 @@ namespace AudioCPURGB
                 RGB_Output.RGB_Output_Interface new_interface = null;
                 foreach (RGB_Output.RGB_Output_Interface _interface in _available_interfaces)
                 {
-                    if (_interface.getName() == selected_name)
+                    foreach (string name in _interface.getAvailableOutputList())
                     {
-                        new_interface = _interface;
+                        if (name == selected_name)
+                        {
+                            new_interface = _interface;
+                            break;
+                        }
+                    }
+                    if (new_interface != null)
+                    {
                         break;
                     }
                 }
+
                 if (new_interface == null)
                 {
                     throw new Exception("Did not find Interface");
                 }
-
                 _current_interface = new_interface;
 
                 if (CkbSerial.IsChecked == true)
                 {
-                    String newPort = Comports.Items[Comports.SelectedIndex] as string;
-                    if (_current_interface.getName() != newPort)
+                    if (_current_interface.getName() != selected_name)
                     {
                         _rgbCreatorI.pause();
                         _current_interface.shutdown();
                         _current_interface.setEnable(false);
 
-                        _current_interface.initialize(newPort);
+                        _current_interface.initialize(selected_name);
                         _current_interface.setEnable(true);
                         _rgbCreatorI.start();
                     }
