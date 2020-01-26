@@ -79,7 +79,7 @@ namespace AudioCPURGB
             _mouse_output = new RGB_Output.LogitechLEDSDK.Logitech_RGB_Output();
             _available_interfaces.Add(_serial_output);
             _available_interfaces.Add(_mouse_output);
-            fill_comports_list();
+            fill_rgb_output_list();
 
             xSkipper.Text = _screenAnalyzer.xSkipper.ToString();
             ySkipper.Text = _screenAnalyzer.ySkipper.ToString();
@@ -191,7 +191,7 @@ namespace AudioCPURGB
             {
                 if (CkbSerial.IsChecked == true)
                 {
-                    _current_interface.initialize(Comports.Items[Comports.SelectedIndex] as string);
+                    _current_interface.initialize(RGB_Output.Items[RGB_Output.SelectedIndex] as string);
 
                     _current_interface.setEnable(true);
                 }
@@ -205,56 +205,55 @@ namespace AudioCPURGB
             catch (Exception ex)
             {
                 cb.IsChecked = !cb.IsChecked; // Reset state                
-                MessageBox.Show(ex.Message, "Error setting COM-Port");
+                MessageBox.Show(ex.Message, "Error setting RGB Output");
             }
         }
 
 
         /// <summary>
-        /// Method which is called when the comport-choser was opened
+        /// Method which is called when the RGB Output-choser was opened
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Comports_DropDownOpened(object sender, EventArgs e)
+        private void RGB_Output_DropDownOpened(object sender, EventArgs e)
         {
-            String curComportName = Comports.Items[Comports.SelectedIndex] as String;
+            String curOutput = RGB_Output.Items[RGB_Output.SelectedIndex] as String;
 
-            Comports.Items.Clear();
-            fill_comports_list();
+            RGB_Output.Items.Clear();
+            fill_rgb_output_list();
 
             int newSelectedIndex = 0;
 
-            for (int i = 0; i < Comports.Items.Count; i++) // foreach (var port in ports)
+            for (int i = 0; i < RGB_Output.Items.Count; i++) // foreach (var port in ports)
             {
-                // Get new Index of selected COM port before (if a new port was added)
-                if (Comports.Items[i] as string == curComportName)
+                // Get new Index of selected RGB Output before (if a new port was added)
+                if (RGB_Output.Items[i] as string == curOutput)
                 {
                     newSelectedIndex = i;
                 }
             }
-            Comports.SelectedIndex = newSelectedIndex;
+            RGB_Output.SelectedIndex = newSelectedIndex;
         }
 
-        private void fill_comports_list()
+        private void fill_rgb_output_list()
         {
             foreach (var out_put_intervace in _available_interfaces)
             {
                 var ports = out_put_intervace.getAvailableOutputList();
                 foreach (var port in ports)
                 {
-                    Comports.Items.Add(port);
+                    RGB_Output.Items.Add(port);
                 }
             }
-            // TODO rename comports
-            Comports.SelectedIndex = 0;
+            RGB_Output.SelectedIndex = 0;
         }
 
 
-        private void Comports_DropDownClosed(object sender, EventArgs e)
+        private void RGB_Output_DropDownClosed(object sender, EventArgs e)
         {
             if (this.IsLoaded)
             {
-                string selected_name = Comports.Items[Comports.SelectedIndex] as string;
+                string selected_name = RGB_Output.Items[RGB_Output.SelectedIndex] as string;
                 RGB_Output.RGB_Output_Interface new_interface = null;
                 foreach (RGB_Output.RGB_Output_Interface _interface in _available_interfaces)
                 {
