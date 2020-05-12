@@ -79,6 +79,7 @@ namespace AudioCPURGB
             _mouse_output = new RGB_Output.LogitechLEDSDK.Logitech_RGB_Output();
             _available_interfaces.Add(_serial_output);
             _available_interfaces.Add(_mouse_output);
+            _current_interface = _available_interfaces[0];
             fill_rgb_output_list();
 
             xSkipper.Text = _screenAnalyzer.xSkipper.ToString();
@@ -176,7 +177,7 @@ namespace AudioCPURGB
             set_new_rgb_creator(_selectedMisc);
         }
 
-        /// ################################### Serial-Controll ################################### 
+        /// ################################### Serial-Control ################################### 
 
         /// <summary>
         /// Method which is called when checkbox for serial enable is called
