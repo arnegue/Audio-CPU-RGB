@@ -30,7 +30,7 @@
             </Style>
         </Grid.Resources>
         <Rectangle Height="16"
-                   Margin="8,0"
+                   Margin="0,0"
                    Fill="#FFD5D5D5"
                    RadiusX="5"
                    RadiusY="5" />

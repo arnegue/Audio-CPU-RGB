@@ -28,7 +28,7 @@
                         <RowDefinition Height="28"/>
                         <RowDefinition/>
                         <RowDefinition Height="50"/>
-                        <RowDefinition Height="28"/>
+                        <RowDefinition Height="35"/>
                         <RowDefinition Height="28"/>
                     </Grid.RowDefinitions>
                     <TextBlock Text="Device:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
@@ -43,12 +43,10 @@
                         <TextBlock Text="R:" VerticalAlignment="Center" Margin="10,0"/>
                         <ProgressBar x:Name="PbR" Width="210" Height="15"/>
                     </StackPanel>
-                    <local:Spectrum x:Name="Spectrum" Grid.Row="1" Grid.RowSpan="3" Grid.Column="1" HorizontalAlignment="Center"/>
-                    <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <local:MyRangeSlider x:Name="SpectrumSlider" Grid.Column="1" Maximum="15"  Minimum="0" RangeMax="15" RangeMin="0" MinDifference="2" Width="330" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <local:Spectrum x:Name="Spectrum" Grid.Row="1" Grid.RowSpan="4" Grid.Column="1" HorizontalAlignment="Center"/>
 
+                    <StackPanel Orientation="Horizontal" Grid.Row="5" Height="50" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <local:MyRangeSlider x:Name="SpectrumSlider" Grid.Column="1" Maximum="15"  Minimum="0" RangeMax="15" RangeMin="0" MinDifference="2" Width="330" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
@@ -64,8 +62,8 @@
                             </TextBlock.RenderTransform>
                         </TextBlock>
                     </StackPanel>
-                    <CheckBox x:Name="RelAbs" Grid.Column="2" Grid.Row="4" VerticalAlignment="Center" Margin="2,18" Click="RelAbs_Click"/>
-                    <TextBlock Text="Rel" Grid.Column="3" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                    <CheckBox x:Name="RelAbs" Grid.Column="2" Grid.Row="5" VerticalAlignment="Center" Click="RelAbs_Click"/>
+                    <TextBlock Text="Rel" Grid.Column="3" Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
                         <TextBlock.RenderTransform>
                             <TransformGroup>
                                 <ScaleTransform/>
@@ -75,7 +73,7 @@
                             </TransformGroup>
                         </TextBlock.RenderTransform>
                     </TextBlock>
-                    <Slider x:Name="MinSlider" Grid.RowSpan="4" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Height="114" Orientation="Vertical" Value="0" ValueChanged="MinSlider_ValueChanged" Minimum="0" Maximum="255" Margin="1,24,1,0"/>
+                    <Slider x:Name="MinSlider" Grid.RowSpan="4" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Height="130" Orientation="Vertical" Value="0" ValueChanged="MinSlider_ValueChanged" Minimum="0" Maximum="255" Margin="0,6,2,10.333" Grid.Row="1"/>
                 </Grid>
             </TabItem>
             <TabItem Header="CPU-Temperature">
@@ -150,7 +148,7 @@
                     <RadioButton x:Name="RunningDot" GroupName="MiscChoose" Content="RunningDot" Checked="RadioButtonChanged" IsChecked="True" />
                     <RadioButton x:Name="Rainbow" GroupName="MiscChoose" Content="Rainbow" Checked="RadioButtonChanged" />
                     <RadioButton x:Name="ColorChanger" GroupName="MiscChoose" Content="ColorChanger" Checked="RadioButtonChanged" />
-                    <RadioButton x:Name="RunningColors" GroupName="MiscChoose" Content="RunningColors" Checked="RadioButtonChanged" />                    
+                    <RadioButton x:Name="RunningColors" GroupName="MiscChoose" Content="RunningColors" Checked="RadioButtonChanged" />
                 </StackPanel>
             </TabItem>
         </TabControl>
