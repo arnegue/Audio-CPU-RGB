@@ -29,6 +29,8 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -105,6 +107,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\temp\externals\Bass.Net.dll</HintPath>
     </Reference>
+    <Reference Include="CUE.NET, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CUE.NET.1.2.0.1\lib\net45\CUE.NET.dll</HintPath>
+    </Reference>
     <Reference Include="Cyotek.Windows.Forms.ColorPicker">
       <HintPath>externals\Cyotek.Windows.Forms.ColorPicker.dll</HintPath>
     </Reference>
@@ -171,6 +176,7 @@
     <Compile Include="RGB_Creator\Misc\RunningColors.cs" />
     <Compile Include="RGB_Creator\ScreenShot\ScreenAnalyzer.cs" />
     <Compile Include="RGB_Creator\Stroboscope\Stroboscope.cs" />
+    <Compile Include="RGB_Output\Corsair\CorsairSDKOutput.cs" />
     <Compile Include="RGB_Output\LogitechLEDSDK\LogitechGSDK.cs" />
     <Compile Include="RGB_Output\LogitechLEDSDK\Logitech_RGB_Output.cs" />
     <Compile Include="RGB_Output\Serial\Serial_RGB_Output.cs" />
@@ -259,6 +265,13 @@
   <PropertyGroup>
     <PreBuildEvent>copy $(ProjectDir)externals\*.dll $(TargetDir)</PreBuildEvent>
   </PropertyGroup>
+  <Import Project="..\packages\CUE.NET.1.2.0.1\build\net45\CUE.NET.targets" Condition="Exists('..\packages\CUE.NET.1.2.0.1\build\net45\CUE.NET.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Dieses Projekt verweist auf mindestens ein NuGet-Paket, das auf diesem Computer fehlt. Verwenden Sie die Wiederherstellung von NuGet-Paketen, um die fehlenden Dateien herunterzuladen. Weitere Informationen finden Sie unter "http://go.microsoft.com/fwlink/?LinkID=322105". Die fehlende Datei ist "{0}".</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\CUE.NET.1.2.0.1\build\net45\CUE.NET.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CUE.NET.1.2.0.1\build\net45\CUE.NET.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

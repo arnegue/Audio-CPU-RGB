@@ -25,6 +25,7 @@ namespace AudioCPURGB
         RGB_Output.RGB_Output_Interface _current_interface;
         RGB_Output.LogitechLEDSDK.Logitech_RGB_Output _mouse_output;
         RGB_Output.Serial.Serial_RGB_Output _serial_output;
+        RGB_Output.Corsair.CorsairSDKOutput _corsair_output;
 
         RGB_Creator.RGB_Creator_Interface _rgbCreatorI;
         RGB_Creator.RGB_Creator_Interface _selectedMisc;
@@ -77,8 +78,11 @@ namespace AudioCPURGB
 
             _serial_output = new RGB_Output.Serial.Serial_RGB_Output();
             _mouse_output = new RGB_Output.LogitechLEDSDK.Logitech_RGB_Output();
+            _corsair_output = new RGB_Output.Corsair.CorsairSDKOutput();
+
             _available_interfaces.Add(_serial_output);
             _available_interfaces.Add(_mouse_output);
+            _available_interfaces.Add(_corsair_output);
             _current_interface = _available_interfaces[0];
             fill_rgb_output_list();
 
@@ -186,26 +190,58 @@ namespace AudioCPURGB
         /// <param name="e"></param>
         private void CkbSerial_Click(object sender, RoutedEventArgs e)
         {
-            CheckBox cb = sender as CheckBox;
-            // TODO 'System.IO.IOException'  --> pause
+            set_new_interface();
+        }
+
+        private void set_new_interface()
+        {
             try
             {
+                string selected_name = RGB_Output.Items[RGB_Output.SelectedIndex] as string;
+                RGB_Output.RGB_Output_Interface new_interface = null;
+                foreach (RGB_Output.RGB_Output_Interface _interface in _available_interfaces)
+                {
+                    foreach (string name in _interface.getAvailableOutputList())
+                    {
+                        if (name == selected_name)
+                        {
+                            new_interface = _interface;
+                            break;
+                        }
+                    }
+                    if (new_interface != null)
+                    {
+                        break;
+                    }
+                }
+                _rgbCreatorI.pause();
+                // Look if interface changed or checkbox is set to false
+                if (_current_interface.getName() != selected_name || CkbSerial.IsChecked == false)
+                {
+                    if (_current_interface.isEnabled())
+                    {
+                        _current_interface.shutdown();
+                        _current_interface.setEnable(false);
+                    }
+                }
+                _current_interface = new_interface;
+
+
                 if (CkbSerial.IsChecked == true)
                 {
-                    _current_interface.initialize(RGB_Output.Items[RGB_Output.SelectedIndex] as string);
-
-                    _current_interface.setEnable(true);
+                    if (!_current_interface.isEnabled())
+                    {
+                        _current_interface.initialize(RGB_Output.Items[RGB_Output.SelectedIndex] as string);
+                        _current_interface.setEnable(true);
+                    }
                 }
-                else
-                {
-                    _current_interface.shutdown();
 
-                    _current_interface.setEnable(false);
-                }
+                _rgbCreatorI.setRGBOutput(_current_interface);
+                _rgbCreatorI.start();
             }
             catch (Exception ex)
             {
-                cb.IsChecked = !cb.IsChecked; // Reset state                
+                CkbSerial.IsChecked = !CkbSerial.IsChecked; // Reset state                
                 MessageBox.Show(ex.Message, "Error setting RGB Output");
             }
         }
@@ -254,43 +290,7 @@ namespace AudioCPURGB
         {
             if (this.IsLoaded)
             {
-                string selected_name = RGB_Output.Items[RGB_Output.SelectedIndex] as string;
-                RGB_Output.RGB_Output_Interface new_interface = null;
-                foreach (RGB_Output.RGB_Output_Interface _interface in _available_interfaces)
-                {
-                    foreach (string name in _interface.getAvailableOutputList())
-                    {
-                        if (name == selected_name)
-                        {
-                            new_interface = _interface;
-                            break;
-                        }
-                    }
-                    if (new_interface != null)
-                    {
-                        break;
-                    }
-                }
-
-                if (new_interface == null)
-                {
-                    throw new Exception("Did not find Interface");
-                }
-                _current_interface = new_interface;
-
-                if (CkbSerial.IsChecked == true)
-                {
-                    if (_current_interface.getName() != selected_name)
-                    {
-                        _rgbCreatorI.pause();
-                        _current_interface.shutdown();
-                        _current_interface.setEnable(false);
-
-                        _current_interface.initialize(selected_name);
-                        _current_interface.setEnable(true);
-                        _rgbCreatorI.start();
-                    }
-                }
+                set_new_interface();
             }
         }
 
