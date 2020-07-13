@@ -274,9 +274,9 @@ namespace AudioCPURGB
 
         private void fill_rgb_output_list()
         {
-            foreach (var out_put_intervace in _available_interfaces)
+            foreach (var out_put_interface in _available_interfaces)
             {
-                var ports = out_put_intervace.getAvailableOutputList();
+                var ports = out_put_interface.getAvailableOutputList();
                 foreach (var port in ports)
                 {
                     RGB_Output.Items.Add(port);
