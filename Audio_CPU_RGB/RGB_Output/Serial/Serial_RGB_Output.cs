@@ -182,6 +182,7 @@ namespace AudioCPURGB.RGB_Output.Serial
             int rFactor = 1;
             int gFactor = 1;
             int bFactor = 1;
+            byte temp_r = oldValue.r, temp_g = oldValue.g, temp_b = oldValue.b;
 
             // Look if decrement or increment
             if (oldValue.r > newValue.r)
@@ -199,17 +200,17 @@ namespace AudioCPURGB.RGB_Output.Serial
 
             if (oldValue.r != newValue.r)
             {
-                oldValue.r += (byte)rFactor;
+                temp_r += (byte)rFactor;
             }
             if (oldValue.g != newValue.g)
             {
-                oldValue.g += (byte)gFactor;
+                temp_g += (byte)gFactor;
             }
             if (oldValue.b != newValue.b)
             {
-                oldValue.b += (byte)bFactor;
+                temp_b += (byte)bFactor;
             }
-            return oldValue;
+            return new RGB_Value(temp_r, temp_g, temp_b);
         }
 
         private bool rgbs_are_equal(RGB_Value[] oldValues, RGB_Value[] newValues)
