@@ -46,7 +46,6 @@ namespace AudioCPURGB
         }
         private void get_rainbow_rgbs()
         {
-            //int left_rgbs = amount_rgbs % 6;  // consider uneven amount of LEDs
             _phase_length = amount_rgbs / 6;
             if (_phase_length < 1)
             {
@@ -69,7 +68,7 @@ namespace AudioCPURGB
 
         protected override RGB_Value[] callback(RGB_Value[] new_rgbs)
         {
-            if (_rainbow_rgbs == null)
+            if (_rainbow_rgbs == null || _rainbow_rgbs.Length != amount_rgbs)
             {
                 get_rainbow_rgbs();
             }
@@ -81,11 +80,8 @@ namespace AudioCPURGB
             }
             last_index++;
 
-            //_rgbOutput.fade(old_rgbs, new_rgbs, 20);
-            //_rgbOutput.showRGBs(new_rgbs);
             _rgbOutput.fade(old_rgbs, new_rgbs, 20);
             old_rgbs = new_rgbs;
-            //Thread.Sleep(250);
 
             return new_rgbs;
         }        
