@@ -40,13 +40,18 @@ namespace AudioCPURGB.RGB_Output.Serial
             _ser_mutex.ReleaseMutex();
 
             // Wait till COM-port returns Amount of LEDS
+            int max_time_waiting_us = 5 * 1000; // 5 seconds
+            int time_waited_us = 0;
+            int sleep_time_us = 10;
             while (_rgbs == 0)
             {
-                Thread.Sleep(10);
-            }
-            if (_rgbs == 0)
-            {
-                // TODO: ERROR
+                Thread.Sleep(sleep_time_us);
+                time_waited_us += sleep_time_us;
+                if (time_waited_us >= max_time_waiting_us)
+                {
+                    shutdown();
+                    throw new Exception(String.Format("TimeOut ({0:0.##} seconds) waiting for replay on {1}", time_waited_us / (1000 * 1000), output));
+                }
             }
         }
 
