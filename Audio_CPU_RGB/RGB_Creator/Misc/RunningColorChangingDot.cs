@@ -38,7 +38,7 @@ namespace AudioCPURGB
             }
 
             // Finally show them
-            _rgbOutput.showRGBs(new_rgbs);
+            _rgbOutput.ShowRGBs(new_rgbs);
             Thread.Sleep(100);
             return new_rgbs;
         }        

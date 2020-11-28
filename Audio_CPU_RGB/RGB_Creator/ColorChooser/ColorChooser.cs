@@ -25,7 +25,7 @@ namespace AudioCPURGB
 
             if (!old_rgb.Equals(copy_val))
             {
-                _rgbOutput.fade(old_rgb, copy_val, 10);
+                _rgbOutput.Fade(old_rgb, copy_val, 10);
                 old_rgb = copy_val;
             }
             Thread.Sleep(100);

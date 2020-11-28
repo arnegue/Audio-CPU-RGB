@@ -80,7 +80,7 @@ namespace AudioCPURGB
             }
             last_index++;
 
-            _rgbOutput.fade(old_rgbs, new_rgbs, 20);
+            _rgbOutput.Fade(old_rgbs, new_rgbs, 20);
             old_rgbs = new_rgbs;
 
             return new_rgbs;

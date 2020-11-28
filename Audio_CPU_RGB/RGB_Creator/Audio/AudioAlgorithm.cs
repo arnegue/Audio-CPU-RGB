@@ -159,7 +159,7 @@ namespace AudioCPURGB
         {
             if (!_newRGBValue.Equals(_oldRGBValue))
             {
-                rgbOutput.showRGB(_newRGBValue);
+                rgbOutput.ShowRGB(_newRGBValue);
 
                 _oldRGBValue.copy_values(_newRGBValue);
             }
@@ -205,7 +205,7 @@ namespace AudioCPURGB
             m = 765 / (double)min_trigger;
 
 
-            int new_amount_rgbs = rgbOutput.getAmountRGBs();
+            int new_amount_rgbs = rgbOutput.GetAmountRGBs();
 
             // In case the amount of RGBs changed create new array (usually if output changes)
             if (rgbs == null || amount_rgbs != new_amount_rgbs)
@@ -219,7 +219,7 @@ namespace AudioCPURGB
             }
 
             rgbs = my_callback(specArray, min_slider, max_slider, min_trigger);
-            rgbOutput.showRGBs(rgbs);
+            rgbOutput.ShowRGBs(rgbs);
         }
     }
 }

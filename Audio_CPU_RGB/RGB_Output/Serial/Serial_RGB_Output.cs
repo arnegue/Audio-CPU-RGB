@@ -22,7 +22,7 @@ namespace AudioCPURGB.RGB_Output.Serial
             _enabled = false;
         }
 
-        public void initialize(String output)
+        public void Initialize(String output)
         {
             _name = output;
             _port = new SerialPort(output);
@@ -49,18 +49,18 @@ namespace AudioCPURGB.RGB_Output.Serial
                 time_waited_us += sleep_time_us;
                 if (time_waited_us >= max_time_waiting_us)
                 {
-                    shutdown();
+                    Shutdown();
                     throw new Exception(String.Format("TimeOut ({0:0.##} seconds) waiting for replay on {1}", time_waited_us / (1000 * 1000), output));
                 }
             }
         }
 
-        public String getName()
+        public String GetName()
         {
             return _name;
         }
 
-        public int getAmountRGBs()
+        public int GetAmountRGBs()
         {
             return _rgbs;
         }
@@ -71,7 +71,7 @@ namespace AudioCPURGB.RGB_Output.Serial
             _ser_mutex.ReleaseMutex();
         }
 
-        public void showRGBs(RGB_Value[] rgbs)
+        public void ShowRGBs(RGB_Value[] rgbs)
         {
             _ser_mutex.WaitOne();
             if (_enabled)
@@ -112,7 +112,7 @@ namespace AudioCPURGB.RGB_Output.Serial
             _ser_mutex.ReleaseMutex();
         }
 
-        public void showRGB(RGB_Value rgb)
+        public void ShowRGB(RGB_Value rgb)
         {
             _ser_mutex.WaitOne();
             if (_enabled)
@@ -124,7 +124,7 @@ namespace AudioCPURGB.RGB_Output.Serial
             _ser_mutex.ReleaseMutex();
         }
 
-        public void shutdown()
+        public void Shutdown()
         {
             _ser_mutex.WaitOne();
             _enabled = false;
@@ -159,21 +159,21 @@ namespace AudioCPURGB.RGB_Output.Serial
             }
         }
 
-        public string[] getAvailableOutputList()
+        public string[] GetAvailableOutputList()
         {
             string[] portNames = SerialPort.GetPortNames();
             Array.Sort(portNames, StringComparer.InvariantCulture);
             return portNames;
         }
 
-        public void setEnable(bool enable)
+        public void SetEnable(bool enable)
         {
             _ser_mutex.WaitOne();
             _enabled = enable;
             _ser_mutex.ReleaseMutex();
         }
 
-        public bool isEnabled()
+        public bool IsEnabled()
         {
             bool en;
             _ser_mutex.WaitOne();
@@ -235,7 +235,7 @@ namespace AudioCPURGB.RGB_Output.Serial
             return true;
         }
 
-        public void fade(RGB_Value[] oldValues, RGB_Value[] newValues, int fade_time_ms = 50)
+        public void Fade(RGB_Value[] oldValues, RGB_Value[] newValues, int fade_time_ms = 50)
         {
             while (!rgbs_are_equal(oldValues, newValues))
             {
@@ -243,22 +243,22 @@ namespace AudioCPURGB.RGB_Output.Serial
                 {
                     oldValues[i] = getNextFadeIteration(oldValues[i], newValues[i]);
                 }
-                showRGBs(oldValues);
+                ShowRGBs(oldValues);
                 Thread.Sleep(fade_time_ms);
             }
         }
 
-        public void fade(RGB_Value oldValue, RGB_Value newValue, int fade_time_ms = 50)
+        public void Fade(RGB_Value oldValue, RGB_Value newValue, int fade_time_ms = 50)
         {
             RGB_Value lastRGB = new RGB_Value();
             lastRGB.copy_values(oldValue);
 
-            showRGB(lastRGB);
+            ShowRGB(lastRGB);
             while (!lastRGB.Equals(newValue))
             {
                 getNextFadeIteration(lastRGB, newValue);
 
-                showRGB(lastRGB);
+                ShowRGB(lastRGB);
                 // Wait a few Millisec to fade to new Color
                 Thread.Sleep(fade_time_ms);
             }

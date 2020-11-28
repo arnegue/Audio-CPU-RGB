@@ -12,54 +12,54 @@ namespace AudioCPURGB.RGB_Output
         /// Shows given RGB_Value
         /// </summary>
         /// <param name="rgb">RGB-value to show</param>
-        void showRGB(RGB_Value rgb);
+        void ShowRGB(RGB_Value rgb);
 
         /// <summary>
         /// Shows RGBs individually
         /// </summary>
         /// <param name="rgbs">List of RGB-Values to show</param>
-        void showRGBs(RGB_Value[] rgbs);
+        void ShowRGBs(RGB_Value[] rgbs);
 
         /// <summary>
         /// Name of Output
         /// </summary>
         /// <returns></returns>
-        String getName();
+        String GetName();
 
         /// <summary>
         /// Get Amount of individually controllable RGBs
         /// </summary>
         /// <returns></returns>
-        int getAmountRGBs();
+        int GetAmountRGBs();
 
         /// <summary>
         /// Initializes Output
         /// </summary>
         /// <param name="output">If RGB_outout has SubOutputs, the name is for identification</param>
-        void initialize(String output);
+        void Initialize(String output);
 
         /// <summary>
         /// Stops/Shutdowns current Output
         /// </summary>
-        void shutdown();
+        void Shutdown();
 
         /// <summary>
         /// If RGB_outout has SubOutputs, the name is for identification
         /// </summary>
         /// <returns>List of available names</returns>
-        String[] getAvailableOutputList();
+        String[] GetAvailableOutputList();
 
         /// <summary>
         /// Enables or disables output
         /// </summary>
         /// <param name="enable">boolean to set</param>
-        void setEnable(bool enable);
+        void SetEnable(bool enable);
 
         /// <summary>
         /// Getter for enable
         /// </summary>
         /// <returns>True if enabled, False if not</returns>
-        bool isEnabled();
+        bool IsEnabled();
 
         /// <summary>
         /// Fades from one value to new one
@@ -67,7 +67,7 @@ namespace AudioCPURGB.RGB_Output
         /// <param name="oldValue">Old RGB-Value</param>
         /// <param name="newValue">New RGB-Value to fade to</param>
         /// <param name="fade_time_ms">Time between each fade step</param>
-        void fade(RGB_Value oldValue, RGB_Value newValue, int fade_time_ms);
+        void Fade(RGB_Value oldValue, RGB_Value newValue, int fade_time_ms);
 
         /// <summary>
         /// Fades from one list of individual RGB-Value to another
@@ -75,6 +75,6 @@ namespace AudioCPURGB.RGB_Output
         /// <param name="oldValues">Old RGB-Values</param>
         /// <param name="newValues">New RGB-Values to fade to</param>
         /// <param name="fade_time_ms">Time between each fade step</param>
-        void fade(RGB_Value[] oldValues, RGB_Value[] newValues, int fade_time_ms);
+        void Fade(RGB_Value[] oldValues, RGB_Value[] newValues, int fade_time_ms);
     }
 }

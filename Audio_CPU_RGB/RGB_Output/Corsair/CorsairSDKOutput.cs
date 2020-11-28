@@ -19,17 +19,17 @@ namespace AudioCPURGB.RGB_Output.Corsair
         private bool _enabled;
         private CorsairColor _lastColor;
 
-        public void fade(RGB_Value oldValue, RGB_Value newValue, int fade_time_ms)
+        public void Fade(RGB_Value oldValue, RGB_Value newValue, int fade_time_ms)
         {
-            showRGB(newValue);
+            ShowRGB(newValue);
         }
 
-        public void fade(RGB_Value[] oldValues, RGB_Value[] newValues, int fade_time_ms)
+        public void Fade(RGB_Value[] oldValues, RGB_Value[] newValues, int fade_time_ms)
         {
-            showRGB(newValues[0]);
+            ShowRGB(newValues[0]);
         }
 
-        public int getAmountRGBs()
+        public int GetAmountRGBs()
         {
             if (_leds == null)
             {
@@ -38,24 +38,24 @@ namespace AudioCPURGB.RGB_Output.Corsair
             return _leds.Count();
         }
 
-        public string[] getAvailableOutputList()
+        public string[] GetAvailableOutputList()
         {
             string[] str_list = { name }; // Half the truth
             return str_list;
         }
 
-        public string getName()
+        public string GetName()
         {
             return name;
         }
 
-        public void initialize(string output)
+        public void Initialize(string output)
         {
             if (_headset == null)
             {
                 CueSDK.Initialize();
                 _headset = CueSDK.HeadsetSDK;
-                getAmountRGBs();
+                GetAmountRGBs();
             }
             if (_headset == null)
             {
@@ -66,17 +66,17 @@ namespace AudioCPURGB.RGB_Output.Corsair
             Console.WriteLine(_headset.DeviceInfo.CapsMask.ToString());
         }
 
-        public bool isEnabled()
+        public bool IsEnabled()
         {
             return _enabled;
         }
 
-        public void setEnable(bool enable)
+        public void SetEnable(bool enable)
         {
             _enabled = enable;
         }
 
-        public void showRGB(RGB_Value rgb)
+        public void ShowRGB(RGB_Value rgb)
         {
             if (_lastColor == null)
             {
@@ -93,7 +93,7 @@ namespace AudioCPURGB.RGB_Output.Corsair
             _headset.Update();
         }
 
-        public void showRGBs(RGB_Value[] rgbs)
+        public void ShowRGBs(RGB_Value[] rgbs)
         {
             int i = 0;
             foreach (var led in _leds)
@@ -107,7 +107,7 @@ namespace AudioCPURGB.RGB_Output.Corsair
 
         }
 
-        public void shutdown()
+        public void Shutdown()
         {
         }
     }

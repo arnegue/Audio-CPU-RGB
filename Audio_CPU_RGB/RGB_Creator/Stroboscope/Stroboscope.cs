@@ -29,9 +29,9 @@ namespace AudioCPURGB
             if (half_freq != 0)
             {
                 // Thats only half the truth since showRGB takes time, which should result in less sleep time
-                _rgbOutput.showRGB(_white);
+                _rgbOutput.ShowRGB(_white);
                 Thread.Sleep(half_freq);
-                _rgbOutput.showRGB(_empty);
+                _rgbOutput.ShowRGB(_empty);
                 Thread.Sleep(half_freq);
             }
         }

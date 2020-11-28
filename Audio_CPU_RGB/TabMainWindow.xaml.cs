@@ -76,7 +76,7 @@ namespace AudioCPURGB
             _available_interfaces.Add(_mouse_output);
             _available_interfaces.Add(_corsair_output);
             _current_interface = _available_interfaces[0];
-            fill_rgb_output_list();
+            FillRGBOutputList();
 
             xSkipper.Text = _screenAnalyzer.xSkipper.ToString();
             ySkipper.Text = _screenAnalyzer.ySkipper.ToString();
@@ -186,10 +186,10 @@ namespace AudioCPURGB
         /// <param name="e"></param>
         private void CkbSerial_Click(object sender, RoutedEventArgs e)
         {
-            set_new_interface();
+            SetNewInterface();
         }
 
-        private void set_new_interface()
+        private void SetNewInterface()
         {
             try
             {
@@ -197,7 +197,7 @@ namespace AudioCPURGB
                 RGB_Output_Interface new_interface = null;
                 foreach (RGB_Output_Interface _interface in _available_interfaces)
                 {
-                    foreach (string name in _interface.getAvailableOutputList())
+                    foreach (string name in _interface.GetAvailableOutputList())
                     {
                         if (name == selected_name)
                         {
@@ -212,12 +212,12 @@ namespace AudioCPURGB
                 }
                 _rgbCreatorI.pause();
                 // Look if interface changed or checkbox is set to false
-                if (_current_interface.getName() != selected_name || CkbSerial.IsChecked == false)
+                if (_current_interface.GetName() != selected_name || CkbSerial.IsChecked == false)
                 {
-                    if (_current_interface.isEnabled())
+                    if (_current_interface.IsEnabled())
                     {
-                        _current_interface.shutdown();
-                        _current_interface.setEnable(false);
+                        _current_interface.Shutdown();
+                        _current_interface.SetEnable(false);
                     }
                 }
                 _current_interface = new_interface;
@@ -225,10 +225,10 @@ namespace AudioCPURGB
 
                 if (CkbSerial.IsChecked == true)
                 {
-                    if (!_current_interface.isEnabled())
+                    if (!_current_interface.IsEnabled())
                     {
-                        _current_interface.initialize(RGB_Output.Items[RGB_Output.SelectedIndex] as string);
-                        _current_interface.setEnable(true);
+                        _current_interface.Initialize(RGB_Output.Items[RGB_Output.SelectedIndex] as string);
+                        _current_interface.SetEnable(true);
                     }
                 }
 
@@ -252,7 +252,7 @@ namespace AudioCPURGB
             String curOutput = RGB_Output.Items[RGB_Output.SelectedIndex] as String;
 
             RGB_Output.Items.Clear();
-            fill_rgb_output_list();
+            FillRGBOutputList();
 
             int newSelectedIndex = 0;
 
@@ -268,11 +268,11 @@ namespace AudioCPURGB
         }
 
 
-        private void fill_rgb_output_list()
+        private void FillRGBOutputList()
         {
             foreach (var out_put_interface in _available_interfaces)
             {
-                var ports = out_put_interface.getAvailableOutputList();
+                var ports = out_put_interface.GetAvailableOutputList();
                 foreach (var port in ports)
                 {
                     RGB_Output.Items.Add(port);
@@ -286,7 +286,7 @@ namespace AudioCPURGB
         {
             if (this.IsLoaded)
             {
-                set_new_interface();
+                SetNewInterface();
             }
         }
 

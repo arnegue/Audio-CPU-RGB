@@ -221,7 +221,7 @@ namespace AudioCPURGB
 
             if (skip >= skipper)
             {
-                if (activeAlgo != null && _rgbOutput != null && _rgbOutput.isEnabled())
+                if (activeAlgo != null && _rgbOutput != null && _rgbOutput.IsEnabled())
                 {
                     activeAlgo.showRGB(_spectrumdata.ToArray(), (int)_mrs.RangeMin, (int)_mrs.RangeMax, minSliderValue, absNotRel, _rgbOutput);  // Now show Audio_RGB-Algorithm
                 }

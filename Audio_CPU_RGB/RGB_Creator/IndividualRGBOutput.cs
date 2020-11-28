@@ -26,7 +26,7 @@ namespace AudioCPURGB.RGB_Creator
 
         protected override void callback()
         {
-            int new_amount_rgbs = _rgbOutput.getAmountRGBs();
+            int new_amount_rgbs = _rgbOutput.GetAmountRGBs();
 
             if (old_rgbs == null || amount_rgbs != new_amount_rgbs)
             {

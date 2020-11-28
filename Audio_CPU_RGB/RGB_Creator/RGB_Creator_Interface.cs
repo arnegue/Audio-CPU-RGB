@@ -31,7 +31,7 @@ namespace AudioCPURGB.RGB_Creator
             while (true)
             {                
                 _pauseEvent.WaitOne();
-                if (_rgbOutput != null && _rgbOutput.isEnabled())
+                if (_rgbOutput != null && _rgbOutput.IsEnabled())
                 {
                     _callback_mutex.WaitOne();
                     callback();

@@ -83,7 +83,7 @@ namespace AudioCPURGB
             // Calculate value and fade into it
             RGB_Value newRgb = calculateRGBValueAlgo1(avg);
 
-            _rgbOutput.fade(_lastRGB, newRgb, 50);
+            _rgbOutput.Fade(_lastRGB, newRgb, 50);
             _lastRGB = newRgb;
 
             Thread.Sleep(_ms_sleepInterval);            

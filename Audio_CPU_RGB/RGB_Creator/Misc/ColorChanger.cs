@@ -15,7 +15,7 @@ namespace AudioCPURGB
         protected override void callback()
         {
             RGB_Value new_rgb = new RGB_Value((byte)random.Next(0, 255), (byte)random.Next(0, 255), (byte)random.Next(0, 255));
-            _rgbOutput.fade(old_rgb, new_rgb, 50);
+            _rgbOutput.Fade(old_rgb, new_rgb, 50);
             old_rgb = new_rgb;
         }
     }

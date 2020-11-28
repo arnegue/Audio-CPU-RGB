@@ -13,33 +13,33 @@ namespace AudioCPURGB.RGB_Output.LogitechLEDSDK
         private string name = "Logitech G502";
         private LogitechGSDK sdk;
         private const double rgb_to_perc = 100.0 / 255.0;
-        public void fade(RGB_Value oldValue, RGB_Value newValue, int fade_time_ms)
+        public void Fade(RGB_Value oldValue, RGB_Value newValue, int fade_time_ms)
         {
-            showRGB(newValue);
+            ShowRGB(newValue);
         }
 
-        public void fade(RGB_Value[] oldValues, RGB_Value[] newValues, int fade_time_ms)
+        public void Fade(RGB_Value[] oldValues, RGB_Value[] newValues, int fade_time_ms)
         {
-            showRGB(newValues[0]);
+            ShowRGB(newValues[0]);
         }
 
-        public int getAmountRGBs()
+        public int GetAmountRGBs()
         {
             return 1;
         }
 
-        public string[] getAvailableOutputList()
+        public string[] GetAvailableOutputList()
         {
             string[] str_list = { name }; // Half the truth
             return str_list;
         }
 
-        public string getName()
+        public string GetName()
         {
             return name;
         }
 
-        public void initialize(string output)
+        public void Initialize(string output)
         {
             sdk = new LogitechGSDK(); // not really sure if needed
 
@@ -69,17 +69,17 @@ namespace AudioCPURGB.RGB_Output.LogitechLEDSDK
             }
         }
 
-        public bool isEnabled()
+        public bool IsEnabled()
         {
             return _enabled;
         }
 
-        public void setEnable(bool enable)
+        public void SetEnable(bool enable)
         {
             _enabled = enable;
         }
 
-        public void showRGB(RGB_Value rgb)
+        public void ShowRGB(RGB_Value rgb)
         {
             // Logitech works in percent (0-100), usual rgb is 0-255
             
@@ -94,12 +94,12 @@ namespace AudioCPURGB.RGB_Output.LogitechLEDSDK
             }
         }
 
-        public void showRGBs(RGB_Value[] rgbs)
+        public void ShowRGBs(RGB_Value[] rgbs)
         {
-            showRGB(rgbs[0]);
+            ShowRGB(rgbs[0]);
         }
 
-        public void shutdown()
+        public void Shutdown()
         {
             // TODO
         }
