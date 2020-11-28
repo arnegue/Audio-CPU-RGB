@@ -1,5 +1,5 @@
 ﻿namespace AudioCPURGB {
-    class RGB_Value
+    public class RGB_Value
     {
         public byte r;
        

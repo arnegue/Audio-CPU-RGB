@@ -1,17 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using AudioCPURGB.RGB_Output;
 
 namespace AudioCPURGB
 {
@@ -20,9 +12,9 @@ namespace AudioCPURGB
     /// </summary>
     public partial class TabMainWindow : Window
     {
-        List<RGB_Output.RGB_Output_Interface> _available_interfaces = new List<RGB_Output.RGB_Output_Interface>();
+        List<RGB_Output_Interface> _available_interfaces = new List<RGB_Output_Interface>();
 
-        RGB_Output.RGB_Output_Interface _current_interface;
+        RGB_Output_Interface _current_interface;
         RGB_Output.LogitechLEDSDK.Logitech_RGB_Output _mouse_output;
         RGB_Output.Serial.Serial_RGB_Output _serial_output;
         RGB_Output.Corsair.CorsairSDKOutput _corsair_output;
@@ -180,6 +172,10 @@ namespace AudioCPURGB
             }
             set_new_rgb_creator(_selectedMisc);
         }
+        public List<RGB_Output_Interface> GetAvailableInterfaces()
+        {
+            return _available_interfaces;
+        }
 
         /// ################################### Serial-Control ################################### 
 
@@ -198,8 +194,8 @@ namespace AudioCPURGB
             try
             {
                 string selected_name = RGB_Output.Items[RGB_Output.SelectedIndex] as string;
-                RGB_Output.RGB_Output_Interface new_interface = null;
-                foreach (RGB_Output.RGB_Output_Interface _interface in _available_interfaces)
+                RGB_Output_Interface new_interface = null;
+                foreach (RGB_Output_Interface _interface in _available_interfaces)
                 {
                     foreach (string name in _interface.getAvailableOutputList())
                     {
@@ -246,7 +242,6 @@ namespace AudioCPURGB
             }
         }
 
-
         /// <summary>
         /// Method which is called when the RGB Output-choser was opened
         /// </summary>
@@ -261,7 +256,7 @@ namespace AudioCPURGB
 
             int newSelectedIndex = 0;
 
-            for (int i = 0; i < RGB_Output.Items.Count; i++) // foreach (var port in ports)
+            for (int i = 0; i < RGB_Output.Items.Count; i++)
             {
                 // Get new Index of selected RGB Output before (if a new port was added)
                 if (RGB_Output.Items[i] as string == curOutput)
@@ -271,6 +266,7 @@ namespace AudioCPURGB
             }
             RGB_Output.SelectedIndex = newSelectedIndex;
         }
+
 
         private void fill_rgb_output_list()
         {

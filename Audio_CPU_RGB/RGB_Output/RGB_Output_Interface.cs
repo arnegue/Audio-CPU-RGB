@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AudioCPURGB.RGB_Output
 {
-    interface RGB_Output_Interface
+    public interface RGB_Output_Interface
     {
         /// <summary>
         /// Shows given RGB_Value
