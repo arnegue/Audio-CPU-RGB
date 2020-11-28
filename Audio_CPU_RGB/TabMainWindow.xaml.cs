@@ -49,13 +49,15 @@ namespace AudioCPURGB
             {
                 System.Diagnostics.Debug.Print(e.ToString());
             }
-            colorWheel = new Cyotek.Windows.Forms.ColorWheel();
-            colorWheel.Color = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(48)))));
-            colorWheel.Dock = System.Windows.Forms.DockStyle.Fill;
-            colorWheel.Location = new System.Drawing.Point(0, 0);
-            colorWheel.Name = "colorWheel";
-            colorWheel.Size = new System.Drawing.Size(624, 224);
-            colorWheel.TabIndex = 0;
+            colorWheel = new Cyotek.Windows.Forms.ColorWheel
+            {
+                Color = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(48))))),
+                Dock = System.Windows.Forms.DockStyle.Fill,
+                Location = new System.Drawing.Point(0, 0),
+                Name = "colorWheel",
+                Size = new System.Drawing.Size(624, 224),
+                TabIndex = 0
+            };
             //this.colorWheel.ColorChanged += new System.EventHandler(this.colorWheel_ColorChanged);
             // colorGrid.Children.Add(colorWheel);
 

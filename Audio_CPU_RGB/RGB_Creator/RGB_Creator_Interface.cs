@@ -16,8 +16,10 @@ namespace AudioCPURGB.RGB_Creator
         public RGB_Creator_Interface()
         {
             // Create a new Thread
-            _workerThread = new Thread(worker_thread);
-            _workerThread.IsBackground = true;
+            _workerThread = new Thread(worker_thread)
+            {
+                IsBackground = true
+            };
 
             pause(); // Don't let the thread run
             _workerThread.Start(); // But start it (until it comes to the pauseEvent)

@@ -18,10 +18,12 @@ namespace AudioCPURGB
         {
             half_freq = 0;
             _empty = new RGB_Value();
-            _white = new RGB_Value();
-            _white.r = 255;
-            _white.g = 255;
-            _white.b = 255;
+            _white = new RGB_Value
+            {
+                r = 255,
+                g = 255,
+                b = 255
+            };
         }
         
         protected override void callback()

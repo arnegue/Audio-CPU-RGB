@@ -25,12 +25,14 @@ namespace AudioCPURGB.RGB_Output.Serial
         public void Initialize(String output)
         {
             _name = output;
-            _port = new SerialPort(output);
-            _port.BaudRate = 115200;
-            _port.StopBits = StopBits.One;
-            _port.Parity = Parity.None;
-            _port.DataBits = 8;
-            _port.DtrEnable = true;
+            _port = new SerialPort(output)
+            {
+                BaudRate = 115200,
+                StopBits = StopBits.One,
+                Parity = Parity.None,
+                DataBits = 8,
+                DtrEnable = true
+            };
             _rgbs = 0;
 
             _ser_mutex.WaitOne();
