@@ -10,7 +10,7 @@ namespace AudioCPURGB
     /// <summary>
     /// Interaktionslogik für Window1.xaml
     /// </summary>
-    public partial class TabMainWindow : Window
+    public partial class TabMainWindow : Window, IDisposable
     {
         List<RGB_Output_Interface> _available_interfaces = new List<RGB_Output_Interface>();
 
@@ -58,8 +58,6 @@ namespace AudioCPURGB
                 Size = new System.Drawing.Size(624, 224),
                 TabIndex = 0
             };
-            //this.colorWheel.ColorChanged += new System.EventHandler(this.colorWheel_ColorChanged);
-            // colorGrid.Children.Add(colorWheel);
 
             _cpuRgbCreator = new CPU_Temperature_RGB_Creator(cpuTempTB);
             _audioRgbCreator = new Audio_RGB_Creator(BtnEnable, PbL, PbR, Spectrum, DeviceBox, AlgoChoice, SpectrumSlider, MinSlider);
@@ -455,6 +453,33 @@ namespace AudioCPURGB
 
             Application.Current.MainWindow.Activate();
         }
-    }
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+
+                _serial_output.Dispose();
+                _cpuRgbCreator.Dispose();
+                _audioRgbCreator.Dispose();
+                _screenAnalyzer.Dispose();
+                _colorChooser.Dispose();
+                _stroboscope.Dispose();
+                _rainbow.Dispose();
+                _runningDot.Dispose();
+                _colorchanger.Dispose();
+                _runningColors.Dispose();
+            }
+            else
+            {
+                // what do i have to do here?            
+            }
+        }
+    }
 }

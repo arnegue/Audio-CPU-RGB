@@ -179,6 +179,7 @@
     <Compile Include="RGB_Output\Corsair\CorsairSDKOutput.cs" />
     <Compile Include="RGB_Output\LogitechLEDSDK\LogitechGSDK.cs" />
     <Compile Include="RGB_Output\LogitechLEDSDK\Logitech_RGB_Output.cs" />
+    <Compile Include="RGB_Output\BondedOutput\BondedOutput.cs" />
     <Compile Include="RGB_Output\Serial\Serial_RGB_Output.cs" />
     <Compile Include="RGB_Value.cs" />
     <Compile Include="RGB_Creator\Audio\Spectrum.xaml.cs">

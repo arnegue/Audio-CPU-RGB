@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using LedCSharp;
 
@@ -63,7 +60,7 @@ namespace AudioCPURGB.RGB_Output.LogitechLEDSDK
 
             Thread.Sleep(2);
 
-            if (!LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_ALL))
+            if (!LogitechGSDK.LogiLedSetTargetDevice(LogitechSDKConstants.LOGI_DEVICETYPE_ALL))
             {
                 throw new Exception("Did not work to set LogiLedSetTargetDevice");
             }

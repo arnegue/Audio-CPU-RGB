@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace AudioCPURGB.RGB_Output.Serial
 {
-    class Serial_RGB_Output : RGB_Output_Interface
+    class Serial_RGB_Output : RGB_Output_Interface, IDisposable
     {
         private SerialPort _port;
         private bool _enabled;
@@ -264,6 +264,11 @@ namespace AudioCPURGB.RGB_Output.Serial
                 // Wait a few Millisec to fade to new Color
                 Thread.Sleep(fade_time_ms);
             }
+        }
+
+        public void Dispose()
+        {
+            _ser_mutex.Dispose();
         }
     }
 }

@@ -253,8 +253,9 @@ namespace AudioCPURGB
             Thread.Sleep(20);
                 
         }
-        void Dispose()
+        public new void Dispose()
         {
+            base.Dispose();
             memoryImage.Dispose();
             varMutex.Dispose();
         }

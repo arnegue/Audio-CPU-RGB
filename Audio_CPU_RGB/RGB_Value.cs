@@ -73,5 +73,11 @@
             }
             return false;
         }
+
+        public override int GetHashCode()
+        {
+            return r + g + b;
+        }
+
     }
 }
