@@ -25,22 +25,16 @@ namespace AudioCPURGB.RGB_Output.LogitechLEDSDK
             return 1;
         }
 
-        public string[] GetAvailableOutputList()
-        {
-            string[] str_list = { name }; // Half the truth
-            return str_list;
-        }
-
         public string GetName()
         {
             return name;
         }
 
-        public void Initialize(string output)
+        public void Initialize()
         {
             sdk = new LogitechGSDK(); // not really sure if needed
 
-            if (!LogitechGSDK.LogiLedInitWithName(output))
+            if (!LogitechGSDK.LogiLedInitWithName(GetName()))
             {
                 Console.WriteLine("LogiLedInit() failed.");
                 return;

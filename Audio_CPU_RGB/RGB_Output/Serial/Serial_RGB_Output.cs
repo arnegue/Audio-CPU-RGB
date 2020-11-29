@@ -7,8 +7,40 @@ using System.IO.Ports;
 using System.Threading;
 
 namespace AudioCPURGB.RGB_Output.Serial
+
 {
-    class Serial_RGB_Output : RGB_Output_Interface, IDisposable
+    public class SerialFactory {
+        Dictionary<String, Serial_RGB_Output> _curent_outputs;  // Map with COM-Portnames as Key and it's Serial_RGB_Output as instance
+
+        public SerialFactory()
+        {
+            _curent_outputs = new Dictionary<string, Serial_RGB_Output>();
+            GetAvailableOutputList();
+        }
+
+        /// <summary>
+        /// Searches for every COM-Port and if it is not already added to _current_outputs, appends it to it
+        /// </summary>
+        /// <returns></returns>
+        public List<Serial_RGB_Output> GetAvailableOutputList()
+        {
+            string[] portNames = SerialPort.GetPortNames();
+            
+            foreach (var portName in portNames)
+            {
+                if (!(_curent_outputs.ContainsKey(portName))) {
+                    _curent_outputs[portName] = new Serial_RGB_Output(portName);
+                }
+            }
+            // TODO old items? How about ports which got removed inbetween?
+
+            List<Serial_RGB_Output> returnItems = new List<Serial_RGB_Output>();
+            returnItems.AddRange(_curent_outputs.Values);
+            return returnItems;
+        }
+    }
+
+    public class Serial_RGB_Output : RGB_Output_Interface, IDisposable
     {
         private SerialPort _port;
         private bool _enabled;
@@ -16,16 +48,16 @@ namespace AudioCPURGB.RGB_Output.Serial
         public String _name = "";
         private Mutex _ser_mutex;
 
-        public Serial_RGB_Output()
+        public Serial_RGB_Output(String port)
         {
             _ser_mutex = new Mutex();
             _enabled = false;
+            _name = port;
         }
 
-        public void Initialize(String output)
+        public void Initialize()
         {
-            _name = output;
-            _port = new SerialPort(output)
+            _port = new SerialPort(_name)
             {
                 BaudRate = 115200,
                 StopBits = StopBits.One,
@@ -41,8 +73,8 @@ namespace AudioCPURGB.RGB_Output.Serial
             _enabled = false;
             _ser_mutex.ReleaseMutex();
 
-            // Wait till COM-port returns Amount of LEDS
-            int max_time_waiting_us = 5 * 1000; // 5 seconds
+            // Wait till COM-port returns Amount of LEDS for 5 seconds
+            int max_time_waiting_us = 5 * 1000;
             int time_waited_us = 0;
             int sleep_time_us = 10;
             while (_rgbs == 0)
@@ -52,7 +84,7 @@ namespace AudioCPURGB.RGB_Output.Serial
                 if (time_waited_us >= max_time_waiting_us)
                 {
                     Shutdown();
-                    throw new Exception(String.Format("TimeOut ({0:0.##} seconds) waiting for replay on {1}", time_waited_us / (1000 * 1000), output));
+                    throw new Exception(String.Format("TimeOut ({0:0.##} seconds) waiting for replay on {1}", time_waited_us / (1000 * 1000), _name));
                 }
             }
         }
@@ -65,12 +97,6 @@ namespace AudioCPURGB.RGB_Output.Serial
         public int GetAmountRGBs()
         {
             return _rgbs;
-        }
-
-        ~Serial_RGB_Output()
-        {
-            _ser_mutex.WaitOne();
-            _ser_mutex.ReleaseMutex();
         }
 
         public void ShowRGBs(RGB_Value[] rgbs)
@@ -159,13 +185,6 @@ namespace AudioCPURGB.RGB_Output.Serial
                     }
                 }
             }
-        }
-
-        public string[] GetAvailableOutputList()
-        {
-            string[] portNames = SerialPort.GetPortNames();
-            Array.Sort(portNames, StringComparer.InvariantCulture);
-            return portNames;
         }
 
         public void SetEnable(bool enable)
@@ -266,9 +285,24 @@ namespace AudioCPURGB.RGB_Output.Serial
             }
         }
 
+        ~Serial_RGB_Output()
+        {
+            _ser_mutex.WaitOne();
+            _ser_mutex.ReleaseMutex();
+            Dispose(false);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _ser_mutex.Dispose();
+            }
+        }
         public void Dispose()
         {
-            _ser_mutex.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

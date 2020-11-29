@@ -35,19 +35,12 @@ namespace AudioCPURGB.RGB_Output
         /// <summary>
         /// Initializes Output
         /// </summary>
-        /// <param name="output">If RGB_outout has SubOutputs, the name is for identification</param>
-        void Initialize(String output);
+        void Initialize();
 
         /// <summary>
         /// Stops/Shutdowns current Output
         /// </summary>
         void Shutdown();
-
-        /// <summary>
-        /// If RGB_outout has SubOutputs, the name is for identification
-        /// </summary>
-        /// <returns>List of available names</returns>
-        String[] GetAvailableOutputList();
 
         /// <summary>
         /// Enables or disables output

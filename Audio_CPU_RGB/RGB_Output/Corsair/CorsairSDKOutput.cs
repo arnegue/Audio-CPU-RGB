@@ -38,18 +38,12 @@ namespace AudioCPURGB.RGB_Output.Corsair
             return _leds.Count();
         }
 
-        public string[] GetAvailableOutputList()
-        {
-            string[] str_list = { name }; // Half the truth
-            return str_list;
-        }
-
         public string GetName()
         {
             return name;
         }
 
-        public void Initialize(string output)
+        public void Initialize()
         {
             if (_headset == null)
             {

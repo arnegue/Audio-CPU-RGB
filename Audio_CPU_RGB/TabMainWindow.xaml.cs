@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using AudioCPURGB.RGB_Creator;
 using AudioCPURGB.RGB_Output;
 
 namespace AudioCPURGB
@@ -12,12 +13,10 @@ namespace AudioCPURGB
     /// </summary>
     public partial class TabMainWindow : Window, IDisposable
     {
-        List<RGB_Output_Interface> _available_interfaces = new List<RGB_Output_Interface>();
+        public static TabMainWindow instance;
 
         RGB_Output_Interface _current_interface;
-        RGB_Output.LogitechLEDSDK.Logitech_RGB_Output _mouse_output;
-        RGB_Output.Serial.Serial_RGB_Output _serial_output;
-        RGB_Output.Corsair.CorsairSDKOutput _corsair_output;
+        RGBOutputManager _rgb_manager;
 
         RGB_Creator.RGB_Creator_Interface _rgbCreatorI;
         RGB_Creator.RGB_Creator_Interface _selectedMisc;
@@ -37,6 +36,7 @@ namespace AudioCPURGB
 
         public TabMainWindow()
         {
+            instance = this;
             // Initialize these before gui... i know bad
             _rainbow = new Rainbow();
             _runningDot = new RunningColorChangingDot();
@@ -59,6 +59,8 @@ namespace AudioCPURGB
                 TabIndex = 0
             };
 
+            _rgb_manager = new RGBOutputManager();
+
             _cpuRgbCreator = new CPU_Temperature_RGB_Creator(cpuTempTB);
             _audioRgbCreator = new Audio_RGB_Creator(BtnEnable, PbL, PbR, Spectrum, DeviceBox, AlgoChoice, SpectrumSlider, MinSlider);
             _screenAnalyzer = new ScreenAnalyzer();
@@ -67,15 +69,6 @@ namespace AudioCPURGB
             _colorchanger = new ColorChanger();
             _runningColors = new RunningColors();
 
-
-            _serial_output = new RGB_Output.Serial.Serial_RGB_Output();
-            _mouse_output = new RGB_Output.LogitechLEDSDK.Logitech_RGB_Output();
-            _corsair_output = new RGB_Output.Corsair.CorsairSDKOutput();
-
-            _available_interfaces.Add(_serial_output);
-            _available_interfaces.Add(_mouse_output);
-            _available_interfaces.Add(_corsair_output);
-            _current_interface = _available_interfaces[0];
             FillRGBOutputList();
 
             xSkipper.Text = _screenAnalyzer.xSkipper.ToString();
@@ -172,11 +165,7 @@ namespace AudioCPURGB
             }
             set_new_rgb_creator(_selectedMisc);
         }
-        public List<RGB_Output_Interface> GetAvailableInterfaces()
-        {
-            return _available_interfaces;
-        }
-
+ 
         /// ################################### Serial-Control ################################### 
 
         /// <summary>
@@ -195,24 +184,20 @@ namespace AudioCPURGB
             {
                 string selected_name = RGB_Output.Items[RGB_Output.SelectedIndex] as string;
                 RGB_Output_Interface new_interface = null;
-                foreach (RGB_Output_Interface _interface in _available_interfaces)
+                foreach (RGB_Output_Interface _interface in _rgb_manager.GetAvailableOutputs())
                 {
-                    foreach (string name in _interface.GetAvailableOutputList())
+                    string name = _interface.GetName();
+                    
+                    if (name == selected_name)
                     {
-                        if (name == selected_name)
-                        {
-                            new_interface = _interface;
-                            break;
-                        }
-                    }
-                    if (new_interface != null)
-                    {
+                        new_interface = _interface;
                         break;
-                    }
+                    }                    
+                    
                 }
                 _rgbCreatorI.pause();
                 // Look if interface changed or checkbox is set to false
-                if (_current_interface.GetName() != selected_name || CkbSerial.IsChecked == false)
+                if (_current_interface != null && (_current_interface.GetName() != selected_name || CkbSerial.IsChecked == false))
                 {
                     if (_current_interface.IsEnabled())
                     {
@@ -227,7 +212,7 @@ namespace AudioCPURGB
                 {
                     if (!_current_interface.IsEnabled())
                     {
-                        _current_interface.Initialize(RGB_Output.Items[RGB_Output.SelectedIndex] as string);
+                        _current_interface.Initialize();
                         _current_interface.SetEnable(true);
                     }
                 }
@@ -249,7 +234,10 @@ namespace AudioCPURGB
         /// <param name="e"></param>
         private void RGB_Output_DropDownOpened(object sender, EventArgs e)
         {
-            String curOutput = RGB_Output.Items[RGB_Output.SelectedIndex] as String;
+            String curOutput = "";
+            if (RGB_Output.Items.Count > 0) {
+                curOutput = RGB_Output.Items[RGB_Output.SelectedIndex] as String;
+            }
 
             RGB_Output.Items.Clear();
             FillRGBOutputList();
@@ -270,13 +258,9 @@ namespace AudioCPURGB
 
         private void FillRGBOutputList()
         {
-            foreach (var out_put_interface in _available_interfaces)
+            foreach (var out_put_interface in _rgb_manager.GetAvailableOutputs())
             {
-                var ports = out_put_interface.GetAvailableOutputList();
-                foreach (var port in ports)
-                {
-                    RGB_Output.Items.Add(port);
-                }
+                RGB_Output.Items.Add(out_put_interface.GetName());                
             }
             RGB_Output.SelectedIndex = 0;
         }
@@ -464,8 +448,6 @@ namespace AudioCPURGB
         {
             if (disposing)
             {
-
-                _serial_output.Dispose();
                 _cpuRgbCreator.Dispose();
                 _audioRgbCreator.Dispose();
                 _screenAnalyzer.Dispose();
