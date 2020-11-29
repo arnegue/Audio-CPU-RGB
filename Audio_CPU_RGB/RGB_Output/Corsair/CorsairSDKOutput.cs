@@ -19,16 +19,6 @@ namespace AudioCPURGB.RGB_Output.Corsair
         private bool _enabled;
         private CorsairColor _lastColor;
 
-        public void Fade(RGB_Value oldValue, RGB_Value newValue, int fade_time_ms)
-        {
-            ShowRGB(newValue);
-        }
-
-        public void Fade(RGB_Value[] oldValues, RGB_Value[] newValues, int fade_time_ms)
-        {
-            ShowRGB(newValues[0]);
-        }
-
         public int GetAmountRGBs()
         {
             if (_leds == null)

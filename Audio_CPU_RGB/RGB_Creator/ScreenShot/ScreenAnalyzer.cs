@@ -248,7 +248,7 @@ namespace AudioCPURGB
             //rgb = new RGB_Value(rByte, gByte, bByte);
             // Averrage 1
             //_rgbOutput.showRGB(rgb);
-            _rgbOutput.Fade(lastRGB_, rgb, 0);
+            Fade(lastRGB_, rgb, 0);
             lastRGB_ = rgb;
             Thread.Sleep(20);
                 

@@ -10,15 +10,6 @@ namespace AudioCPURGB.RGB_Output.LogitechLEDSDK
         private string name = "Logitech G502";
         private LogitechGSDK sdk;
         private const double rgb_to_perc = 100.0 / 255.0;
-        public void Fade(RGB_Value oldValue, RGB_Value newValue, int fade_time_ms)
-        {
-            ShowRGB(newValue);
-        }
-
-        public void Fade(RGB_Value[] oldValues, RGB_Value[] newValues, int fade_time_ms)
-        {
-            ShowRGB(newValues[0]);
-        }
 
         public int GetAmountRGBs()
         {

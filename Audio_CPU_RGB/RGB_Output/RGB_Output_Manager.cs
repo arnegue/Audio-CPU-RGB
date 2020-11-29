@@ -14,13 +14,16 @@ namespace AudioCPURGB.RGB_Creator
 
         private RGB_Output.LogitechLEDSDK.Logitech_RGB_Output _mouse_output;
         private RGB_Output.Corsair.CorsairSDKOutput _corsair_output;
-        private RGB_Output.Serial.SerialFactory _serial_factory;
+        private RGB_Output.BondedOutPut.BondedOutput _bonded_poutput;
 
+        private RGB_Output.Serial.SerialFactory _serial_factory;
+        
         public RGBOutputManager()
         {
             _mouse_output = new RGB_Output.LogitechLEDSDK.Logitech_RGB_Output();
             _corsair_output = new RGB_Output.Corsair.CorsairSDKOutput();
             _serial_factory = new RGB_Output.Serial.SerialFactory();
+            _bonded_poutput = new RGB_Output.BondedOutPut.BondedOutput(this);
         }
 
         public List<RGB_Output.RGB_Output_Interface> GetAvailableOutputs()
@@ -28,6 +31,7 @@ namespace AudioCPURGB.RGB_Creator
             List<RGB_Output_Interface> _available_interfaces = new List<RGB_Output_Interface>();
             _available_interfaces.Add(_mouse_output);
             _available_interfaces.Add(_corsair_output);
+            _available_interfaces.Add(_bonded_poutput);
 
             _available_interfaces.AddRange(_serial_factory.GetAvailableOutputList());
 

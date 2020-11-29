@@ -53,21 +53,5 @@ namespace AudioCPURGB.RGB_Output
         /// </summary>
         /// <returns>True if enabled, False if not</returns>
         bool IsEnabled();
-
-        /// <summary>
-        /// Fades from one value to new one
-        /// </summary>
-        /// <param name="oldValue">Old RGB-Value</param>
-        /// <param name="newValue">New RGB-Value to fade to</param>
-        /// <param name="fade_time_ms">Time between each fade step</param>
-        void Fade(RGB_Value oldValue, RGB_Value newValue, int fade_time_ms);
-
-        /// <summary>
-        /// Fades from one list of individual RGB-Value to another
-        /// </summary>
-        /// <param name="oldValues">Old RGB-Values</param>
-        /// <param name="newValues">New RGB-Values to fade to</param>
-        /// <param name="fade_time_ms">Time between each fade step</param>
-        void Fade(RGB_Value[] oldValues, RGB_Value[] newValues, int fade_time_ms);
     }
 }
