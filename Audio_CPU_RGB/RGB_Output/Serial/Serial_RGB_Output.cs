@@ -277,7 +277,7 @@ namespace AudioCPURGB.RGB_Output.Serial
             ShowRGB(lastRGB);
             while (!lastRGB.Equals(newValue))
             {
-                getNextFadeIteration(lastRGB, newValue);
+                lastRGB = getNextFadeIteration(lastRGB, newValue);
 
                 ShowRGB(lastRGB);
                 // Wait a few Millisec to fade to new Color
