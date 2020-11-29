@@ -58,18 +58,18 @@ namespace AudioCPURGB.RGB_Output.BondedOutPut
         }
         private List<RGB_Output_Interface> ShowDialog()
         {
-            Form prompt = new Form();
-            prompt.AutoSize = true;
-            prompt.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            /*
-            prompt.Width = 180;
-            prompt.Height = 100;*/
-            prompt.Text = "Choose outputs";
+            Form prompt = new Form
+            {
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                Text = "Choose outputs"
+            };
 
-
-            FlowLayoutPanel panel = new FlowLayoutPanel();
-            panel.AutoSize = true;
-            panel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            FlowLayoutPanel panel = new FlowLayoutPanel
+            {
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink
+            };
 
             foreach (var out_put in _manager.GetAvailableOutputs())
             {
@@ -82,13 +82,11 @@ namespace AudioCPURGB.RGB_Output.BondedOutPut
           
             Button ok = new Button() { Text = "Okay" };
             ok.Click += (sender, e) => { prompt.Close(); };
-            //panel.SetFlowBreak(chk, true);
             panel.Controls.Add(ok);
             prompt.Controls.Add(panel);
             prompt.ShowDialog();
 
             // At this point the user closed the dialog
-
             var checked_boxes = panel.Controls.OfType<RGBOutputCheckbox>().Where(c => c.Checked);
             List<RGB_Output_Interface> newOutputs = new List<RGB_Output_Interface>();
             foreach (var cbx in checked_boxes)
