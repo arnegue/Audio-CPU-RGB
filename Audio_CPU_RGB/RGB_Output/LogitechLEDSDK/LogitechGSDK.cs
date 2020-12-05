@@ -151,7 +151,7 @@ namespace LedCSharp
     }
 
 
-    internal class LogitechGSDK
+    internal static class NativeMethods
     {
         [DllImport("LogitechLedEnginesWrapper ", CallingConvention = CallingConvention.Cdecl)]
         internal static extern bool LogiLedInit();

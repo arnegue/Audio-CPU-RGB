@@ -8,7 +8,6 @@ namespace AudioCPURGB.RGB_Output.LogitechLEDSDK
     {
         private bool _enabled;
         private string name = "Logitech G502";
-        private LogitechGSDK sdk;
         private const double rgb_to_perc = 100.0 / 255.0;
 
         public int GetAmountRGBs()
@@ -23,9 +22,8 @@ namespace AudioCPURGB.RGB_Output.LogitechLEDSDK
 
         public void Initialize()
         {
-            sdk = new LogitechGSDK(); // not really sure if needed
 
-            if (!LogitechGSDK.LogiLedInitWithName(GetName()))
+            if (!NativeMethods.LogiLedInitWithName(GetName()))
             {
                 Console.WriteLine("LogiLedInit() failed.");
                 return;
@@ -34,7 +32,7 @@ namespace AudioCPURGB.RGB_Output.LogitechLEDSDK
             Thread.Sleep(2);
 
             int major = 0, minor = 0, build = 0;
-            if (!LogitechGSDK.LogiLedGetSdkVersion(ref major, ref minor, ref build))
+            if (!NativeMethods.LogiLedGetSdkVersion(ref major, ref minor, ref build))
             {
                 throw new Exception("Could not retrieve SDK version");
             }
@@ -45,7 +43,7 @@ namespace AudioCPURGB.RGB_Output.LogitechLEDSDK
 
             Thread.Sleep(2);
 
-            if (!LogitechGSDK.LogiLedSetTargetDevice(LogitechSDKConstants.LOGI_DEVICETYPE_ALL))
+            if (!NativeMethods.LogiLedSetTargetDevice(LogitechSDKConstants.LOGI_DEVICETYPE_ALL))
             {
                 throw new Exception("Did not work to set LogiLedSetTargetDevice");
             }
@@ -70,7 +68,7 @@ namespace AudioCPURGB.RGB_Output.LogitechLEDSDK
             double b = (double)rgb.b * rgb_to_perc;
 
 
-            if (!LogitechGSDK.LogiLedSetLighting((int)r, (int)g, (int)b))
+            if (!NativeMethods.LogiLedSetLighting((int)r, (int)g, (int)b))
             {
                 Console.WriteLine("Did not work to set LogiLedSetLighting");
             }
