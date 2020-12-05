@@ -315,7 +315,7 @@ namespace AudioCPURGB
         private void MinSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             Slider slider = sender as Slider;
-            _audioRgbCreator.triggerValueChanged((int)slider.Value);
+            _audioRgbCreator.TriggerValueChanged((int)slider.Value);
         }
 
         /// <summary>

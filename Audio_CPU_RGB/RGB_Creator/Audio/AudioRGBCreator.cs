@@ -250,87 +250,10 @@ namespace AudioCPURGB
                 Enable = true;
             }
         }
-        
- 
-        public void triggerValueChanged(int value)
+         
+        public void TriggerValueChanged(int value)
         {
             minSliderValue = value;            
         }
-        
-        /// <summary>
-        /// Takes every value between min and max slider and calculates average for each color range.
-        /// Displays every AudioValue to specific RGB (depending on AmountRGBs)
-        /// RangeMin and RangeMax are also min and max limit for colors (left = red, right = blue)
-        /// Sends average to RGBs ("new algorithm")
-        /// </summary>
-      /*  private void showAudioToRGBA3()
-        {
-            byte[] specArray = _spectrumdata.ToArray();
-
-            int left = (int)_mrs.RangeMin;
-            int right = ((int)_mrs.RangeMax) + 1;
-            int bass = 0;
-            for (int i = left; i < right; i++)
-            {
-                bass += specArray[i];*/
-              /*  if(specArray[i] > _triggerSlider.Value)
-                {
-                    _triggerSlider.Value = specArray[i];
-                }*/
-            /*}
-            if (right - left > 0)
-            {
-                bass /= (right - left);
-            }
-
-            bassAvg[bass_avg_Index] = bass;
-            bass_avg_Index = (bass_avg_Index + 1) % bassAvg.Length;
-            int currBassAvg = 0;
-            for(int i = 0; i < bassAvg.Length; i++)
-            {
-                currBassAvg += bassAvg[i];
-            }
-            currBassAvg /= bassAvg.Length;
-            bass = currBassAvg;
-
-            int minTrigger = minSliderValue;
-
-            int leds = 0;
-            if (bass > 0 && minTrigger > 0)
-            {
-                leds = (int)(((double)_rgbOutput.getAmountRGBs() * (double)bass) / (double)minTrigger);
-            }
-        
-            if(bass > minTrigger)
-            {
-                minTrigger = bass;
-                _triggerSlider.Value = bass;                
-            }
-
-            RGB_Value emptyRGB = new RGB_Value();
-            RGB_Value setRGB = valueToRGB((byte)bass); 
-            
-            if (rgbs == null)
-            {
-                rgbs = new RGB_Value[_rgbOutput.getAmountRGBs()]; // TODO if serial output changes, it wont take affect
-            }
-
-            // TODO amount leds in gui
-            for (int i = 0; i < rgbs.Length; i++)
-            {
-                //rgbs[i] = new RGB_Value();
-                if (i <= leds)
-                {
-                    rgbs[i] = setRGB;
-                }
-                else
-                {
-                    rgbs[i] = emptyRGB;
-                }
-            }
-            _rgbOutput.showRGBs(rgbs);
-        }
-
-*/
     }
 }
