@@ -65,7 +65,7 @@ namespace AudioCPURGB.RGB_Output.BondedOutPut
                 Text = "Choose outputs"
             };
 
-            FlowLayoutPanel panel = new FlowLayoutPanel
+            Panel panel = new FlowLayoutPanel
             {
                 AutoSize = true,
                 AutoSizeMode = AutoSizeMode.GrowAndShrink
@@ -88,6 +88,10 @@ namespace AudioCPURGB.RGB_Output.BondedOutPut
 
             // At this point the user closed the dialog
             var checked_boxes = panel.Controls.OfType<RGBOutputCheckbox>().Where(c => c.Checked);
+            if (checked_boxes.Count() == 0)
+            {
+                throw new Exception("Can't set BondedOutput: No outputs chosen.");
+            }
             List<RGB_Output_Interface> newOutputs = new List<RGB_Output_Interface>();
             foreach (var cbx in checked_boxes)
             {
