@@ -163,10 +163,10 @@ namespace AudioCPURGB
 
                 _oldRGBValue.CopyValues(_newRGBValue);
             }
-            else
+           /* else
             {
                 System.Diagnostics.Debug.WriteLine("Did not send Value, because it's the same as the old one");
-            }
+            }*/
         }
     }
 
