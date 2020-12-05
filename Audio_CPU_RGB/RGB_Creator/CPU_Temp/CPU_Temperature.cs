@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
-using AudioCPURGB.RGB_Output;
 using OpenHardwareMonitor.Hardware;
 using System.Windows.Controls;
 using AudioCPURGB.RGB_Creator;
+using System.Security.Principal;
 
 namespace AudioCPURGB
 {
@@ -25,7 +25,6 @@ namespace AudioCPURGB
         public CPU_Temperature_RGB_Creator(TextBlock temperatureTextBlock)
         {
             _temperatureTextBlock = temperatureTextBlock;
-
 
             // Iterate throught the sensors, to get the CPU-Package-Sensor
             _myComputer = new Computer();
@@ -50,6 +49,29 @@ namespace AudioCPURGB
             {
                 // TODO Popup warning
                 System.Diagnostics.Debug.WriteLine("No \"CPU Package\" was found.");
+            }
+        }
+
+        /// <summary>
+        /// Taken from https://stackoverflow.com/a/3600338
+        /// </summary>
+        private static bool IsAdministrator()
+        {
+            using (WindowsIdentity identity = WindowsIdentity.GetCurrent())
+            {
+                WindowsPrincipal principal = new WindowsPrincipal(identity);
+                return principal.IsInRole(WindowsBuiltInRole.Administrator);
+            }
+        }
+
+        public override void start()
+        {
+         if (!IsAdministrator())
+            {
+                throw new Exception("CPU-Temperature needs to be started with administrator privilegies. Restart this program as admin.");
+            } else
+            {
+                base.start();
             }
         }
 
@@ -91,7 +113,6 @@ namespace AudioCPURGB
 
         private RGB_Value calculateRGBValueAlgo1(float temp)
         {
-
             // Calculate Colours to temperature
             byte r, g, b;
             if (temp < 30)
