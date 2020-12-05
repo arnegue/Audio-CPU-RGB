@@ -24,31 +24,33 @@ namespace AudioCPURGB
 
         public CPU_Temperature_RGB_Creator(TextBlock temperatureTextBlock)
         {
-            _temperatureTextBlock = temperatureTextBlock;
+            if (IsAdministrator()) {
+                _temperatureTextBlock = temperatureTextBlock;
 
-            // Iterate throught the sensors, to get the CPU-Package-Sensor
-            _myComputer = new Computer();
-            _myComputer.Open();
+                // Iterate throught the sensors, to get the CPU-Package-Sensor
+                _myComputer = new Computer();
+                _myComputer.Open();
 
 
-            _myComputer.CPUEnabled = true;
+                _myComputer.CPUEnabled = true;
 
-            foreach (var hardware in _myComputer.Hardware)
-            {
-                hardware.Update();
-                foreach (var sensor in hardware.Sensors)
+                foreach (var hardware in _myComputer.Hardware)
                 {
-                    if (sensor.SensorType == SensorType.Temperature && sensor.Name.Equals("CPU Package"))
+                    hardware.Update();
+                    foreach (var sensor in hardware.Sensors)
                     {
-                        _cpuPackageSensor = sensor;
-                        _cpuHardware = hardware;
+                        if (sensor.SensorType == SensorType.Temperature && sensor.Name.Equals("CPU Package"))
+                        {
+                            _cpuPackageSensor = sensor;
+                            _cpuHardware = hardware;
+                        }
                     }
                 }
-            }
-            if (_cpuPackageSensor == null)
-            {
-                // TODO Popup warning
-                System.Diagnostics.Debug.WriteLine("No \"CPU Package\" was found.");
+                if (_cpuPackageSensor == null)
+                {
+                    // TODO Popup warning
+                    System.Diagnostics.Debug.WriteLine("No \"CPU Package\" was found.");
+                }
             }
         }
 
@@ -66,12 +68,12 @@ namespace AudioCPURGB
 
         public override void start()
         {
-         if (!IsAdministrator())
-            {
-                throw new Exception("CPU-Temperature needs to be started with administrator privilegies. Restart this program as admin.");
-            } else
+            if (IsAdministrator())
             {
                 base.start();
+            } else
+            {
+                throw new Exception("CPU-Temperature needs to be started with administrator privilegies. Restart this program as admin.");
             }
         }
 
