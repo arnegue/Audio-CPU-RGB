@@ -16,18 +16,18 @@ namespace AudioCPURGB.RGB_Output.BondedOutPut
         {
             this._manager = manager;
         }
-        
-        int RGB_Output_Interface.GetAmountRGBs()
+
+        public int GetAmountRGBs()
         {
             return 1; // thats to much to show individually
         }
 
-        string RGB_Output_Interface.GetName()
+        public string GetName()
         {
             return "BondedOutput"; // TODO add names of currently_used_outputs to it, but the string could get too long
         }
 
-        void RGB_Output_Interface.Initialize()
+        public void Initialize()
         {
             _current_outputs = ShowDialog();
             List<RGB_Output_Interface> initialized_outputs = new List<RGB_Output_Interface>(); 
@@ -96,12 +96,12 @@ namespace AudioCPURGB.RGB_Output.BondedOutPut
             return newOutputs;            
         }
     
-        bool RGB_Output_Interface.IsEnabled()
+        public bool IsEnabled()
         {
             return _enabled;
         }
 
-        void RGB_Output_Interface.SetEnable(bool enable)
+        public void SetEnable(bool enable)
         {
             this._enabled = enable;
             foreach (var output in _current_outputs)
@@ -110,7 +110,7 @@ namespace AudioCPURGB.RGB_Output.BondedOutPut
             }
         }
 
-        void RGB_Output_Interface.ShowRGB(RGB_Value rgb)
+        public void ShowRGB(RGB_Value rgb)
         {
             foreach (var output in _current_outputs)
             {
@@ -118,15 +118,12 @@ namespace AudioCPURGB.RGB_Output.BondedOutPut
             }
         }
 
-        void RGB_Output_Interface.ShowRGBs(RGB_Value[] rgbs)
+        public void ShowRGBs(RGB_Value[] rgbs)
         {
-            foreach (var output in _current_outputs)
-            {
-                output.ShowRGBs(rgbs);
-            }
+            this.ShowRGB(rgbs[0]); // Since it's only one rgb, just make it as old protocol 
         }
 
-        void RGB_Output_Interface.Shutdown()
+        public void Shutdown()
         {
             foreach (var output in _current_outputs)
             {
