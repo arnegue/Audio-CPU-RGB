@@ -92,7 +92,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
     <Optimize>true</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
@@ -169,11 +169,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="RGB_Creator\Audio\AudioAlgorithms.cs" />
-    <Compile Include="RGB_Creator\Audio\Audio_RGB_Creator.cs" />
+    <Compile Include="RGB_Creator\Audio\AudioRGBCreator.cs" />
     <Compile Include="RGB_Creator\Audio\AudioAlgorithm.cs" />
     <Compile Include="RGB_Output\RGBOutputManager.cs" />
     <Compile Include="RGB_Creator\ColorChooser\ColorChooser.cs" />
-    <Compile Include="RGB_Creator\CPU_Temp\CPU_Temperature.cs" />
+    <Compile Include="RGB_Creator\CPU_Temp\CPUTemperature.cs" />
     <Compile Include="RGB_Creator\Audio\MyRangeSlider.xaml.cs">
       <DependentUpon>MyRangeSlider.xaml</DependentUpon>
     </Compile>
