@@ -19,12 +19,12 @@ namespace AudioCPURGB.RGB_Output.BondedOutPut
 
         public int GetAmountRGBs()
         {
-            return 1; // thats to much to show individually
+            return 1; // thats too much to show individually
         }
 
         public string GetName()
         {
-            return "BondedOutput"; // TODO add names of currently_used_outputs to it, but the string could get too long
+            return "BondedOutput";
         }
 
         public void Initialize()
