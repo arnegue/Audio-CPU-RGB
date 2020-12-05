@@ -134,8 +134,15 @@ namespace AudioCPURGB
 
             if (new_rgb_creator != null && _current_interface != null)
             {
-                new_rgb_creator.setRGBOutput(_current_interface);
-                new_rgb_creator.start(); // start new rgbCreator
+                try
+                {
+                    new_rgb_creator.setRGBOutput(_current_interface);
+                    new_rgb_creator.start(); // start new rgbCreator
+                }
+                catch (Exception ex)
+                {        
+                    MessageBox.Show(ex.Message, $"Error setting RGB-Creator {new_rgb_creator.GetType().Name}");
+                }
             }
             _rgbCreatorI = new_rgb_creator;
         }
@@ -217,8 +224,7 @@ namespace AudioCPURGB
                     }
                 }
 
-                _rgbCreatorI.setRGBOutput(_current_interface);
-                _rgbCreatorI.start();
+                set_new_rgb_creator(_rgbCreatorI);
             }
             catch (Exception ex)
             {

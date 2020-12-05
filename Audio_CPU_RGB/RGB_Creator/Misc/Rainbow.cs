@@ -10,36 +10,41 @@ namespace AudioCPURGB
     class Rainbow : IndividualRGBOutput
     {
         RGB_Value[] _rainbow_rgbs;
-        int _phase_length;
+        int _phase_length;  // Amount of RGBs per Phase
         int last_index = 0;
- 
-        private int[] get_rainbow_values()
+
+        public Rainbow()
         {
-            int[] rgb_values = new int[amount_rgbs];
-            double slope = 255.0 / ((float)amount_rgbs / 6.0);
+            minimum_amount_rgbs = 6;
+        }
+
+        private int[] get_rainbow_values(int rgb_value_range)
+        {
+            int[] rgb_values = new int[rgb_value_range];
+            double slope = 255.0 / ((float)rgb_value_range / 6.0);
             int idx = 0;
             int p;
-            for (int i = 0; i < amount_rgbs; i++)
+            for (int i = 0; i < rgb_value_range; i++)
             {
                 // Phase 1 getting up
                 for (p = 0; p < _phase_length; p++, idx++)
                 {
-                    rgb_values[idx % amount_rgbs] = (int)(slope * p);
+                    rgb_values[idx % rgb_value_range] = (int)(slope * p);
                 }
                 // Phase 2 stay up
                 for (p = 0; p < _phase_length * 2; p++, idx++)
                 {
-                    rgb_values[idx % amount_rgbs] = 255;
+                    rgb_values[idx % rgb_value_range] = 255;
                 }
                 // Phase 3 getting down
                 for (p = 0; p < _phase_length; p++, idx++)
                 {
-                    rgb_values[idx % amount_rgbs] = rgb_values[_phase_length - p]; // TODO modulo?
+                    rgb_values[idx % rgb_value_range] = rgb_values[_phase_length - p]; // TODO modulo?
                 }
                 // Phase 4 stay down
                 for (p = 0; p < _phase_length * 2; p++, idx++)
                 {
-                    rgb_values[idx % amount_rgbs] = 0;
+                    rgb_values[idx % rgb_value_range] = 0;
                 }
             }
             return rgb_values;
@@ -52,7 +57,7 @@ namespace AudioCPURGB
                 _phase_length = 1;
             }
 
-            int[] rainbow_values = get_rainbow_values();
+            int[] rainbow_values = get_rainbow_values(amount_rgbs);
 
             _rainbow_rgbs = new RGB_Value[amount_rgbs];
             for (int i = 0; i < amount_rgbs; i++)
