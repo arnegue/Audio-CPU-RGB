@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO.Ports;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using Un4seen.Bass;
-using System.Text;
 using Un4seen.BassWasapi;
-using System.Threading;
 using AudioCPURGB.RGBCreator;
-using AudioCPURGB.RGBOutput;
 using AudioCPURGB.RGBCreator.Audio;
 
 namespace AudioCPURGB
@@ -132,7 +128,12 @@ namespace AudioCPURGB
         // initialization
         private void Init()
         {
-            bool result = false;
+            Bass.BASS_SetConfig(BASSConfig.BASS_CONFIG_UPDATETHREADS, false);
+            Bass.BASS_SetConfig(BASSConfig.BASS_CONFIG_UNICODE, true);
+
+            if (!(Bass.BASS_Init(0, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero)))
+                throw new Exception("Init Error");
+            
             try
             {
                 for (int i = 0; i < BassWasapi.BASS_WASAPI_GetDeviceCount(); i++)
@@ -149,33 +150,16 @@ namespace AudioCPURGB
                         System.Diagnostics.Debug.Print("Init? " + device.IsInitialized);
                         System.Diagnostics.Debug.Print(device + "\n");
                     }
-                    //  BASS_CONFIG_DEV_DEFAULT
                 }
             } catch (System.DllNotFoundException e)
             {
                 System.Diagnostics.Debug.Print("It seems like you loaded the wrong basswasapi.dll. Be sure to put the x64-dll to the x64-Build folder and the same with x32-dll in the x32 folder: " + e.Message);
             }
             _devicelist.SelectedIndex = 0;
-            Bass.BASS_SetConfig(BASSConfig.BASS_CONFIG_UPDATETHREADS, false);
-            result = Bass.BASS_Init(0, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
-            BASS_DEVICEINFO info =  Bass.BASS_GetDeviceInfo(-1);
-
-            if (!result) throw new Exception("Init Error");
-            /*foreach (Un4seen.BassWasapi.BASS_WASAPI_DEVICEINFO device in _devicelist.Items)
-            {
-                System.Diagnostics.Debug.Print("Found device: " + device.name);
-                System.Diagnostics.Debug.Print("Default? " + device.IsDefault);
-                System.Diagnostics.Debug.Print("Input? " + device.IsInput);
-                System.Diagnostics.Debug.Print("Loopb? " + device.IsLoopback);
-                System.Diagnostics.Debug.Print("Unplugged? " + device.IsUnplugged);
-                System.Diagnostics.Debug.Print("Init?? " + device.IsInitialized);
-                System.Diagnostics.Debug.Print(device + "\n");
-            }*/
 
             absNotRel = false;
             minSliderValue = 0;
         }
-
 
         // WASAPI callback, required for continuous recording
         private int Process(IntPtr buffer, int length, IntPtr user)
