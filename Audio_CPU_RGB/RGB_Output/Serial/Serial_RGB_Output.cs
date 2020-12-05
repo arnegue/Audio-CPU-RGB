@@ -205,8 +205,6 @@ namespace AudioCPURGB.RGB_Output.Serial
 
         ~Serial_RGB_Output()
         {
-            _ser_mutex.WaitOne();
-            _ser_mutex.ReleaseMutex();
             Dispose(false);
         }
 
@@ -214,6 +212,8 @@ namespace AudioCPURGB.RGB_Output.Serial
         {
             if (disposing)
             {
+                _ser_mutex.WaitOne();
+                _ser_mutex.ReleaseMutex();
                 _ser_mutex.Dispose();
             }
         }
