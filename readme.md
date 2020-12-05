@@ -32,8 +32,9 @@ As I told the main part of getting the audio was not my work, but I continued it
 - Visual Studio 2015
 
 ## Used libraries
-- OpenHardwareMonitorLib: [ohm]
-- bass.dll, Bass.Net.dll, basswasapi.dll: [bass]
+- OpenHardwareMonitorLib (0.8.0.0): [ohm]
+- bass.dll (2.4.15.0), Bass.Net.dll (2.4.14.1), basswasapi.dll (2.4.3.1): [bass]
+- LogitechLedEnginesWrapper.dll
 
 ## Compiling
 Attention: When compiling to a new Solution Configuration ("Debug", "Relase", etc.) be aware that you copy the 4 dlls ("bass.dll", "Bass.Net.dll", "basswasapi.dll" and "OpenHardwareMonitorLib.dll" into the folders ``\Audio_CPU_RGB\bin\<SolutionName>`` and ``\Audio_CPU_RGB\obj\<SolutionName>)``!
