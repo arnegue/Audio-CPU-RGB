@@ -146,7 +146,7 @@ namespace AudioCPURGB
                         System.Diagnostics.Debug.Print("Input? " + device.IsInput);
                         System.Diagnostics.Debug.Print("Loopb? " + device.IsLoopback);
                         System.Diagnostics.Debug.Print("Unplugged? " + device.IsUnplugged);
-                        System.Diagnostics.Debug.Print("Init?? " + device.IsInitialized);
+                        System.Diagnostics.Debug.Print("Init? " + device.IsInitialized);
                         System.Diagnostics.Debug.Print(device + "\n");
                     }
                     //  BASS_CONFIG_DEV_DEFAULT
