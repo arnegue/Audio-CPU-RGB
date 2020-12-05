@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO.Ports;
 using System.Threading;
 
-namespace AudioCPURGB.RGB_Output.Serial
+namespace AudioCPURGB.RGBOutput.Serial
 
 {
     public class SerialFactory {
-        Dictionary<String, Serial_RGB_Output> _curent_outputs;  // Map with COM-Portnames as Key and it's Serial_RGB_Output as instance
+        private Dictionary<String, SerialRGBOutput> _curent_outputs;  // Map with COM-Portnames as Key and it's Serial_RGB_Output as instance
 
         public SerialFactory()
         {
-            _curent_outputs = new Dictionary<string, Serial_RGB_Output>();
+            _curent_outputs = new Dictionary<string, SerialRGBOutput>();
             GetAvailableOutputList();
         }
 
@@ -22,33 +19,33 @@ namespace AudioCPURGB.RGB_Output.Serial
         /// Searches for every COM-Port and if it is not already added to _current_outputs, appends it to it
         /// </summary>
         /// <returns></returns>
-        public List<Serial_RGB_Output> GetAvailableOutputList()
+        public List<SerialRGBOutput> GetAvailableOutputList()
         {
             string[] portNames = SerialPort.GetPortNames();
             
             foreach (var portName in portNames)
             {
                 if (!(_curent_outputs.ContainsKey(portName))) {
-                    _curent_outputs[portName] = new Serial_RGB_Output(portName);
+                    _curent_outputs[portName] = new SerialRGBOutput(portName);
                 }
             }
             // TODO old items? How about ports which got removed inbetween?
 
-            List<Serial_RGB_Output> returnItems = new List<Serial_RGB_Output>();
+            List<SerialRGBOutput> returnItems = new List<SerialRGBOutput>();
             returnItems.AddRange(_curent_outputs.Values);
             return returnItems;
         }
     }
 
-    public class Serial_RGB_Output : RGB_Output_Interface, IDisposable
+    public class SerialRGBOutput : IRGBOutput, IDisposable
     {
         private SerialPort _port;
         private bool _enabled;
         private int _rgbs;
-        public String _name = "";
+        private String _name = "";
         private Mutex _ser_mutex;
 
-        public Serial_RGB_Output(String port)
+        public SerialRGBOutput(String port)
         {
             _ser_mutex = new Mutex();
             _enabled = false;
@@ -84,7 +81,7 @@ namespace AudioCPURGB.RGB_Output.Serial
                 if (time_waited_us >= max_time_waiting_us)
                 {
                     Shutdown();
-                    throw new Exception(String.Format("TimeOut ({0:0.##} seconds) waiting for replay on {1}", time_waited_us / (1000 * 1000), _name));
+                    throw new Exception(String.Format(System.Globalization.CultureInfo.CurrentCulture, "TimeOut ({0:0.##} seconds) waiting for replay on {1}", time_waited_us / (1000 * 1000), _name));
                 }
             }
         }
@@ -99,14 +96,14 @@ namespace AudioCPURGB.RGB_Output.Serial
             return _rgbs;
         }
 
-        public void ShowRGBs(RGB_Value[] rgbs)
+        public void ShowRGBs(RGBValue[] rgbs)
         {
             _ser_mutex.WaitOne();
-            if (_enabled)
+            if (_enabled && rgbs != null)
             {
                 byte[] bytes = new byte[(rgbs.Length * 3) + 2];
                 bytes[0] = System.Convert.ToByte('(');
-                RGB_Value rgb;
+                RGBValue rgb;
                 byte r, g, b;
 
                 int byte_index = 1;  // first byte is (
@@ -122,9 +119,9 @@ namespace AudioCPURGB.RGB_Output.Serial
                     }
                     else
                     {
-                        r = System.Convert.ToByte(rgb.r);
-                        g = System.Convert.ToByte(rgb.g);
-                        b = System.Convert.ToByte(rgb.b);
+                        r = System.Convert.ToByte(rgb.R);
+                        g = System.Convert.ToByte(rgb.G);
+                        b = System.Convert.ToByte(rgb.B);
                     }
 
                     bytes[byte_index] = r;
@@ -140,12 +137,12 @@ namespace AudioCPURGB.RGB_Output.Serial
             _ser_mutex.ReleaseMutex();
         }
 
-        public void ShowRGB(RGB_Value rgb)
+        public void ShowRGB(RGBValue rgb)
         {
             _ser_mutex.WaitOne();
-            if (_enabled)
+            if (_enabled && rgb != null)
             {
-                byte[] bytes = { System.Convert.ToByte('('), rgb.r, System.Convert.ToByte(','), rgb.g, System.Convert.ToByte(','), rgb.b, System.Convert.ToByte(')') };
+                byte[] bytes = { System.Convert.ToByte('('), rgb.R, System.Convert.ToByte(','), rgb.G, System.Convert.ToByte(','), rgb.B, System.Convert.ToByte(')') };
                 
                 _port.Write(bytes, 0, bytes.Length);              
             }
@@ -203,7 +200,7 @@ namespace AudioCPURGB.RGB_Output.Serial
             return en;
         }
 
-        ~Serial_RGB_Output()
+        ~SerialRGBOutput()
         {
             Dispose(false);
         }
@@ -212,6 +209,7 @@ namespace AudioCPURGB.RGB_Output.Serial
         {
             if (disposing)
             {
+                _port.Dispose();
                 _ser_mutex.WaitOne();
                 _ser_mutex.ReleaseMutex();
                 _ser_mutex.Dispose();

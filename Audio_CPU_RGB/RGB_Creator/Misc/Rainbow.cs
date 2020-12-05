@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Threading;
-using AudioCPURGB.RGB_Creator;
+using AudioCPURGB.RGBCreator;
 
 namespace AudioCPURGB
 {
     /// <summary>
     /// Fades from one random color to another of each LED (new Protocol)
     /// </summary>
-    class Rainbow : IndividualRGBOutput
+    class Rainbow : IndividualRGBCreator
     {
-        RGB_Value[] _rainbow_rgbs;
-        int _phase_length;  // Amount of RGBs per Phase
-        int last_index = 0;
+        private  RGBValue[] _rainbow_rgbs;
+        private int _phase_length;  // Amount of RGBs per Phase
+        private int last_index;
 
         public Rainbow()
         {
@@ -59,7 +59,7 @@ namespace AudioCPURGB
 
             int[] rainbow_values = get_rainbow_values(amount_rgbs);
 
-            _rainbow_rgbs = new RGB_Value[amount_rgbs];
+            _rainbow_rgbs = new RGBValue[amount_rgbs];
             for (int i = 0; i < amount_rgbs; i++)
             {
                 byte r, g, b;
@@ -67,11 +67,11 @@ namespace AudioCPURGB
                 g = (byte)rainbow_values[i];
                 b = (byte)rainbow_values[(i + _phase_length * 4) % amount_rgbs];
 
-                _rainbow_rgbs[i] = new RGB_Value(r, g, b);
+                _rainbow_rgbs[i] = new RGBValue(r, g, b);
             }
         }
 
-        protected override RGB_Value[] callback(RGB_Value[] new_rgbs)
+        protected override RGBValue[] callback(RGBValue[] new_rgbs)
         {
             if (_rainbow_rgbs == null || _rainbow_rgbs.Length != amount_rgbs)
             {

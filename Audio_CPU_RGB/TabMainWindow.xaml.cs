@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using AudioCPURGB.RGB_Creator;
-using AudioCPURGB.RGB_Output;
+using AudioCPURGB.RGBCreator;
+using AudioCPURGB.RGBOutput;
 
 namespace AudioCPURGB
 {
@@ -13,16 +13,14 @@ namespace AudioCPURGB
     /// </summary>
     public partial class TabMainWindow : Window, IDisposable
     {
-        public static TabMainWindow instance;
-
-        RGB_Output_Interface _current_interface;
+        IRGBOutput _current_interface;
         RGBOutputManager _rgb_manager;
 
-        RGB_Creator.RGB_Creator_Interface _rgbCreatorI;
-        RGB_Creator.RGB_Creator_Interface _selectedMisc;
+        RGBCreator.IRGBCreator _rgbCreatorI;
+        RGBCreator.IRGBCreator _selectedMisc;
 
-        CPU_Temperature_RGB_Creator _cpuRgbCreator;
-        Audio_RGB_Creator _audioRgbCreator;
+        CPUTemperatureRGBCreator _cpuRgbCreator;
+        AudioRGBCreator _audioRgbCreator;
         ScreenAnalyzer _screenAnalyzer;
         ColorChooser _colorChooser;
         Stroboscope _stroboscope;
@@ -31,52 +29,42 @@ namespace AudioCPURGB
         ColorChanger _colorchanger;
         RunningColors _runningColors;
 
-
-        Cyotek.Windows.Forms.ColorWheel colorWheel;
-
         public TabMainWindow()
         {
-            instance = this;
             // Initialize these before gui... i know bad
             _rainbow = new Rainbow();
             _runningDot = new RunningColorChangingDot();
 
-            try
-            {
-                InitializeComponent();
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.Print(e.ToString());
-            }
-            colorWheel = new Cyotek.Windows.Forms.ColorWheel
-            {
-                Color = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(48))))),
-                Dock = System.Windows.Forms.DockStyle.Fill,
-                Location = new System.Drawing.Point(0, 0),
-                Name = "colorWheel",
-                Size = new System.Drawing.Size(624, 224),
-                TabIndex = 0
-            };
-
+            InitializeComponent();    
+           
             _rgb_manager = new RGBOutputManager();
 
-            _cpuRgbCreator = new CPU_Temperature_RGB_Creator(cpuTempTB);
-            _audioRgbCreator = new Audio_RGB_Creator(BtnEnable, PbL, PbR, Spectrum, DeviceBox, AlgoChoice, SpectrumSlider, MinSlider);
+            _audioRgbCreator = new AudioRGBCreator(BtnEnable, PbL, PbR, Spectrum, DeviceBox, AlgoChoice, SpectrumSlider, MinSlider);
+            _cpuRgbCreator = new CPUTemperatureRGBCreator(cpuTempTB);            
             _screenAnalyzer = new ScreenAnalyzer();
             _colorChooser = new ColorChooser();
             _stroboscope = new Stroboscope();
             _colorchanger = new ColorChanger();
             _runningColors = new RunningColors();
 
+            _cpuRgbCreator.Initialize();
+            _audioRgbCreator.Initialize();
+            _screenAnalyzer.Initialize();
+            _colorChooser.Initialize();
+            _stroboscope.Initialize();
+            _colorchanger.Initialize();
+            _runningColors.Initialize();
+            _rainbow.Initialize();
+            _runningDot.Initialize();
+
             FillRGBOutputList();
 
-            xSkipper.Text = _screenAnalyzer.xSkipper.ToString();
-            ySkipper.Text = _screenAnalyzer.ySkipper.ToString();
-            xStart.Text = _screenAnalyzer.xStart.ToString();
-            yStart.Text = _screenAnalyzer.yStart.ToString();
-            xStop.Text = _screenAnalyzer.xStop.ToString();
-            yStop.Text = _screenAnalyzer.yStop.ToString();
+            xSkipper.Text = _screenAnalyzer.xSkipper.ToString(System.Globalization.CultureInfo.CurrentCulture);
+            ySkipper.Text = _screenAnalyzer.ySkipper.ToString(System.Globalization.CultureInfo.CurrentCulture);
+            xStart.Text = _screenAnalyzer.xStart.ToString(System.Globalization.CultureInfo.CurrentCulture);
+            yStart.Text = _screenAnalyzer.yStart.ToString(System.Globalization.CultureInfo.CurrentCulture);
+            xStop.Text = _screenAnalyzer.xStop.ToString(System.Globalization.CultureInfo.CurrentCulture);
+            yStop.Text = _screenAnalyzer.yStop.ToString(System.Globalization.CultureInfo.CurrentCulture);
 
             Application.Current.MainWindow.Activate();
             Application.Current.MainWindow.Focus();
@@ -88,7 +76,7 @@ namespace AudioCPURGB
             TabControl tabControl = sender as TabControl;
             if (e.Source is TabControl) //if this event fired from TabControl then enter
             {
-                RGB_Creator.RGB_Creator_Interface new_rgb_creator;
+                RGBCreator.IRGBCreator new_rgb_creator;
 
 
                 if (tabControl.SelectedIndex != 0)
@@ -121,25 +109,25 @@ namespace AudioCPURGB
                     default:
                         return;
                 }
-                set_new_rgb_creator(new_rgb_creator);
+                SetNewRGBCreator(new_rgb_creator);
             }
         }
 
-        private void set_new_rgb_creator(RGB_Creator.RGB_Creator_Interface new_rgb_creator)
+        private void SetNewRGBCreator(RGBCreator.IRGBCreator new_rgb_creator)
         {
             if (_rgbCreatorI != null)
             {
-                _rgbCreatorI.pause(); // pause current rgbCreator
+                _rgbCreatorI.Pause(); // pause current rgbCreator
             }
 
             if (new_rgb_creator != null && _current_interface != null)
             {
                 try
                 {
-                    new_rgb_creator.setRGBOutput(_current_interface);
-                    new_rgb_creator.start(); // start new rgbCreator
+                    new_rgb_creator.SetRGBOutput(_current_interface);
+                    new_rgb_creator.Start(); // start new rgbCreator
                 }
-                catch (Exception ex)
+                catch (RGBCreator.RGBCreatorException ex)
                 {        
                     MessageBox.Show(ex.Message, $"Error setting RGB-Creator {new_rgb_creator.GetType().Name}");
                 }
@@ -170,7 +158,7 @@ namespace AudioCPURGB
                     System.Diagnostics.Debug.Print("Weird radio button selected");
                     break;
             }
-            set_new_rgb_creator(_selectedMisc);
+            SetNewRGBCreator(_selectedMisc);
         }
  
         /// ################################### Serial-Control ################################### 
@@ -190,8 +178,8 @@ namespace AudioCPURGB
             try
             {
                 string selected_name = RGB_Output.Items[RGB_Output.SelectedIndex] as string;
-                RGB_Output_Interface new_interface = null;
-                foreach (RGB_Output_Interface _interface in _rgb_manager.GetAvailableOutputs())
+                IRGBOutput new_interface = null;
+                foreach (IRGBOutput _interface in _rgb_manager.GetAvailableOutputs())
                 {
                     string name = _interface.GetName();
                     
@@ -202,7 +190,7 @@ namespace AudioCPURGB
                     }                    
                     
                 }
-                _rgbCreatorI.pause();
+                _rgbCreatorI.Pause();
                 // Look if interface changed or checkbox is set to false
                 if (_current_interface != null && (_current_interface.GetName() != selected_name || CkbSerial.IsChecked == false))
                 {
@@ -224,9 +212,9 @@ namespace AudioCPURGB
                     }
                 }
 
-                set_new_rgb_creator(_rgbCreatorI);
+                SetNewRGBCreator(_rgbCreatorI);
             }
-            catch (Exception ex)
+            catch (RGBOutputException ex)
             {
                 CkbSerial.IsChecked = !CkbSerial.IsChecked; // Reset state                
                 MessageBox.Show(ex.Message, "Error setting RGB Output");
@@ -351,7 +339,7 @@ namespace AudioCPURGB
                 {
                     _screenAnalyzer.xSkipper = val;
                 }
-                xSkipper.Text = _screenAnalyzer.xSkipper.ToString();
+                xSkipper.Text = _screenAnalyzer.xSkipper.ToString(System.Globalization.CultureInfo.CurrentCulture);
             }
         }
 
@@ -364,7 +352,7 @@ namespace AudioCPURGB
                 {
                     _screenAnalyzer.ySkipper = val;
                 }
-                ySkipper.Text = _screenAnalyzer.ySkipper.ToString();
+                ySkipper.Text = _screenAnalyzer.ySkipper.ToString(System.Globalization.CultureInfo.CurrentCulture);
             }
         }
 
@@ -377,7 +365,7 @@ namespace AudioCPURGB
                 {
                     _screenAnalyzer.xStart = val;
                 }
-                xStart.Text = _screenAnalyzer.xStart.ToString();
+                xStart.Text = _screenAnalyzer.xStart.ToString(System.Globalization.CultureInfo.CurrentCulture);
             }
         }
 
@@ -390,7 +378,7 @@ namespace AudioCPURGB
                 {
                     _screenAnalyzer.yStart = val;
                 }
-                yStart.Text = _screenAnalyzer.yStart.ToString();
+                yStart.Text = _screenAnalyzer.yStart.ToString(System.Globalization.CultureInfo.CurrentCulture);
             }
         }
 
@@ -403,7 +391,7 @@ namespace AudioCPURGB
                 {
                     _screenAnalyzer.xStop = val;
                 }
-                xStop.Text = _screenAnalyzer.xStop.ToString();
+                xStop.Text = _screenAnalyzer.xStop.ToString(System.Globalization.CultureInfo.CurrentCulture);
             }
         }
 
@@ -416,7 +404,7 @@ namespace AudioCPURGB
                 {
                     _screenAnalyzer.yStop = val;
                 }
-                yStop.Text = _screenAnalyzer.yStop.ToString();
+                yStop.Text = _screenAnalyzer.yStop.ToString(System.Globalization.CultureInfo.CurrentCulture);
             }
         }
 

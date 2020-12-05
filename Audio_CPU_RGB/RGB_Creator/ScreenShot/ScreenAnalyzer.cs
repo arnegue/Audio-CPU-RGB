@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using AudioCPURGB.RGB_Output;
+using AudioCPURGB.RGBOutput;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Drawing.Imaging;
-using AudioCPURGB.RGB_Creator;
+using AudioCPURGB.RGBCreator;
 
 namespace AudioCPURGB
 {
-    class ScreenAnalyzer : RGB_Creator_Interface
+    class ScreenAnalyzer : IRGBCreator
     {
         private Screen activeScreen = Screen.PrimaryScreen;
 
@@ -29,7 +29,7 @@ namespace AudioCPURGB
         private Graphics memoryGraphics;
 
         private float emphaser_;
-        private RGB_Value lastRGB_;
+        private RGBValue lastRGB_;
 
         private Mutex varMutex = new Mutex();
 
@@ -45,7 +45,7 @@ namespace AudioCPURGB
             yStop_ = activeScreen.Bounds.Height;
             memoryImage = new Bitmap(activeScreen.Bounds.Width, activeScreen.Bounds.Height);
             s = new Size(memoryImage.Width, memoryImage.Height);
-            lastRGB_ = new RGB_Value();
+            lastRGB_ = new RGBValue();
         }
         public int xSkipper
         {
@@ -187,7 +187,7 @@ namespace AudioCPURGB
             emphaser_ = 1 + value;
         }
 
-        protected override void callback()
+        protected override void Callback()
         {         
             memoryGraphics = Graphics.FromImage(memoryImage);
             memoryGraphics.CopyFromScreen(0, 0, 0, 0, s);
@@ -223,7 +223,7 @@ namespace AudioCPURGB
             red *= brightness * emphaser_;
             green *= brightness * emphaser_;
             blue *= brightness * emphaser_;
-            RGB_Value rgb = new RGB_Value((byte)red, (byte)green, (byte)blue);
+            RGBValue rgb = new RGBValue((byte)red, (byte)green, (byte)blue);
             // Brightness 0
 
             // Brightness 1

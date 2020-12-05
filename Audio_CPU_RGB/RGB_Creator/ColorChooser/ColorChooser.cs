@@ -1,26 +1,26 @@
 ﻿using System.Threading;
-using AudioCPURGB.RGB_Creator;
+using AudioCPURGB.RGBCreator;
 
 namespace AudioCPURGB
 {
-    class ColorChooser : RGB_Creator_Interface
+    class ColorChooser : IRGBCreator
     {
-        RGB_Value old_rgb = new RGB_Value();
-        RGB_Value new_rgb = new RGB_Value();
+        RGBValue old_rgb = new RGBValue();
+        RGBValue new_rgb = new RGBValue();
         Mutex new_rgb_mutex = new Mutex();
 
         public void rgbChanged(int r, int g, int b)
         {
             new_rgb_mutex.WaitOne();
-            new_rgb = new RGB_Value((byte)r, (byte)g, (byte)b);
+            new_rgb = new RGBValue((byte)r, (byte)g, (byte)b);
             new_rgb_mutex.ReleaseMutex();
         }
 
-        protected override void callback()
+        protected override void Callback()
         {
-            RGB_Value copy_val = new RGB_Value();
+            RGBValue copy_val = new RGBValue();
             new_rgb_mutex.WaitOne();
-            copy_val.copy_values(new_rgb);
+            copy_val.CopyValues(new_rgb);
             new_rgb_mutex.ReleaseMutex();
 
             if (!old_rgb.Equals(copy_val))

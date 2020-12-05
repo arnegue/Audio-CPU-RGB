@@ -1,34 +1,34 @@
 ﻿using System;
-using AudioCPURGB.RGB_Creator;
+using AudioCPURGB.RGBCreator;
 using System.Threading;
 
 namespace AudioCPURGB
 {
-    class RunningColors : IndividualRGBOutput
+    class RunningColors : IndividualRGBCreator
     {
-        RGB_Value filled_rgb;
-        RGB_Value middle_rgb;
-        RGB_Value diff_rgb;
+        private RGBValue filled_rgb;
+        private RGBValue middle_rgb;
+        private RGBValue diff_rgb;
 
-        int last_rgb_index = 0;
-        int direction = 1;
-        Random random = new Random();
+        private int last_rgb_index;
+        private int direction = 1;
+        private Random random = new Random();
 
-        public override void start()
+        public override void Start()
         {
-            filled_rgb = new RGB_Value((byte)random.Next(0, 255), (byte)random.Next(0, 255), (byte)random.Next(0, 255));
-            middle_rgb = new RGB_Value((byte)random.Next(0, 255), (byte)random.Next(0, 255), (byte)random.Next(0, 255));
+            filled_rgb = new RGBValue((byte)random.Next(0, 255), (byte)random.Next(0, 255), (byte)random.Next(0, 255));
+            middle_rgb = new RGBValue((byte)random.Next(0, 255), (byte)random.Next(0, 255), (byte)random.Next(0, 255));
 
-            byte diff_r = (byte)(Math.Abs((int)filled_rgb.r - (int)middle_rgb.r) / 2);
-            byte diff_g = (byte)(Math.Abs((int)filled_rgb.g - (int)middle_rgb.g) / 2);
-            byte diff_b = (byte)(Math.Abs((int)filled_rgb.b - (int)middle_rgb.b) / 2);
+            byte diff_r = (byte)(Math.Abs((int)filled_rgb.R - (int)middle_rgb.R) / 2);
+            byte diff_g = (byte)(Math.Abs((int)filled_rgb.G - (int)middle_rgb.G) / 2);
+            byte diff_b = (byte)(Math.Abs((int)filled_rgb.B - (int)middle_rgb.B) / 2);
 
-            diff_rgb = new RGB_Value(diff_r, diff_g, diff_b);
+            diff_rgb = new RGBValue(diff_r, diff_g, diff_b);
 
-            base.start();
+            base.Start();
         }
 
-        protected override RGB_Value[] callback(RGB_Value[] new_rgbs)
+        protected override RGBValue[] callback(RGBValue[] new_rgbs)
         {
             // Show random dot at last_rgb_index
             int before_index = (last_rgb_index - 1) % amount_rgbs;

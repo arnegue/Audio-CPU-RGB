@@ -1,16 +1,16 @@
-﻿using AudioCPURGB.RGB_Creator;
+﻿using AudioCPURGB.RGBCreator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace AudioCPURGB.RGB_Output.BondedOutPut
+namespace AudioCPURGB.RGBOutput.BondedOutPut
 {
-    class BondedOutput : RGB_Output_Interface
+    class BondedOutput : IRGBOutput
     {
         private RGBOutputManager _manager;
         private bool _enabled;
-        private List<RGB_Output_Interface> _current_outputs;
+        private List<IRGBOutput> _current_outputs;
 
         public BondedOutput(RGBOutputManager manager)
         {
@@ -30,14 +30,14 @@ namespace AudioCPURGB.RGB_Output.BondedOutPut
         public void Initialize()
         {
             _current_outputs = ShowDialog();
-            List<RGB_Output_Interface> initialized_outputs = new List<RGB_Output_Interface>(); 
+            List<IRGBOutput> initialized_outputs = new List<IRGBOutput>(); 
             foreach (var output in _current_outputs)
             {
                 try
                 {
                     output.Initialize();
                     initialized_outputs.Add(output);
-                } catch {
+                } catch (RGBOutputException) {
                     // Safety shutdown for every already initialized output
                     foreach (var initialized_output in initialized_outputs)
                     {
@@ -49,20 +49,20 @@ namespace AudioCPURGB.RGB_Output.BondedOutPut
 
         private class RGBOutputCheckbox : CheckBox
         {
-            public RGB_Output_Interface Output;
-            public RGBOutputCheckbox(RGB_Output_Interface output)
+            public IRGBOutput Output;
+            public RGBOutputCheckbox(IRGBOutput output)
             {
                 this.Output = output;
                 this.Text = output.GetName();
             }
         }
-        private List<RGB_Output_Interface> ShowDialog()
+        private List<IRGBOutput> ShowDialog()
         {
             Form prompt = new Form
             {
                 AutoSize = true,
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                Text = "Choose outputs"
+                Text = String.Format(System.Globalization.CultureInfo.CurrentCulture, "Choose outputs")
             };
 
             Panel panel = new FlowLayoutPanel
@@ -80,7 +80,7 @@ namespace AudioCPURGB.RGB_Output.BondedOutPut
                 }
             }
           
-            Button ok = new Button() { Text = "Okay" };
+            Button ok = new Button() { Text = String.Format(System.Globalization.CultureInfo.CurrentCulture, "Okay") };
             ok.Click += (sender, e) => { prompt.Close(); };
             panel.Controls.Add(ok);
             prompt.Controls.Add(panel);
@@ -88,11 +88,12 @@ namespace AudioCPURGB.RGB_Output.BondedOutPut
 
             // At this point the user closed the dialog
             var checked_boxes = panel.Controls.OfType<RGBOutputCheckbox>().Where(c => c.Checked);
-            if (checked_boxes.Count() == 0)
+            prompt.Dispose();
+            if (!checked_boxes.Any())
             {
                 throw new Exception("Can't set BondedOutput: No outputs chosen.");
             }
-            List<RGB_Output_Interface> newOutputs = new List<RGB_Output_Interface>();
+            List<IRGBOutput> newOutputs = new List<IRGBOutput>();
             foreach (var cbx in checked_boxes)
             {
                 newOutputs.Add(cbx.Output);
@@ -114,7 +115,7 @@ namespace AudioCPURGB.RGB_Output.BondedOutPut
             }
         }
 
-        public void ShowRGB(RGB_Value rgb)
+        public void ShowRGB(RGBValue rgb)
         {
             foreach (var output in _current_outputs)
             {
@@ -122,7 +123,7 @@ namespace AudioCPURGB.RGB_Output.BondedOutPut
             }
         }
 
-        public void ShowRGBs(RGB_Value[] rgbs)
+        public void ShowRGBs(RGBValue[] rgbs)
         {
             this.ShowRGB(rgbs[0]); // Since it's only one rgb, just make it as old protocol 
         }

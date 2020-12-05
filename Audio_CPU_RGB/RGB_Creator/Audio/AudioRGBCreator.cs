@@ -8,14 +8,14 @@ using Un4seen.Bass;
 using System.Text;
 using Un4seen.BassWasapi;
 using System.Threading;
-using AudioCPURGB.RGB_Creator;
-using AudioCPURGB.RGB_Output;
-using AudioCPURGB.RGB_Creator.Audio;
+using AudioCPURGB.RGBCreator;
+using AudioCPURGB.RGBOutput;
+using AudioCPURGB.RGBCreator.Audio;
 
 namespace AudioCPURGB
 {
 
-    internal class Audio_RGB_Creator : RGB_Creator_Interface
+    internal class AudioRGBCreator : IRGBCreator
     {
         private bool _enable;               //enabled status
         private DispatcherTimer _t;         //timer that refreshes the display
@@ -35,7 +35,7 @@ namespace AudioCPURGB
 
         private int _lines = 16;            // number of spectrum lines
         //ctor
-        public Audio_RGB_Creator(System.Windows.Controls.Primitives.ToggleButton btnEnable, ProgressBar left, ProgressBar right, Spectrum spectrum, ComboBox devicelist, ComboBox algoChoser, MyRangeSlider mrs, Slider triggerSlider)
+        public AudioRGBCreator(System.Windows.Controls.Primitives.ToggleButton btnEnable, ProgressBar left, ProgressBar right, Spectrum spectrum, ComboBox devicelist, ComboBox algoChoser, MyRangeSlider mrs, Slider triggerSlider)
         {
             _fft = new float[1024];
             _lastlevel = 0;
@@ -89,7 +89,7 @@ namespace AudioCPURGB
             Enable = enable;
         }
 
-        protected override void callback()
+        protected override void Callback()
         {
 
         }
@@ -106,7 +106,7 @@ namespace AudioCPURGB
                     if (!_initialized)
                     {
                         var array = (_devicelist.Items[_devicelist.SelectedIndex] as string).Split(' ');
-                        devindex = Convert.ToInt32(array[0]);
+                        devindex = Convert.ToInt32(array[0], System.Globalization.CultureInfo.CurrentCulture);
                         bool result = BassWasapi.BASS_WASAPI_Init(devindex, 0, 0, BASSWASAPIInit.BASS_WASAPI_BUFFER, 1f, 0.05f, _process, IntPtr.Zero);
                         if (!result)
                         {
@@ -140,7 +140,7 @@ namespace AudioCPURGB
                     var device = BassWasapi.BASS_WASAPI_GetDeviceInfo(i);
                     if (device.IsEnabled && device.IsLoopback)
                     {
-                        _devicelist.Items.Add(string.Format("{0} - {1}", i, device.name));
+                        _devicelist.Items.Add(string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0} - {1}", i, device.name));
                         System.Diagnostics.Debug.Print("Found device: " + device.name);
                         System.Diagnostics.Debug.Print("Default? " + device.IsDefault);
                         System.Diagnostics.Debug.Print("Input? " + device.IsInput);
@@ -151,9 +151,9 @@ namespace AudioCPURGB
                     }
                     //  BASS_CONFIG_DEV_DEFAULT
                 }
-            } catch(Exception)
+            } catch (System.DllNotFoundException e)
             {
-                System.Diagnostics.Debug.Print("It seems like you loaded the wrong basswasapi.dll. Be sure to put the x64-dll to the x64-Build folder and the same with x32-dll in the x32 folder");
+                System.Diagnostics.Debug.Print("It seems like you loaded the wrong basswasapi.dll. Be sure to put the x64-dll to the x64-Build folder and the same with x32-dll in the x32 folder: " + e.Message);
             }
             _devicelist.SelectedIndex = 0;
             Bass.BASS_SetConfig(BASSConfig.BASS_CONFIG_UPDATETHREADS, false);
@@ -184,7 +184,7 @@ namespace AudioCPURGB
         }
 
         //cleanup
-        public void Free()
+        public static void Free()
         {
             BassWasapi.BASS_WASAPI_Free();
             Bass.BASS_Free();
@@ -192,7 +192,7 @@ namespace AudioCPURGB
 
         //timer 
         private const int skipper = 2;
-        private int skip = 0;
+        private int skip;
         private void _t_Tick(object sender, EventArgs e)
         {
             int ret = BassWasapi.BASS_WASAPI_GetData(_fft, (int)BASSData.BASS_DATA_FFT2048); //get channel fft data

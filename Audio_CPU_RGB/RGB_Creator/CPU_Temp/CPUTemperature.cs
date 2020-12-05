@@ -2,16 +2,16 @@
 using System.Threading;
 using OpenHardwareMonitor.Hardware;
 using System.Windows.Controls;
-using AudioCPURGB.RGB_Creator;
+using AudioCPURGB.RGBCreator;
 using System.Security.Principal;
 
 namespace AudioCPURGB
 {
-    class CPU_Temperature_RGB_Creator : RGB_Creator_Interface
+    class CPUTemperatureRGBCreator : IRGBCreator
     {
         private TextBlock _temperatureTextBlock;
 
-        private RGB_Value _lastRGB = new RGB_Value(); // last RGB_Value needed for fading
+        private RGBValue _lastRGB = new RGBValue(); // last RGB_Value needed for fading
         private const float m = 12.75F; // Constant needed for Algo1
         private const int _ms_sleepInterval = 1000;
 
@@ -19,10 +19,10 @@ namespace AudioCPURGB
         private IHardware _cpuHardware;
         private Computer _myComputer;
 
-        float[] temp_avg = new float[10];
-        int avg_index = 0;
+        private float[] temp_avg = new float[10];
+        private int avg_index;
 
-        public CPU_Temperature_RGB_Creator(TextBlock temperatureTextBlock)
+        public CPUTemperatureRGBCreator(TextBlock temperatureTextBlock)
         {
             if (IsAdministrator()) {
                 _temperatureTextBlock = temperatureTextBlock;
@@ -66,18 +66,18 @@ namespace AudioCPURGB
             }
         }
 
-        public override void start()
+        public override void Start()
         {
             if (IsAdministrator())
             {
-                base.start();
+                base.Start();
             } else
             {
                 throw new Exception("CPU-Temperature needs to be started with administrator privilegies. Restart this program as admin.");
             }
         }
 
-        protected override void callback()
+        protected override void Callback()
         {
             _cpuHardware.Update(); // Update Sensors
             float value = _cpuPackageSensor.Value ?? 0; // Get value from Sensor
@@ -105,7 +105,7 @@ namespace AudioCPURGB
             avg_index = (avg_index + 1) % temp_avg.Length;
 
             // Calculate value and fade into it
-            RGB_Value newRgb = calculateRGBValueAlgo1(avg);
+            RGBValue newRgb = calculateRGBValueAlgo1(avg);
 
             Fade(_lastRGB, newRgb, 50);
             _lastRGB = newRgb;
@@ -113,7 +113,7 @@ namespace AudioCPURGB
             Thread.Sleep(_ms_sleepInterval);            
         }
 
-        private RGB_Value calculateRGBValueAlgo1(float temp)
+        static private RGBValue calculateRGBValueAlgo1(float temp)
         {
             // Calculate Colours to temperature
             byte r, g, b;
@@ -142,7 +142,7 @@ namespace AudioCPURGB
                 g = 0;
                 b = 0;
             }
-            return new RGB_Value(r, g, b);
+            return new RGBValue(r, g, b);
         }    
     }
 }

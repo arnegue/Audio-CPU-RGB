@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CUE.NET;
 using CUE.NET.Brushes;
 using CUE.NET.Devices.Generic;
 using CUE.NET.Devices.Headset;
 using CUE.NET.Exceptions;
 
-namespace AudioCPURGB.RGB_Output.Corsair
+namespace AudioCPURGB.RGBOutput.Corsair
 {
-    class CorsairSDKOutput : RGB_Output_Interface
+    class CorsairSDKOutput : IRGBOutput
     {
         private string name = "Corsair";
         private CorsairHeadset _headset;
@@ -60,31 +58,31 @@ namespace AudioCPURGB.RGB_Output.Corsair
             _enabled = enable;
         }
 
-        public void ShowRGB(RGB_Value rgb)
+        public void ShowRGB(RGBValue rgb)
         {
             if (_lastColor == null)
             {
-                _lastColor = new CorsairColor(rgb.r, rgb.g, rgb.b);
+                _lastColor = new CorsairColor(rgb.R, rgb.G, rgb.B);
                 _headset.Brush = new SolidColorBrush(_lastColor);
             }
             else
             {
                 // Don't need to instantiate it again and again
-                _lastColor.R = rgb.r;
-                _lastColor.G = rgb.g;
-                _lastColor.B = rgb.b;
+                _lastColor.R = rgb.R;
+                _lastColor.G = rgb.G;
+                _lastColor.B = rgb.B;
             }
             _headset.Update();
         }
 
-        public void ShowRGBs(RGB_Value[] rgbs)
+        public void ShowRGBs(RGBValue[] rgbs)
         {
             int i = 0;
             foreach (var led in _leds)
             {
-                led.Color.R = rgbs[i].r;
-                led.Color.G = rgbs[i].g;
-                led.Color.B = rgbs[i].b;
+                led.Color.R = rgbs[i].R;
+                led.Color.G = rgbs[i].G;
+                led.Color.B = rgbs[i].B;
                 i++;
             }
             _headset.Update(true, true); 

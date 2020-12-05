@@ -14,7 +14,7 @@ namespace AudioCPURGB {
 
         public void Set(List<byte> data)
         {
-            if (data.Count < 16) return;
+            if (data == null || data.Count >= 16) return;
             Bar01.Value = data[0];
             Bar02.Value = data[1];
             Bar03.Value = data[2];

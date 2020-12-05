@@ -2,9 +2,9 @@
 using System.Threading;
 using LedCSharp;
 
-namespace AudioCPURGB.RGB_Output.LogitechLEDSDK
+namespace AudioCPURGB.RGBOutput.LogitechLEDSDK
 {
-    class Logitech_RGB_Output : RGB_Output_Interface
+    class LogitechRGBOutput : IRGBOutput
     {
         private bool _enabled;
         private string name = "Logitech G502";
@@ -25,8 +25,7 @@ namespace AudioCPURGB.RGB_Output.LogitechLEDSDK
 
             if (!NativeMethods.LogiLedInitWithName(GetName()))
             {
-                Console.WriteLine("LogiLedInit() failed.");
-                return;
+                throw new RGBOutputException("LogiLedInit() failed.");
             }
 
             Thread.Sleep(2);
@@ -43,7 +42,7 @@ namespace AudioCPURGB.RGB_Output.LogitechLEDSDK
 
             Thread.Sleep(2);
 
-            if (!NativeMethods.LogiLedSetTargetDevice(LogitechSDKConstants.LOGI_DEVICETYPE_ALL))
+            if (!NativeMethods.LogiLedSetTargetDevice(LogitechSDKConstants.LogiDevicetypeAll))
             {
                 throw new Exception("Did not work to set LogiLedSetTargetDevice");
             }
@@ -59,22 +58,21 @@ namespace AudioCPURGB.RGB_Output.LogitechLEDSDK
             _enabled = enable;
         }
 
-        public void ShowRGB(RGB_Value rgb)
+        public void ShowRGB(RGBValue rgb)
         {
-            // Logitech works in percent (0-100), usual rgb is 0-255
-            
-            double r = (double)rgb.r * rgb_to_perc;
-            double g = (double)rgb.g * rgb_to_perc;
-            double b = (double)rgb.b * rgb_to_perc;
+            // Logitech works in percent (0-100), usual rgb is 0-255            
+            double r = (double)rgb.R * rgb_to_perc;
+            double g = (double)rgb.G * rgb_to_perc;
+            double b = (double)rgb.B * rgb_to_perc;
 
 
             if (!NativeMethods.LogiLedSetLighting((int)r, (int)g, (int)b))
             {
-                Console.WriteLine("Did not work to set LogiLedSetLighting");
+                throw new RGBOutputException("Did not work to set LogiLedSetLighting");
             }
         }
 
-        public void ShowRGBs(RGB_Value[] rgbs)
+        public void ShowRGBs(RGBValue[] rgbs)
         {
             ShowRGB(rgbs[0]);
         }

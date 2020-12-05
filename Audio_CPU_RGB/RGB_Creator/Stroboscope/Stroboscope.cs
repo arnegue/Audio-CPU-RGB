@@ -1,32 +1,32 @@
 ﻿using System;
 using System.Threading;
-using AudioCPURGB.RGB_Output;
+using AudioCPURGB.RGBOutput;
 using OpenHardwareMonitor.Hardware;
 using System.Windows.Controls;
-using AudioCPURGB.RGB_Creator;
+using AudioCPURGB.RGBCreator;
 using AudioCPURGB;
 
 namespace AudioCPURGB
 {
-    class Stroboscope : RGB_Creator_Interface
+    class Stroboscope : IRGBCreator
     {
-        RGB_Value _empty;
-        RGB_Value _white;
+        RGBValue _empty;
+        RGBValue _white;
         int half_freq;
 
         public Stroboscope()
         {
             half_freq = 0;
-            _empty = new RGB_Value();
-            _white = new RGB_Value
+            _empty = new RGBValue();
+            _white = new RGBValue
             {
-                r = 255,
-                g = 255,
-                b = 255
+                R = 255,
+                G = 255,
+                B = 255
             };
         }
         
-        protected override void callback()
+        protected override void Callback()
         {
             if (half_freq != 0)
             {

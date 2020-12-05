@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AudioCPURGB.RGB_Output;
-
-namespace AudioCPURGB.RGB_Creator.Audio
+﻿namespace AudioCPURGB.RGBCreator.Audio
 {
     class ShowAudioToRGB1 : OldAudioAlgorithm
     {
         public ShowAudioToRGB1() : base("Algorithm 1") { }
 
-        protected override RGB_Value my_callback(RGB_Value rgb_template, byte[] specArray, int min_slider, int max_slider, int min_trigger)
+        protected override RGBValue my_callback(RGBValue rgb_template, byte[] specArray, int min_slider, int max_slider, int min_trigger)
         {
             byte[] rgb = new byte[colors];
 
@@ -34,7 +27,7 @@ namespace AudioCPURGB.RGB_Creator.Audio
 
                 rgb[rgbIndex] = (byte)(rgb[rgbIndex] / stepsPerColor); // Calculate Average
             }
-            rgb_template.set_array(rgb);
+            rgb_template.SetArray(rgb);
             return rgb_template;
         }
     }
@@ -48,7 +41,7 @@ namespace AudioCPURGB.RGB_Creator.Audio
     {
         public ShowAudioToRGB2() : base("Algorithm 2") { }
 
-        protected override RGB_Value my_callback(RGB_Value rgb_template, byte[] specArray, int min_slider, int max_slider, int min_trigger)
+        protected override RGBValue my_callback(RGBValue rgb_template, byte[] specArray, int min_slider, int max_slider, int min_trigger)
         {
 
             byte[] rgb = new byte[colors];
@@ -89,20 +82,20 @@ namespace AudioCPURGB.RGB_Creator.Audio
                 rgb[2] = (byte)(rgb[2] / bCount);
             }
 
-            rgb_template.set_array(rgb);
+            rgb_template.SetArray(rgb);
             return rgb_template;
         }
     }
 
     class ShowAudioToRGB3 : NewAudioAlgorithm
     {
-        int[] bassAvg = new int[2];
-        int bass_avg_Index = 0;
+        private int[] bassAvg = new int[2];
+        private int bass_avg_Index;
         public ShowAudioToRGB3() : base("Algorithm 3")
         {
         }
 
-        protected override RGB_Value[] my_callback(byte[] specArray, int min_slider, int max_slider, int min_trigger)
+        protected override RGBValue[] my_callback(byte[] specArray, int min_slider, int max_slider, int min_trigger)
         {
             int bass = 0;
             int right = ((int)max_slider) + 1;
@@ -143,8 +136,8 @@ namespace AudioCPURGB.RGB_Creator.Audio
                 // _triggerSlider.Value = bass;           // TODO      
             }
 
-            RGB_Value emptyRGB = new RGB_Value();
-            RGB_Value setRGB = valueToRGB((byte)bass, min_trigger);
+            RGBValue emptyRGB = new RGBValue();
+            RGBValue setRGB = valueToRGB((byte)bass, min_trigger);
 
             for (int i = 0; i < amount_rgbs; i++)
             {
@@ -170,7 +163,7 @@ namespace AudioCPURGB.RGB_Creator.Audio
     class ShowAudioToRGB4 : OldAudioAlgorithm
     {
         public ShowAudioToRGB4() : base("Algorithm 4") { }
-        protected override RGB_Value my_callback(RGB_Value rgb_template, byte[] specArray, int min_slider, int max_slider, int min_trigger)
+        protected override RGBValue my_callback(RGBValue rgb_template, byte[] specArray, int min_slider, int max_slider, int min_trigger)
         {
             bool with_avg = true;
 
@@ -189,7 +182,7 @@ namespace AudioCPURGB.RGB_Creator.Audio
                 left = left_max + (diff * i);
                 right = left_max + (diff * (i + 1));
 
-                int maximumIndex = this.get_maximum_peak_index_range(left, right, specArray);
+                int maximumIndex = get_maximum_peak_index_range(left, right, specArray);
 
                 if (with_avg)
                 {
@@ -217,7 +210,7 @@ namespace AudioCPURGB.RGB_Creator.Audio
                 rgb[i] = peak_volume;
             }
 
-            rgb_template.set_array(rgb);
+            rgb_template.SetArray(rgb);
             return rgb_template;
         }
     }
@@ -231,7 +224,7 @@ namespace AudioCPURGB.RGB_Creator.Audio
     {
         bool with_avg = true;
         public ShowAudioToRGB5() : base("Algorithm 5") { }
-        protected override RGB_Value my_callback(RGB_Value rgb_template, byte[] specArray, int min_slider, int max_slider, int min_trigger)
+        protected override RGBValue my_callback(RGBValue rgb_template, byte[] specArray, int min_slider, int max_slider, int min_trigger)
         {
             byte right_max = (byte)(max_slider + 1);
             byte left_max = (byte)min_slider;
@@ -265,7 +258,7 @@ namespace AudioCPURGB.RGB_Creator.Audio
                     search_right = right;
                 }
 
-                int maximumIndex = this.get_maximum_peak_index_range(search_left, search_right, specArray);
+                int maximumIndex = get_maximum_peak_index_range(search_left, search_right, specArray);
 
                 if (maximumIndex < left || maximumIndex > right)
                 {
@@ -300,18 +293,18 @@ namespace AudioCPURGB.RGB_Creator.Audio
             }
 
 
-            rgb_template.set_array(rgb);
+            rgb_template.SetArray(rgb);
             return rgb_template;
         }
     }
     class ShowAudioToRGB6 : NewAudioAlgorithm
     {
-        int[] bassAvg = new int[2];
-        int bass_avg_Index = 0;
+        private int[] bassAvg = new int[2];
+        private int bass_avg_Index;
 
         public ShowAudioToRGB6() : base("Algorithm 6") { }
 
-        protected override RGB_Value[] my_callback(byte[] specArray, int min_slider, int max_slider, int min_trigger) // TODO TRIGGER!?
+        protected override RGBValue[] my_callback(byte[] specArray, int min_slider, int max_slider, int min_trigger) // TODO TRIGGER!?
         {
             int left = (int)min_slider;
             int right = ((int)max_slider) + 1;
@@ -347,8 +340,8 @@ namespace AudioCPURGB.RGB_Creator.Audio
                  _triggerSlider.Value = bass;
              }
              */
-            RGB_Value emptyRGB = new RGB_Value();
-            RGB_Value setRGB = valueToRGB((byte)bass, min_trigger);
+            RGBValue emptyRGB = new RGBValue();
+            RGBValue setRGB = valueToRGB((byte)bass, min_trigger);
 
 
             for (int i = 0; i < rgbs.Length; i++)

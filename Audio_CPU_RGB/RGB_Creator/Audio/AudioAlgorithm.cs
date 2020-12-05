@@ -27,9 +27,9 @@ namespace AudioCPURGB
             return _name;
         }
 
-        public abstract void showRGB(byte[] specArray, int min_slider, int max_slider, int min_trigger, bool absNotRel, RGB_Output.RGB_Output_Interface rgbOutput);
+        public abstract void showRGB(byte[] specArray, int min_slider, int max_slider, int min_trigger, bool absNotRel, RGBOutput.IRGBOutput rgbOutput);
 
-        protected byte rel_check(byte b, int min_trigger)
+        static protected byte rel_check(byte b, int min_trigger)
         {
             if (min_trigger == 255)
             {
@@ -58,7 +58,7 @@ namespace AudioCPURGB
          }*/
 
 
-        protected RGB_Value valueToRGB(byte value, int minTrigger)
+        protected RGBValue valueToRGB(byte value, int minTrigger)
         {
             if (minTrigger == 0)
             {
@@ -85,7 +85,7 @@ namespace AudioCPURGB
                 r = 255;
             }
 
-            return new RGB_Value(r, g, b);
+            return new RGBValue(r, g, b);
         }
 
 
@@ -94,7 +94,7 @@ namespace AudioCPURGB
         /// </summary>
         /// <param name="left"></param>
         /// <param name="right"></param>
-        protected int get_maximum_peak_index_range(int left, int right, byte[] specArray)
+        static protected int get_maximum_peak_index_range(int left, int right, byte[] specArray)
         {
             int maximumIndex = 0;
             byte maxVal = 0;
@@ -118,16 +118,16 @@ namespace AudioCPURGB
     /// </summary>
     abstract class OldAudioAlgorithm : AudioAlgorithm
     {
-        private RGB_Value _oldRGBValue;
-        private RGB_Value _newRGBValue;
+        private RGBValue _oldRGBValue;
+        private RGBValue _newRGBValue;
         public OldAudioAlgorithm(String name) : base(name)
         {
-            _oldRGBValue = new RGB_Value();
-            _newRGBValue = new RGB_Value();
+            _oldRGBValue = new RGBValue();
+            _newRGBValue = new RGBValue();
         }
 
 
-        public override void showRGB(byte[] specArray, int min_slider, int max_slider, int min_trigger, bool absNotRel, RGB_Output.RGB_Output_Interface rgbOutput)
+        public override void showRGB(byte[] specArray, int min_slider, int max_slider, int min_trigger, bool absNotRel, RGBOutput.IRGBOutput rgbOutput)
         {
             if (min_trigger != 0)
             {
@@ -153,15 +153,15 @@ namespace AudioCPURGB
             sendRGBValue(rgbOutput);
         }
 
-        protected abstract RGB_Value my_callback(RGB_Value rgb_template, byte[] specArray, int min_slider, int max_slider, int min_trigger);
+        protected abstract RGBValue my_callback(RGBValue rgb_template, byte[] specArray, int min_slider, int max_slider, int min_trigger);
 
-        private void sendRGBValue(RGB_Output.RGB_Output_Interface rgbOutput)
+        private void sendRGBValue(RGBOutput.IRGBOutput rgbOutput)
         {
             if (!_newRGBValue.Equals(_oldRGBValue))
             {
                 rgbOutput.ShowRGB(_newRGBValue);
 
-                _oldRGBValue.copy_values(_newRGBValue);
+                _oldRGBValue.CopyValues(_newRGBValue);
             }
             else
             {
@@ -172,15 +172,15 @@ namespace AudioCPURGB
 
     abstract class NewAudioAlgorithm : AudioAlgorithm
     {
-        protected RGB_Value[] rgbs;
+        protected RGBValue[] rgbs;
         protected int amount_rgbs = -1;
         public NewAudioAlgorithm(String name) : base(name)
         {
         }
 
-        protected abstract RGB_Value[] my_callback(byte[] specArray, int min_slider, int max_slider, int min_trigger);
+        protected abstract RGBValue[] my_callback(byte[] specArray, int min_slider, int max_slider, int min_trigger);
 
-        public override void showRGB(byte[] specArray, int min_slider, int max_slider, int min_trigger, bool absNotRel, RGB_Output.RGB_Output_Interface rgbOutput)
+        public override void showRGB(byte[] specArray, int min_slider, int max_slider, int min_trigger, bool absNotRel, RGBOutput.IRGBOutput rgbOutput)
         {
             if (min_trigger != 0)
             {
@@ -210,10 +210,10 @@ namespace AudioCPURGB
             // In case the amount of RGBs changed create new array (usually if output changes)
             if (rgbs == null || amount_rgbs != new_amount_rgbs)
             {
-                rgbs = new RGB_Value[new_amount_rgbs];
+                rgbs = new RGBValue[new_amount_rgbs];
                 for (int led = 0; led < new_amount_rgbs; led++)
                 {
-                    rgbs[led] = new RGB_Value();
+                    rgbs[led] = new RGBValue();
                 }
                 amount_rgbs = new_amount_rgbs;
             }

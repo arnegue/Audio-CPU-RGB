@@ -1,27 +1,27 @@
 ﻿using System;
 using System.Threading;
-using AudioCPURGB.RGB_Creator;
+using AudioCPURGB.RGBCreator;
 
 namespace AudioCPURGB
 {
     /// <summary>
     /// Lets one dot with random Colour run around the LED-Strip
     /// </summary>
-    class RunningColorChangingDot : IndividualRGBOutput
-    {      
-        RGB_Value empty_rgb = new RGB_Value();
-        int last_rgb_index = 0;
-        int direction = 1;
-        Random random = new Random();
+    class RunningColorChangingDot : IndividualRGBCreator
+    {
+        private RGBValue empty_rgb = new RGBValue();
+        private int last_rgb_index;
+        private int direction = 1;
+        private Random random = new Random();
 
-        protected override RGB_Value[] callback(RGB_Value[] new_rgbs)
+        protected override RGBValue[] callback(RGBValue[] new_rgbs)
         {           
             // Show random dot at last_rgb_index
             for (int i = 0; i < new_rgbs.Length; i++)
             {
                 if (i == last_rgb_index)
                 {
-                    new_rgbs[i] = new RGB_Value((byte)random.Next(0, 255), (byte)random.Next(0, 255), (byte)random.Next(0, 255));
+                    new_rgbs[i] = new RGBValue((byte)random.Next(0, 255), (byte)random.Next(0, 255), (byte)random.Next(0, 255));
                 }
                 else
                 {

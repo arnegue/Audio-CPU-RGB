@@ -4,7 +4,7 @@ using System.Text;
 
 namespace LedCSharp
 {
-    public enum keyboardNames
+    public enum KeyboardName
     {
         ESC = 0x01,
         F1 = 0x3b,
@@ -19,9 +19,9 @@ namespace LedCSharp
         F10 = 0x44,
         F11 = 0x57,
         F12 = 0x58,
-        PRINT_SCREEN = 0x137,
-        SCROLL_LOCK = 0x46,
-        PAUSE_BREAK = 0x145,
+        PrintScreen = 0x137,
+        ScrollLock = 0x46,
+        PauseBreak = 0x145,
         TILDE = 0x29,
         ONE = 0x02,
         TWO = 0x03,
@@ -38,11 +38,11 @@ namespace LedCSharp
         BACKSPACE = 0x0E,
         INSERT = 0x152,
         HOME = 0x147,
-        PAGE_UP = 0x149,
-        NUM_LOCK = 0x45,
-        NUM_SLASH = 0x135,
-        NUM_ASTERISK = 0x37,
-        NUM_MINUS = 0x4A,
+        PageUp = 0x149,
+        NumLock = 0x45,
+        NumSlash = 0x135,
+        NumAsterix = 0x37,
+        NumMinus = 0x4A,
         TAB = 0x0F,
         Q = 0x10,
         W = 0x11,
@@ -54,17 +54,17 @@ namespace LedCSharp
         I = 0x17,
         O = 0x18,
         P = 0x19,
-        OPEN_BRACKET = 0x1A,
-        CLOSE_BRACKET = 0x1B,
+        OpenBracket = 0x1A,
+        CloseBracket = 0x1B,
         BACKSLASH = 0x2B,
-        KEYBOARD_DELETE = 0x153,
+        KeyboardDelete = 0x153,
         END = 0x14F,
-        PAGE_DOWN = 0x151,
-        NUM_SEVEN = 0x47,
-        NUM_EIGHT = 0x48,
-        NUM_NINE = 0x49,
-        NUM_PLUS = 0x4E,
-        CAPS_LOCK = 0x3A,
+        PageDown = 0x151,
+        NumSeven = 0x47,
+        NumEight = 0x48,
+        NumNine = 0x49,
+        NumPlus = 0x4E,
+        CapsLock = 0x3A,
         A = 0x1E,
         S = 0x1F,
         D = 0x20,
@@ -77,10 +77,10 @@ namespace LedCSharp
         SEMICOLON = 0x27,
         APOSTROPHE = 0x28,
         ENTER = 0x1C,
-        NUM_FOUR = 0x4B,
-        NUM_FIVE = 0x4C,
-        NUM_SIX = 0x4D,
-        LEFT_SHIFT = 0x2A,
+        NumFour = 0x4B,
+        NumFive = 0x4C,
+        NumSix = 0x4D,
+        LeftShift = 0x2A,
         Z = 0x2C,
         X = 0x2D,
         C = 0x2E,
@@ -90,37 +90,37 @@ namespace LedCSharp
         M = 0x32,
         COMMA = 0x33,
         PERIOD = 0x34,
-        FORWARD_SLASH = 0x35,
-        RIGHT_SHIFT = 0x36,
-        ARROW_UP = 0x148,
-        NUM_ONE = 0x4F,
-        NUM_TWO = 0x50,
-        NUM_THREE = 0x51,
-        NUM_ENTER = 0x11C,
-        LEFT_CONTROL = 0x1D,
-        LEFT_WINDOWS = 0x15B,
-        LEFT_ALT = 0x38,
+        ForwardSlash = 0x35,
+        RightShift = 0x36,
+        ArrowUp = 0x148,
+        NumOne = 0x4F,
+        NumTwo = 0x50,
+        NumThree = 0x51,
+        NumEnter = 0x11C,
+        LeftControl = 0x1D,
+        LeftWindows = 0x15B,
+        LeftAlt = 0x38,
         SPACE = 0x39,
-        RIGHT_ALT = 0x138,
-        RIGHT_WINDOWS = 0x15C,
-        APPLICATION_SELECT = 0x15D,
-        RIGHT_CONTROL = 0x11D,
-        ARROW_LEFT = 0x14B,
-        ARROW_DOWN = 0x150,
-        ARROW_RIGHT = 0x14D,
-        NUM_ZERO = 0x52,
-        NUM_PERIOD = 0x53,
-        G_1 = 0xFFF1,
-        G_2 = 0xFFF2,
-        G_3 = 0xFFF3,
-        G_4 = 0xFFF4,
-        G_5 = 0xFFF5,
-        G_6 = 0xFFF6,
-        G_7 = 0xFFF7,
-        G_8 = 0xFFF8,
-        G_9 = 0xFFF9,
-        G_LOGO = 0xFFFF1,
-        G_BADGE = 0xFFFF2
+        RightAlt = 0x138,
+        RightWindows = 0x15C,
+        ApplicationSelect = 0x15D,
+        RightControl = 0x11D,
+        ArrowLeft = 0x14B,
+        ArrowDown = 0x150,
+        ArrowRight = 0x14D,
+        NumZero = 0x52,
+        NumPeriod = 0x53,
+        G1 = 0xFFF1,
+        G2 = 0xFFF2,
+        G3 = 0xFFF3,
+        G4 = 0xFFF4,
+        G5 = 0xFFF5,
+        G6 = 0xFFF6,
+        G7 = 0xFFF7,
+        G8 = 0xFFF8,
+        G9 = 0xFFF9,
+        GLogo = 0xFFFF1,
+        GBadge = 0xFFFF2
     };
 
     public enum DeviceType
@@ -131,23 +131,23 @@ namespace LedCSharp
         Headset = 0x8,
         Speaker = 0xe
     }
-    public class LogitechSDKConstants
+    public static class LogitechSDKConstants
     {
-        private const int LOGI_DEVICETYPE_MONOCHROME_ORD = 0;
-        private const int LOGI_DEVICETYPE_RGB_ORD = 1;
-        private const int LOGI_DEVICETYPE_PERKEY_RGB_ORD = 2;
+        private const int LogiDevicetypeMonochromeOrd = 0;
+        private const int LogiDevicetypeRGBOrd = 1;
+        private const int LogiDevicetypePerKeyRGBOrd = 2;
 
-        public const int LOGI_DEVICETYPE_MONOCHROME = (1 << LOGI_DEVICETYPE_MONOCHROME_ORD);
-        public const int LOGI_DEVICETYPE_RGB = (1 << LOGI_DEVICETYPE_RGB_ORD);
-        public const int LOGI_DEVICETYPE_PERKEY_RGB = (1 << LOGI_DEVICETYPE_PERKEY_RGB_ORD);
-        public const int LOGI_DEVICETYPE_ALL = (LOGI_DEVICETYPE_MONOCHROME | LOGI_DEVICETYPE_RGB | LOGI_DEVICETYPE_PERKEY_RGB);
+        public const int LogiDevicetypeMonochrome = (1 << LogiDevicetypeMonochromeOrd);
+        public const int LogiDevicetypeRGB = (1 << LogiDevicetypeRGBOrd);
+        public const int LogiDevicetypePerKeyRGB = (1 << LogiDevicetypePerKeyRGBOrd);
+        public const int LogiDevicetypeAll = (LogiDevicetypeMonochrome | LogiDevicetypeRGB | LogiDevicetypePerKeyRGB);
 
-        public const int LOGI_LED_BITMAP_WIDTH = 21;
-        public const int LOGI_LED_BITMAP_HEIGHT = 6;
-        public const int LOGI_LED_BITMAP_BYTES_PER_KEY = 4;
+        public const int LogiLEDBitmapWidth = 21;
+        public const int LogiLEDBitmapHeight = 6;
+        public const int LogiLEDBitmapBytesPerKey = 4;
 
-        public const int LOGI_LED_BITMAP_SIZE = LOGI_LED_BITMAP_WIDTH * LOGI_LED_BITMAP_HEIGHT * LOGI_LED_BITMAP_BYTES_PER_KEY;
-        public const int LOGI_LED_DURATION_INFINITE = 0;
+        public const int LogiLEDBitmapSize = LogiLEDBitmapWidth * LogiLEDBitmapHeight * LogiLEDBitmapBytesPerKey;
+        public const int LogiLEDDurationInfinite = 0;
     }
 
 
@@ -198,7 +198,7 @@ namespace LedCSharp
         internal static extern bool LogiLedStopEffects();
 
         [DllImport("LogitechLedEnginesWrapper ", CallingConvention = CallingConvention.Cdecl)]
-        internal static extern bool LogiLedExcludeKeysFromBitmap(keyboardNames[] keyList, int listCount);
+        internal static extern bool LogiLedExcludeKeysFromBitmap(KeyboardName[] keyList, int listCount);
 
         [DllImport("LogitechLedEnginesWrapper ", CallingConvention = CallingConvention.Cdecl)]
         internal static extern bool LogiLedSetLightingFromBitmap(byte[] bitmap);
@@ -213,22 +213,22 @@ namespace LedCSharp
         internal static extern bool LogiLedSetLightingForKeyWithQuartzCode(int keyCode, int redPercentage, int greenPercentage, int bluePercentage);
 
         [DllImport("LogitechLedEnginesWrapper ", CallingConvention = CallingConvention.Cdecl)]
-        internal static extern bool LogiLedSetLightingForKeyWithKeyName(keyboardNames keyCode, int redPercentage, int greenPercentage, int bluePercentage);
+        internal static extern bool LogiLedSetLightingForKeyWithKeyName(KeyboardName keyCode, int redPercentage, int greenPercentage, int bluePercentage);
 
         [DllImport("LogitechLedEnginesWrapper ", CallingConvention = CallingConvention.Cdecl)]
-        internal static extern bool LogiLedSaveLightingForKey(keyboardNames keyName);
+        internal static extern bool LogiLedSaveLightingForKey(KeyboardName keyName);
 
         [DllImport("LogitechLedEnginesWrapper ", CallingConvention = CallingConvention.Cdecl)]
-        internal static extern bool LogiLedRestoreLightingForKey(keyboardNames keyName);
+        internal static extern bool LogiLedRestoreLightingForKey(KeyboardName keyName);
 
         [DllImport("LogitechLedEnginesWrapper ", CallingConvention = CallingConvention.Cdecl)]
-        internal static extern bool LogiLedFlashSingleKey(keyboardNames keyName, int redPercentage, int greenPercentage, int bluePercentage, int msDuration, int msInterval);
+        internal static extern bool LogiLedFlashSingleKey(KeyboardName keyName, int redPercentage, int greenPercentage, int bluePercentage, int msDuration, int msInterval);
 
         [DllImport("LogitechLedEnginesWrapper ", CallingConvention = CallingConvention.Cdecl)]
-        internal static extern bool LogiLedPulseSingleKey(keyboardNames keyName, int startRedPercentage, int startGreenPercentage, int startBluePercentage, int finishRedPercentage, int finishGreenPercentage, int finishBluePercentage, int msDuration, bool isInfinite);
+        internal static extern bool LogiLedPulseSingleKey(KeyboardName keyName, int startRedPercentage, int startGreenPercentage, int startBluePercentage, int finishRedPercentage, int finishGreenPercentage, int finishBluePercentage, int msDuration, bool isInfinite);
 
         [DllImport("LogitechLedEnginesWrapper ", CallingConvention = CallingConvention.Cdecl)]
-        internal static extern bool LogiLedStopEffectsOnKey(keyboardNames keyName);
+        internal static extern bool LogiLedStopEffectsOnKey(KeyboardName keyName);
 
         [DllImport("LogitechLedEnginesWrapper ", CallingConvention = CallingConvention.Cdecl)]
         internal static extern bool LogiLedSetLightingForTargetZone(DeviceType deviceType, int zone, int redPercentage, int greenPercentage, int bluePercentage);
