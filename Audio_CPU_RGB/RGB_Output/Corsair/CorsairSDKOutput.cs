@@ -11,7 +11,6 @@ namespace AudioCPURGB.RGBOutput.Corsair
 {
     class CorsairSDKOutput : IRGBOutput
     {
-        private string name = "Corsair";
         private CorsairHeadset _headset;
         private IEnumerable<CorsairLed> _leds;
         private bool _enabled;
@@ -28,7 +27,7 @@ namespace AudioCPURGB.RGBOutput.Corsair
 
         public string GetName()
         {
-            return name;
+            return "Corsair";
         }
 
         public void Initialize()
