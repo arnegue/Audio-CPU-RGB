@@ -127,7 +127,7 @@ namespace AudioCPURGB.RGBCreator
 
         public void Fade(RGBValue[] oldValues, RGBValue[] newValues, int fade_time_ms = 50)
         {            
-            while (!RGBValue.Equals(oldValues, newValues))
+            while (!RGBValue.Equals(oldValues, newValues) && _pauseEvent.WaitOne())
             {
                 for (int i = 0; i < newValues.Length; i++)
                 {
@@ -143,7 +143,7 @@ namespace AudioCPURGB.RGBCreator
             RGBValue lastRGB = new RGBValue();
             lastRGB.CopyValues(oldValue);
 
-            while (!lastRGB.Equals(newValue))
+            while (!lastRGB.Equals(newValue) && _pauseEvent.WaitOne())
             {
                 lastRGB = GetNextFadeIteration(lastRGB, newValue);
 
