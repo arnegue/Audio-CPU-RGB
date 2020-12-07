@@ -143,13 +143,11 @@ namespace AudioCPURGB.RGBCreator
             RGBValue lastRGB = new RGBValue();
             lastRGB.CopyValues(oldValue);
 
-            _rgbOutput.ShowRGB(lastRGB);
             while (!lastRGB.Equals(newValue))
             {
                 lastRGB = GetNextFadeIteration(lastRGB, newValue);
 
                 _rgbOutput.ShowRGB(lastRGB);
-                // Wait a few Millisec to fade to new Color
                 Thread.Sleep(fade_time_ms);
             }
         }
