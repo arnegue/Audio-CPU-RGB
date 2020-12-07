@@ -46,7 +46,13 @@
         /// <returns>true if equal</returns>
         public override bool Equals(object obj)
         {
-            return Equals(this, obj);
+            if (this.GetType() == obj.GetType())
+            {
+                return StaticEquals(this, (RGBValue) obj);
+            } else
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -55,9 +61,9 @@
         /// <param name="obj_1">First object to compare to</param>
         /// <param name="val_2">Second object to compare to</param>
         /// <returns></returns>
-        public static bool Equals(RGBValue obj_1, RGBValue val_2)
+        public static bool StaticEquals(RGBValue obj_1, RGBValue val_2)
         {
-            if (obj_1 != null && val_2 != null && val_2.GetType() == obj_1.GetType())
+            if (obj_1 != null && val_2 != null)
             {
                 RGBValue that = (RGBValue)val_2;
                 if (obj_1.R == that.R && obj_1.G == that.G && obj_1.B == that.B)
