@@ -125,26 +125,9 @@ namespace AudioCPURGB.RGBCreator
             return new RGBValue(temp_r, temp_g, temp_b);
         }
 
-        static private bool RGBsEqual(RGBValue[] oldValues, RGBValue[] newValues)
-        {
-            if (oldValues.Length != newValues.Length)
-            {
-                return false;
-            }
-
-            for (int i = 0; i < newValues.Length; i++)
-            {
-                if (!oldValues[i].Equals(newValues[i]))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
         public void Fade(RGBValue[] oldValues, RGBValue[] newValues, int fade_time_ms = 50)
-        {
-            while (!RGBsEqual(oldValues, newValues))
+        {            
+            while (!RGBValue.Equals(oldValues, newValues))
             {
                 for (int i = 0; i < newValues.Length; i++)
                 {

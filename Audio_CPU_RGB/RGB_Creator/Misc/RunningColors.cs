@@ -28,7 +28,7 @@ namespace AudioCPURGB
             base.Start();
         }
 
-        protected override RGBValue[] callback(RGBValue[] new_rgbs)
+        protected override RGBValue[] Callback(RGBValue[] new_rgbs)
         {
             // Show random dot at last_rgb_index
             int before_index = (last_rgb_index - 1) % amount_rgbs;
