@@ -21,6 +21,8 @@
     <WarningLevel>4</WarningLevel>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -35,8 +37,6 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -116,9 +116,6 @@
     </Reference>
     <Reference Include="CUE.NET, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CUE.NET.1.2.0.1\lib\net45\CUE.NET.dll</HintPath>
-    </Reference>
-    <Reference Include="Cyotek.Windows.Forms.ColorPicker">
-      <HintPath>externals\Cyotek.Windows.Forms.ColorPicker.dll</HintPath>
     </Reference>
     <Reference Include="OpenHardwareMonitorLib">
       <HintPath>F:\test\OpenHardwareMonitorLib.dll</HintPath>
