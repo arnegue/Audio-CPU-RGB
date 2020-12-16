@@ -34,13 +34,19 @@ namespace AudioCPURGB.RGBOutput.Corsair
         {
             if (_headset == null)
             {
-                CueSDK.Initialize();
-                _headset = CueSDK.HeadsetSDK;
-                GetAmountRGBs();
-            }
-            if (_headset == null)
-            {
-                throw new WrapperException("Something went wrong. No headset?");
+                try
+                {
+                    CueSDK.Initialize();
+                    _headset = CueSDK.HeadsetSDK;
+                    GetAmountRGBs();
+
+                    if (_headset == null)
+                    {
+                        throw new InitializationException("Something went wrong. No headset?");
+                    }
+                } catch (CUE.NET.Exceptions.CUEException e) {
+                    throw new InitializationException(e.Message, e);
+                }
             }
             Console.WriteLine(_headset.DeviceInfo.Model);
             Console.WriteLine(_headset.DeviceInfo.Type.ToString());
