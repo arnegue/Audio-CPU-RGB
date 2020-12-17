@@ -7,9 +7,6 @@
 
         public RGBValue()
         {
-            R = 0;
-            G = 0;
-            B = 0;
         }
 
         public RGBValue(byte rn, byte gn, byte bn)
@@ -42,12 +39,34 @@
             }
         }
 
+        /// <summary>
+        /// Instance Equal check between intance and given object
+        /// </summary>
+        /// <param name="obj">Object to compare to</param>
+        /// <returns>true if equal</returns>
         public override bool Equals(object obj)
         {
-            if (obj != null && obj.GetType() == this.GetType())
+            if (this.GetType() == obj.GetType())
             {
-                RGBValue that = (RGBValue)obj;
-                if (this.R == that.R && this.G == that.G && this.B == that.B)
+                return StaticEquals(this, (RGBValue) obj);
+            } else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Static Equal check between two given RGBValues
+        /// </summary>
+        /// <param name="obj_1">First object to compare to</param>
+        /// <param name="val_2">Second object to compare to</param>
+        /// <returns></returns>
+        public static bool StaticEquals(RGBValue obj_1, RGBValue val_2)
+        {
+            if (obj_1 != null && val_2 != null)
+            {
+                RGBValue that = (RGBValue)val_2;
+                if (obj_1.R == that.R && obj_1.G == that.G && obj_1.B == that.B)
                 {
                     return true;
                 }
@@ -55,10 +74,33 @@
             return false;
         }
 
+        /// <summary>
+        /// Static Equal check between list of RGBValues
+        /// </summary>
+        /// <param name="val_1"></param>
+        /// <param name="val_2"></param>
+        /// <returns></returns>
+        public static bool Equals(RGBValue[] val_1, RGBValue[] val_2)
+        {
+            if (val_1.Length != val_2.Length)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < val_2.Length; i++)
+            {
+                if (!RGBValue.Equals(val_1[i], val_2[i]))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
         public override int GetHashCode()
         {
             return R + G + B;
         }
-
     }
 }

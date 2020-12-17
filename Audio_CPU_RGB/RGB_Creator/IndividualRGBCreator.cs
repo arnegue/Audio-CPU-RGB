@@ -11,7 +11,7 @@ namespace AudioCPURGB.RGBCreator
         protected int amount_rgbs;
         protected int minimum_amount_rgbs = 1;
 
-        static private RGBValue[] create_new_rgbs(int amount_rgbs)
+        static private RGBValue[] CreateNewRGBs(int amount_rgbs)
         {
             RGBValue[] new_rgbs = new RGBValue[amount_rgbs];
             for (int led = 0; led < amount_rgbs; led++)
@@ -31,17 +31,17 @@ namespace AudioCPURGB.RGBCreator
             if (old_rgbs == null || amount_rgbs != new_amount_rgbs)
             {
                 amount_rgbs = new_amount_rgbs;
-                old_rgbs = create_new_rgbs(amount_rgbs); // Reset old ones
+                old_rgbs = CreateNewRGBs(amount_rgbs); // Reset old ones
             }
             base.Start();
         }
 
         protected override void Callback()
         {
-            RGBValue[] new_values = create_new_rgbs(amount_rgbs); // Create template for callback
-            old_rgbs = callback(new_values);
+            RGBValue[] new_values = CreateNewRGBs(amount_rgbs); // Create template for callback
+            old_rgbs = Callback(new_values);
         }
 
-        protected abstract RGBValue[] callback(RGBValue[] new_rgbs);
+        protected abstract RGBValue[] Callback(RGBValue[] new_rgbs);
     }
 }

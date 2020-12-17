@@ -125,26 +125,9 @@ namespace AudioCPURGB.RGBCreator
             return new RGBValue(temp_r, temp_g, temp_b);
         }
 
-        static private bool RGBsEqual(RGBValue[] oldValues, RGBValue[] newValues)
-        {
-            if (oldValues.Length != newValues.Length)
-            {
-                return false;
-            }
-
-            for (int i = 0; i < newValues.Length; i++)
-            {
-                if (!oldValues[i].Equals(newValues[i]))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
         public void Fade(RGBValue[] oldValues, RGBValue[] newValues, int fade_time_ms = 50)
-        {
-            while (!RGBsEqual(oldValues, newValues))
+        {            
+            while (!RGBValue.Equals(oldValues, newValues) && _pauseEvent.WaitOne())
             {
                 for (int i = 0; i < newValues.Length; i++)
                 {
@@ -160,13 +143,11 @@ namespace AudioCPURGB.RGBCreator
             RGBValue lastRGB = new RGBValue();
             lastRGB.CopyValues(oldValue);
 
-            _rgbOutput.ShowRGB(lastRGB);
-            while (!lastRGB.Equals(newValue))
+            while (!lastRGB.Equals(newValue) && _pauseEvent.WaitOne())
             {
                 lastRGB = GetNextFadeIteration(lastRGB, newValue);
 
                 _rgbOutput.ShowRGB(lastRGB);
-                // Wait a few Millisec to fade to new Color
                 Thread.Sleep(fade_time_ms);
             }
         }

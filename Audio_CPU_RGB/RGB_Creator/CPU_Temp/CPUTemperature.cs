@@ -48,7 +48,6 @@ namespace AudioCPURGB
                 }
                 if (_cpuPackageSensor == null)
                 {
-                    // TODO Popup warning
                     System.Diagnostics.Debug.WriteLine("No \"CPU Package\" was found.");
                 }
             }
@@ -68,12 +67,16 @@ namespace AudioCPURGB
 
         public override void Start()
         {
-            if (IsAdministrator())
+            if (_cpuHardware == null || _cpuPackageSensor == null)
+            {
+                throw new InitializationException("No CPU-Temperature sensor was found.");
+            }
+            else if (IsAdministrator())
             {
                 base.Start();
             } else
             {
-                throw new Exception("CPU-Temperature needs to be started with administrator privilegies. Restart this program as admin.");
+                throw new InitializationException("CPU-Temperature needs to be started with administrator privilegies. Restart this program as admin.");
             }
         }
 

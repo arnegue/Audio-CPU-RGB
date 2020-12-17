@@ -7,7 +7,6 @@ namespace AudioCPURGB.RGBOutput.LogitechLEDSDK
     class LogitechRGBOutput : IRGBOutput
     {
         private bool _enabled;
-        private string name = "Logitech G502";
         private const double rgb_to_perc = 100.0 / 255.0;
 
         public int GetAmountRGBs()
@@ -17,7 +16,7 @@ namespace AudioCPURGB.RGBOutput.LogitechLEDSDK
 
         public string GetName()
         {
-            return name;
+            return "Logitech G502";
         }
 
         public void Initialize()

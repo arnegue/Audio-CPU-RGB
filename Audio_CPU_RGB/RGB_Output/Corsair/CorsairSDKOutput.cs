@@ -11,7 +11,6 @@ namespace AudioCPURGB.RGBOutput.Corsair
 {
     class CorsairSDKOutput : IRGBOutput
     {
-        private string name = "Corsair";
         private CorsairHeadset _headset;
         private IEnumerable<CorsairLed> _leds;
         private bool _enabled;
@@ -28,20 +27,26 @@ namespace AudioCPURGB.RGBOutput.Corsair
 
         public string GetName()
         {
-            return name;
+            return "Corsair";
         }
 
         public void Initialize()
         {
             if (_headset == null)
             {
-                CueSDK.Initialize();
-                _headset = CueSDK.HeadsetSDK;
-                GetAmountRGBs();
-            }
-            if (_headset == null)
-            {
-                throw new WrapperException("Something went wrong. No headset?");
+                try
+                {
+                    CueSDK.Initialize();
+                    _headset = CueSDK.HeadsetSDK;
+                    GetAmountRGBs();
+
+                    if (_headset == null)
+                    {
+                        throw new InitializationException("Something went wrong. No headset?");
+                    }
+                } catch (CUE.NET.Exceptions.CUEException e) {
+                    throw new InitializationException(e.Message, e);
+                }
             }
             Console.WriteLine(_headset.DeviceInfo.Model);
             Console.WriteLine(_headset.DeviceInfo.Type.ToString());

@@ -175,9 +175,9 @@ namespace AudioCPURGB
 
         private void SetNewInterface()
         {
+            string selected_name = RGB_Output.Items[RGB_Output.SelectedIndex] as string;
             try
             {
-                string selected_name = RGB_Output.Items[RGB_Output.SelectedIndex] as string;
                 IRGBOutput new_interface = null;
                 foreach (IRGBOutput _interface in _rgb_manager.GetAvailableOutputs())
                 {
@@ -217,7 +217,8 @@ namespace AudioCPURGB
             catch (RGBOutputException ex)
             {
                 CkbSerial.IsChecked = !CkbSerial.IsChecked; // Reset state                
-                MessageBox.Show(ex.Message, "Error setting RGB Output");
+                string test = "Error setting new Interace \"" + selected_name + "\":\n\n" + ex.Message;
+                MessageBox.Show(test, "Error setting RGB Output");
             }
         }
 

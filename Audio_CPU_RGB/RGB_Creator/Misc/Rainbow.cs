@@ -71,7 +71,7 @@ namespace AudioCPURGB
             }
         }
 
-        protected override RGBValue[] callback(RGBValue[] new_rgbs)
+        protected override RGBValue[] Callback(RGBValue[] new_rgbs)
         {
             if (_rainbow_rgbs == null || _rainbow_rgbs.Length != amount_rgbs)
             {

@@ -14,7 +14,7 @@ namespace AudioCPURGB
         private int direction = 1;
         private Random random = new Random();
 
-        protected override RGBValue[] callback(RGBValue[] new_rgbs)
+        protected override RGBValue[] Callback(RGBValue[] new_rgbs)
         {           
             // Show random dot at last_rgb_index
             for (int i = 0; i < new_rgbs.Length; i++)
