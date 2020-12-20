@@ -168,7 +168,9 @@
     <Compile Include="RGB_Creator\Audio\AudioAlgorithms.cs" />
     <Compile Include="RGB_Creator\Audio\AudioRGBCreator.cs" />
     <Compile Include="RGB_Creator\Audio\AudioAlgorithm.cs" />
-    <Compile Include="RGB_Output\RGBOutputManager.cs" />
+    <Compile Include="RGBOutput\GigabyteAorusSDK\GigabyteAorusSDK.cs" />
+    <Compile Include="RGBOutput\GigabyteAorusSDK\GigabyteRGBOutput.cs" />
+    <Compile Include="RGBOutput\RGBOutputManager.cs" />
     <Compile Include="RGB_Creator\ColorChooser\ColorChooser.cs" />
     <Compile Include="RGB_Creator\CPU_Temp\CPUTemperature.cs" />
     <Compile Include="RGB_Creator\Audio\MyRangeSlider.xaml.cs">
@@ -181,17 +183,17 @@
     <Compile Include="RGB_Creator\Misc\RunningColors.cs" />
     <Compile Include="RGB_Creator\ScreenShot\ScreenAnalyzer.cs" />
     <Compile Include="RGB_Creator\Stroboscope\Stroboscope.cs" />
-    <Compile Include="RGB_Output\Corsair\CorsairSDKOutput.cs" />
-    <Compile Include="RGB_Output\LogitechLEDSDK\LogitechGSDK.cs" />
-    <Compile Include="RGB_Output\LogitechLEDSDK\LogitechRGBOutput.cs" />
-    <Compile Include="RGB_Output\BondedOutput\BondedOutput.cs" />
-    <Compile Include="RGB_Output\Serial\SerialRGBOutput.cs" />
+    <Compile Include="RGBOutput\Corsair\CorsairSDKOutput.cs" />
+    <Compile Include="RGBOutput\LogitechLEDSDK\LogitechGSDK.cs" />
+    <Compile Include="RGBOutput\LogitechLEDSDK\LogitechRGBOutput.cs" />
+    <Compile Include="RGBOutput\BondedOutput\BondedOutput.cs" />
+    <Compile Include="RGBOutput\Serial\SerialRGBOutput.cs" />
     <Compile Include="RGBValue.cs" />
     <Compile Include="RGB_Creator\Audio\Spectrum.xaml.cs">
       <DependentUpon>Spectrum.xaml</DependentUpon>
     </Compile>
     <Compile Include="RGB_Creator\IRGBCreator.cs" />
-    <Compile Include="RGB_Output\IRGBOutput.cs" />
+    <Compile Include="RGBOutput\IRGBOutput.cs" />
     <Compile Include="TabMainWindow.xaml.cs">
       <DependentUpon>TabMainWindow.xaml</DependentUpon>
     </Compile>
@@ -275,6 +277,7 @@
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.3.3.2\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.3.3.2\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

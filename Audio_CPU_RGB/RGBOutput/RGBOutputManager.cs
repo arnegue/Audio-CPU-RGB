@@ -9,6 +9,7 @@ namespace AudioCPURGB.RGBCreator
         private RGBOutput.LogitechLEDSDK.LogitechRGBOutput _mouse_output;
         private RGBOutput.Corsair.CorsairSDKOutput _corsair_output;
         private RGBOutput.BondedOutPut.BondedOutput _bonded_poutput;
+        private RGBOutput.GigabyteAorusSDK.GigabyteRGBOutput _aorusSdk;
 
         private RGBOutput.Serial.SerialFactory _serial_factory;
         
