@@ -29,6 +29,20 @@
             this.B = bn;
         }
 
+        public void Set(int rn, int gn, int bn)
+        {
+            this.R = (byte)rn;
+            this.G = (byte)gn;
+            this.B = (byte)bn;
+        }
+
+        public void Set(double rn, double gn, double bn)
+        {
+            this.R = (byte)rn;
+            this.G = (byte)gn;
+            this.B = (byte)bn;
+        }
+
         public void CopyValues(RGBValue rgb)
         {
             if (rgb != null)
