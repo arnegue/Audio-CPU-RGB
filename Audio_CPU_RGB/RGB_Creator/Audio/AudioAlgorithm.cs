@@ -2,9 +2,9 @@
 
 namespace AudioCPURGB
 {
-    /**
-     * Small class which contains a name for an Audio-RGB-algorithm and it's method
-     */
+    /// <summary>
+    /// Small class which contains a name for an Audio-RGB-algorithm and it's method
+    /// </summary>
     abstract class AudioAlgorithm
     {
         private String _name;
@@ -39,23 +39,6 @@ namespace AudioCPURGB
             float val = (100 * b) / x;
             return (byte)val;
         }
-
-
-        /* protected RGB_Value rel_check(RGB_Value rgb, int min_trigger)
-         {
-             rgb.r = rel_check(rgb.r, min_trigger); // TODO input, not output!
-             rgb.r = rel_check(rgb.g, min_trigger);
-             rgb.r = rel_check(rgb.b, min_trigger);
-             return rgb;
-         }
-
-         protected RGB_Value abs_check(RGB_Value rgb, int min_trigger)
-         {
-             rgb.r = rgb.r < min_trigger ? (byte)0 : rgb.r;
-             rgb.g = rgb.g < min_trigger ? (byte)0 : rgb.g;
-             rgb.b = rgb.b < min_trigger ? (byte)0 : rgb.b;
-             return rgb;
-         }*/
 
 
         protected RGBValue valueToRGB(byte value, int minTrigger)

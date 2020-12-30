@@ -3,6 +3,9 @@ using System.Threading;
 
 namespace AudioCPURGB.RGBCreator
 {
+    /// <summary>
+    /// Base Class for RGBCreation, provides methods for starting/pausing/resuming threads, and basic RGB-Fade-methods
+    /// </summary>
     abstract class IRGBCreator : IDisposable
     {
         private readonly ManualResetEvent _pauseEvent;
@@ -64,6 +67,15 @@ namespace AudioCPURGB.RGBCreator
         public virtual void Start()
         {
             _pauseEvent.Set();
+            Reset();
+        }
+
+        /// <summary>
+        /// Gets called after Start (before Callback).
+        /// </summary>
+        public virtual void Reset()
+        {
+            // May be filled
         }
 
         /// <summary>

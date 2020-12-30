@@ -3,7 +3,7 @@
 namespace AudioCPURGB.RGBCreator
 {
     /// <summary>
-    /// Wraps creation of new RGBArrays.
+    /// Creator class for individual RGBs (New Algorithm)
     /// </summary>
     abstract class IndividualRGBCreator : IRGBCreator
     {

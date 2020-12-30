@@ -7,11 +7,10 @@ using System.Security.Principal;
 
 namespace AudioCPURGB
 {
-    class CPUTemperatureRGBCreator : IRGBCreator
+    class CPUTemperatureRGBCreator : SingleRGBCreator
     {
         private TextBlock _temperatureTextBlock;
 
-        private RGBValue _lastRGB = new RGBValue(); // last RGB_Value needed for fading
         private const float m = 12.75F; // Constant needed for Algo1
         private const int _ms_sleepInterval = 1000;
 
@@ -110,8 +109,8 @@ namespace AudioCPURGB
             // Calculate value and fade into it
             RGBValue newRgb = calculateRGBValueAlgo1(avg);
 
-            Fade(_lastRGB, newRgb, 50);
-            _lastRGB = newRgb;
+            Fade(lastRGB_, newRgb, 50);
+            lastRGB_ = newRgb;
 
             Thread.Sleep(_ms_sleepInterval);            
         }

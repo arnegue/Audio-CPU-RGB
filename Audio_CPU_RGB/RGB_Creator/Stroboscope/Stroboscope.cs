@@ -8,22 +8,18 @@ using AudioCPURGB;
 
 namespace AudioCPURGB
 {
-    class Stroboscope : IRGBCreator
+    /// <summary>
+    /// Flashes and resets white RGB-Value
+    /// </summary>
+    class Stroboscope : SingleRGBCreator
     {
-        RGBValue _empty;
         RGBValue _white;
         int half_freq;
 
         public Stroboscope()
         {
             half_freq = 0;
-            _empty = new RGBValue();
-            _white = new RGBValue
-            {
-                R = 255,
-                G = 255,
-                B = 255
-            };
+            _white = new RGBValue(255, 255, 255);
         }
         
         protected override void Callback()
@@ -33,7 +29,7 @@ namespace AudioCPURGB
                 // Thats only half the truth since showRGB takes time, which should result in less sleep time
                 _rgbOutput.ShowRGB(_white);
                 Thread.Sleep(half_freq);
-                _rgbOutput.ShowRGB(_empty);
+                _rgbOutput.ShowRGB(lastRGB_);
                 Thread.Sleep(half_freq);
             }
         }

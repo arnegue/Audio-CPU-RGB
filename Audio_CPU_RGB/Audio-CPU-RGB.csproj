@@ -180,6 +180,7 @@
     <Compile Include="RGB_Creator\Misc\RunningColorChangingDot.cs" />
     <Compile Include="RGB_Creator\Misc\RunningColors.cs" />
     <Compile Include="RGB_Creator\ScreenShot\ScreenAnalyzer.cs" />
+    <Compile Include="RGB_Creator\SingleRGBCreator.cs" />
     <Compile Include="RGB_Creator\Stroboscope\Stroboscope.cs" />
     <Compile Include="RGBOutput\Corsair\CorsairSDKOutput.cs" />
     <Compile Include="RGBOutput\LogitechLEDSDK\LogitechGSDK.cs" />

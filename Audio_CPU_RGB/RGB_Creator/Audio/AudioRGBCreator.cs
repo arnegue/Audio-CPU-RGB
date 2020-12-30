@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -128,8 +129,15 @@ namespace AudioCPURGB
         // initialization
         private void Init()
         {
-            Bass.BASS_SetConfig(BASSConfig.BASS_CONFIG_UPDATETHREADS, false);
-            Bass.BASS_SetConfig(BASSConfig.BASS_CONFIG_UNICODE, true);
+            try
+            {
+                Bass.BASS_SetConfig(BASSConfig.BASS_CONFIG_UPDATETHREADS, false);
+                Bass.BASS_SetConfig(BASSConfig.BASS_CONFIG_UNICODE, true);
+            }
+            catch (System.TypeInitializationException e)
+            {
+                return; //   throw new Exception("Init Error", e);
+            }
 
             if (!(Bass.BASS_Init(0, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero)))
                 throw new Exception("Init Error");

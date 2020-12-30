@@ -13,7 +13,10 @@ using AudioCPURGB.RGBCreator;
 
 namespace AudioCPURGB
 {
-    class ScreenAnalyzer : IRGBCreator
+    /// <summary>
+    /// Takes screenshot of screen, analyzes color-average and show (emphasized) colors to RGB
+    /// </summary>
+    class ScreenAnalyzer : SingleRGBCreator
     {
         private readonly Screen activeScreen = Screen.PrimaryScreen;
 
@@ -29,7 +32,6 @@ namespace AudioCPURGB
         private Graphics memoryGraphics;
 
         private float emphaser_;
-        private RGBValue lastRGB_;
 
         private Mutex varMutex = new Mutex();
 
@@ -45,7 +47,6 @@ namespace AudioCPURGB
             yStop_ = activeScreen.Bounds.Height;
             memoryImage = new Bitmap(activeScreen.Bounds.Width, activeScreen.Bounds.Height);
             s = new Size(memoryImage.Width, memoryImage.Height);
-            lastRGB_ = new RGBValue();
         }
         public int XSkipper
         {
