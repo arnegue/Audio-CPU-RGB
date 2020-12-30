@@ -168,8 +168,6 @@
     <Compile Include="RGB_Creator\Audio\AudioAlgorithms.cs" />
     <Compile Include="RGB_Creator\Audio\AudioRGBCreator.cs" />
     <Compile Include="RGB_Creator\Audio\AudioAlgorithm.cs" />
-    <Compile Include="RGBOutput\GigabyteAorusSDK\GigabyteAorusSDK.cs" />
-    <Compile Include="RGBOutput\GigabyteAorusSDK\GigabyteRGBOutput.cs" />
     <Compile Include="RGBOutput\RGBOutputManager.cs" />
     <Compile Include="RGB_Creator\ColorChooser\ColorChooser.cs" />
     <Compile Include="RGB_Creator\CPU_Temp\CPUTemperature.cs" />
