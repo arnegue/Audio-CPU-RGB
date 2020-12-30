@@ -125,6 +125,12 @@ namespace AudioCPURGB.RGBCreator
             return new RGBValue(temp_r, temp_g, temp_b);
         }
 
+        /// <summary>
+        /// Fade multiple RGB-Values"
+        /// </summary>
+        /// <param name="oldValues">List of old values to fade from</param>
+        /// <param name="newValues">List of new values to fade to</param>
+        /// <param name="fade_time_ms">Time to sleep between each fade iteration</param>
         public void Fade(RGBValue[] oldValues, RGBValue[] newValues, int fade_time_ms = 50)
         {            
             while (!RGBValue.Equals(oldValues, newValues) && _pauseEvent.WaitOne())
@@ -138,6 +144,12 @@ namespace AudioCPURGB.RGBCreator
             }
         }
 
+        /// <summary>
+        /// Fade a single RGB-Value
+        /// </summary>
+        /// <param name="oldValues">Old value to fade from</param>
+        /// <param name="newValues">New Values to fade to</param>
+        /// <param name="fade_time_ms">Time to sleedpbetween each fade iteration</param>
         public void Fade(RGBValue oldValue, RGBValue newValue, int fade_time_ms = 50)
         {
             RGBValue lastRGB = new RGBValue();
