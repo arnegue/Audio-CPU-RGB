@@ -156,7 +156,7 @@
             <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock VerticalAlignment="Center" Margin="5,0" Text="Choose RGB Output:"/>
                 <ComboBox x:Name="RGB_Output" Width="120" VerticalAlignment="Center" Margin="5,0" DropDownOpened="RGB_Output_DropDownOpened" DropDownClosed="RGB_Output_DropDownClosed"/>
-                <CheckBox x:Name="CkbSerial" Content="Enable RGB output" VerticalAlignment="Center" Margin="5,0" Click="CkbSerial_Click"/>
+                <CheckBox x:Name="CkbSerial" Content="Enable RGB output" VerticalAlignment="Center" Margin="5,0" Click="EnableInterfaceClicked"/>
             </StackPanel>
         </Border>
     </Grid>

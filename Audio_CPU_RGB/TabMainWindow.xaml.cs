@@ -161,14 +161,14 @@ namespace AudioCPURGB
             SetNewRGBCreator(_selectedMisc);
         }
  
-        /// ################################### Serial-Control ################################### 
+        /// ################################### Audio-Output-Control ################################### 
 
         /// <summary>
         /// Method which is called when checkbox for serial enable is called
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void CkbSerial_Click(object sender, RoutedEventArgs e)
+        private void EnableInterfaceClicked(object sender, RoutedEventArgs e)
         {
             SetNewInterface();
         }
