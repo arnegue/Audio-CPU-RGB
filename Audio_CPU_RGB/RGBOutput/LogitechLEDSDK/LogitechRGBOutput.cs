@@ -6,6 +6,7 @@ namespace AudioCPURGB.RGBOutput.LogitechLEDSDK
 {
     class LogitechRGBOutput : IRGBOutput
     {
+        private bool _sdk_initialized;
         private bool _enabled;
         private const double rgb_to_perc = 100.0 / 255.0;
 
@@ -21,11 +22,11 @@ namespace AudioCPURGB.RGBOutput.LogitechLEDSDK
 
         public void Initialize()
         {
-
-            if (!NativeMethods.LogiLedInitWithName(GetName()))
+            if (!_sdk_initialized && !NativeMethods.LogiLedInitWithName(GetName()))
             {
                 throw new RGBOutputException("LogiLedInit() failed.");
             }
+            _sdk_initialized = true;
 
             Thread.Sleep(2);
 
