@@ -5,10 +5,10 @@ namespace AudioCPURGB.RGBCreator
 {
     abstract class IRGBCreator : IDisposable
     {
-        private ManualResetEvent _pauseEvent;
+        private readonly ManualResetEvent _pauseEvent;
         protected RGBOutput.IRGBOutput _rgbOutput;
         private Thread _workerThread;
-        private static Mutex _callback_mutex = new Mutex();
+        private static readonly Mutex _callback_mutex = new Mutex();
 
         public IRGBCreator()
         {
@@ -49,16 +49,26 @@ namespace AudioCPURGB.RGBCreator
         /// </summary>
         protected abstract void Callback();
 
+        /// <summary>
+        /// Sets new RGBOutput interface
+        /// </summary>
+        /// <param name="rgbOutput">interface to set</param>
         public virtual void SetRGBOutput(RGBOutput.IRGBOutput rgbOutput)
         {
             _rgbOutput = rgbOutput;
         }
 
+        /// <summary>
+        /// Starts/Resumes worherThread
+        /// </summary>
         public virtual void Start()
         {
             _pauseEvent.Set();
         }
 
+        /// <summary>
+        /// Pauses WorkerThread
+        /// </summary>
         public virtual void Pause()
         {
             _pauseEvent.Reset();
@@ -71,24 +81,13 @@ namespace AudioCPURGB.RGBCreator
                 Thread.Sleep(100);
             }
         }
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _pauseEvent.Dispose();
-            }
-            else
-            {
-                //
-            }
-        }
 
+        /// <summary>
+        /// Returns next RGBValue to set when fading. Attention: sets values of newvalue (does not create new instanec)
+        /// </summary>
+        /// <param name="oldValue">Old Value to compare to</param>
+        /// <param name="newValue">New Value to compare to and set</param>
+        /// <returns>New set value / newInstance</returns>
         static private RGBValue GetNextFadeIteration(RGBValue oldValue, RGBValue newValue)
         {
             int rFactor = 1;
@@ -161,6 +160,23 @@ namespace AudioCPURGB.RGBCreator
 
                 _rgbOutput.ShowRGB(lastRGB);
                 Thread.Sleep(fade_time_ms);
+            }
+        }
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _pauseEvent.Dispose();
+            }
+            else
+            {
+                //
             }
         }
     }
