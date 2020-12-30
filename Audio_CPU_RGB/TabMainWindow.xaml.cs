@@ -59,12 +59,12 @@ namespace AudioCPURGB
 
             FillRGBOutputList();
 
-            xSkipper.Text = _screenAnalyzer.xSkipper.ToString(System.Globalization.CultureInfo.CurrentCulture);
-            ySkipper.Text = _screenAnalyzer.ySkipper.ToString(System.Globalization.CultureInfo.CurrentCulture);
-            xStart.Text = _screenAnalyzer.xStart.ToString(System.Globalization.CultureInfo.CurrentCulture);
-            yStart.Text = _screenAnalyzer.yStart.ToString(System.Globalization.CultureInfo.CurrentCulture);
-            xStop.Text = _screenAnalyzer.xStop.ToString(System.Globalization.CultureInfo.CurrentCulture);
-            yStop.Text = _screenAnalyzer.yStop.ToString(System.Globalization.CultureInfo.CurrentCulture);
+            xSkipper.Text = _screenAnalyzer.XSkipper.ToString(System.Globalization.CultureInfo.CurrentCulture);
+            ySkipper.Text = _screenAnalyzer.YSkipper.ToString(System.Globalization.CultureInfo.CurrentCulture);
+            xStart.Text = _screenAnalyzer.XStart.ToString(System.Globalization.CultureInfo.CurrentCulture);
+            yStart.Text = _screenAnalyzer.YStart.ToString(System.Globalization.CultureInfo.CurrentCulture);
+            xStop.Text = _screenAnalyzer.XStop.ToString(System.Globalization.CultureInfo.CurrentCulture);
+            yStop.Text = _screenAnalyzer.YStop.ToString(System.Globalization.CultureInfo.CurrentCulture);
 
             Application.Current.MainWindow.Activate();
             Application.Current.MainWindow.Focus();
@@ -338,9 +338,9 @@ namespace AudioCPURGB
                 int val;
                 if (Int32.TryParse(xSkipper.Text, out val))
                 {
-                    _screenAnalyzer.xSkipper = val;
+                    _screenAnalyzer.XSkipper = val;
                 }
-                xSkipper.Text = _screenAnalyzer.xSkipper.ToString(System.Globalization.CultureInfo.CurrentCulture);
+                xSkipper.Text = _screenAnalyzer.XSkipper.ToString(System.Globalization.CultureInfo.CurrentCulture);
             }
         }
 
@@ -351,9 +351,9 @@ namespace AudioCPURGB
                 int val;
                 if (Int32.TryParse(ySkipper.Text, out val))
                 {
-                    _screenAnalyzer.ySkipper = val;
+                    _screenAnalyzer.YSkipper = val;
                 }
-                ySkipper.Text = _screenAnalyzer.ySkipper.ToString(System.Globalization.CultureInfo.CurrentCulture);
+                ySkipper.Text = _screenAnalyzer.YSkipper.ToString(System.Globalization.CultureInfo.CurrentCulture);
             }
         }
 
@@ -364,9 +364,9 @@ namespace AudioCPURGB
                 int val;
                 if (Int32.TryParse(xStart.Text, out val))
                 {
-                    _screenAnalyzer.xStart = val;
+                    _screenAnalyzer.XStart = val;
                 }
-                xStart.Text = _screenAnalyzer.xStart.ToString(System.Globalization.CultureInfo.CurrentCulture);
+                xStart.Text = _screenAnalyzer.XStart.ToString(System.Globalization.CultureInfo.CurrentCulture);
             }
         }
 
@@ -377,9 +377,9 @@ namespace AudioCPURGB
                 int val;
                 if (Int32.TryParse(yStart.Text, out val))
                 {
-                    _screenAnalyzer.yStart = val;
+                    _screenAnalyzer.YStart = val;
                 }
-                yStart.Text = _screenAnalyzer.yStart.ToString(System.Globalization.CultureInfo.CurrentCulture);
+                yStart.Text = _screenAnalyzer.YStart.ToString(System.Globalization.CultureInfo.CurrentCulture);
             }
         }
 
@@ -390,9 +390,9 @@ namespace AudioCPURGB
                 int val;
                 if (Int32.TryParse(xStop.Text, out val))
                 {
-                    _screenAnalyzer.xStop = val;
+                    _screenAnalyzer.XStop = val;
                 }
-                xStop.Text = _screenAnalyzer.xStop.ToString(System.Globalization.CultureInfo.CurrentCulture);
+                xStop.Text = _screenAnalyzer.XStop.ToString(System.Globalization.CultureInfo.CurrentCulture);
             }
         }
 
@@ -403,9 +403,9 @@ namespace AudioCPURGB
                 int val;
                 if (Int32.TryParse(yStop.Text, out val))
                 {
-                    _screenAnalyzer.yStop = val;
+                    _screenAnalyzer.YStop = val;
                 }
-                yStop.Text = _screenAnalyzer.yStop.ToString(System.Globalization.CultureInfo.CurrentCulture);
+                yStop.Text = _screenAnalyzer.YStop.ToString(System.Globalization.CultureInfo.CurrentCulture);
             }
         }
 
@@ -424,7 +424,7 @@ namespace AudioCPURGB
 
         private void Emphaser_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            _screenAnalyzer.setEmphaser((float)ColorEmphaser.Value);
+            _screenAnalyzer.SetEmphaser((float)ColorEmphaser.Value);
         }
 
         private void Window_Activated(object sender, EventArgs e)

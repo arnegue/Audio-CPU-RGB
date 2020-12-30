@@ -15,7 +15,7 @@ namespace AudioCPURGB
 {
     class ScreenAnalyzer : IRGBCreator
     {
-        private Screen activeScreen = Screen.PrimaryScreen;
+        private readonly Screen activeScreen = Screen.PrimaryScreen;
 
         private int xSkipper_;
         private int ySkipper_;
@@ -39,7 +39,7 @@ namespace AudioCPURGB
             emphaser_ = 1.0F;
             xSkipper_ = 100;
             ySkipper_ = 100;
-            xStart_ = 0; // TODO
+            xStart_ = 0;
             yStart_ = 0;
             xStop_ = activeScreen.Bounds.Width;
             yStop_ = activeScreen.Bounds.Height;
@@ -47,7 +47,7 @@ namespace AudioCPURGB
             s = new Size(memoryImage.Width, memoryImage.Height);
             lastRGB_ = new RGBValue();
         }
-        public int xSkipper
+        public int XSkipper
         {
             set
             {
@@ -69,7 +69,7 @@ namespace AudioCPURGB
             }
         }
 
-        public int ySkipper
+        public int YSkipper
         {
             set
             {
@@ -91,7 +91,7 @@ namespace AudioCPURGB
             }
         }
 
-        public int xStart
+        public int XStart
         {
             set
             {
@@ -99,9 +99,9 @@ namespace AudioCPURGB
                 {
                     value = 0;
                 }
-                else if (value > xStop)
+                else if (value > XStop)
                 {
-                    xStart_ = xStop - 1;
+                    xStart_ = XStop - 1;
                 }
                 varMutex.WaitOne();
                 xStart_ = value;
@@ -113,13 +113,13 @@ namespace AudioCPURGB
             }
         }
 
-        public int xStop
+        public int XStop
         {
             set
             {
-                if (value < xStart)
+                if (value < XStart)
                 {
-                    value = xStart + 1;
+                    value = XStart + 1;
                 }
                 else if (value > activeScreen.Bounds.Width)
                 {
@@ -134,7 +134,7 @@ namespace AudioCPURGB
                 return xStop_;
             }
         }
-        public int yStart
+        public int YStart
         {
             set
             {
@@ -142,9 +142,9 @@ namespace AudioCPURGB
                 {
                     value = 0;
                 }
-                else if (value > yStop)
+                else if (value > YStop)
                 {
-                    value = yStop - 1;
+                    value = YStop - 1;
                 }
                 yStart_ = value;
             }
@@ -154,13 +154,13 @@ namespace AudioCPURGB
             }
         }
 
-        public int yStop
+        public int YStop
         {
             set
             {
-                if (value < yStart)
+                if (value < YStart)
                 {
-                    value = yStart + 1;
+                    value = YStart + 1;
                 }
                 else if (value > activeScreen.Bounds.Width)
                 {
@@ -174,7 +174,7 @@ namespace AudioCPURGB
             }
         }
 
-        public void setEmphaser(float value)
+        public void SetEmphaser(float value)
         {
             if (value < 0)
             {
@@ -214,7 +214,6 @@ namespace AudioCPURGB
                 }
             }
             varMutex.ReleaseMutex();
-            //long divider = x * y;  //(activeScreen.Bounds.Width / xSkipper_) * (activeScreen.Bounds.Height / ySkipper_);
             red /= cntr;
             green /= cntr;
             blue /= cntr;
@@ -223,36 +222,13 @@ namespace AudioCPURGB
             red *= brightness * emphaser_;
             green *= brightness * emphaser_;
             blue *= brightness * emphaser_;
-            RGBValue rgb = new RGBValue((byte)red, (byte)green, (byte)blue);
-            // Brightness 0
 
-            // Brightness 1
-
-            // Emphaser 0
-            /*if (red > blue && red > green)
-            {
-                rgb = new RGB_Value((byte)(red * (1 + emphaser_)), (byte)(green * (1 - emphaser_)), (byte)(blue * (1 - emphaser_)));
-            } else if (green > red && green > blue)
-            {
-                rgb = new RGB_Value((byte)(red * (1 - emphaser_)), (byte)(green * (1 + emphaser_)), (byte)(blue * (1 - emphaser_)));
-            } else
-            {
-                rgb = new RGB_Value((byte)(red * (1 - emphaser_)), (byte)(green * (1 - emphaser_)), (byte)(blue * (1 + emphaser_)));
-            }*/
-            // Emphaser 1
-
-            // Average 0
-            // byte rByte = (byte)red;
-            //byte gByte = (byte)green;
-            //byte bByte = (byte)blue;
-            //rgb = new RGB_Value(rByte, gByte, bByte);
-            // Averrage 1
-            //_rgbOutput.showRGB(rgb);
-            Fade(lastRGB_, rgb, 0);
-            lastRGB_ = rgb;
-            Thread.Sleep(20);
-                
+            lastRGB_.Set(red, green, blue);
+            _rgbOutput.ShowRGB(lastRGB_);
+        
+          //  Thread.Sleep(20);                
         }
+
         public new void Dispose()
         {
             base.Dispose();
