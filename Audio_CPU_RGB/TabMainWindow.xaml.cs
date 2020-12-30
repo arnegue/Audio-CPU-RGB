@@ -12,22 +12,22 @@ namespace AudioCPURGB
     /// Interaktionslogik für Window1.xaml
     /// </summary>
     public partial class TabMainWindow : Window, IDisposable
-    {
-        IRGBOutput _current_interface;
-        RGBOutputManager _rgb_manager;
+    {        
+        readonly RGBOutputManager _rgb_manager;
+        IRGBOutput _current_rgb_output;
 
-        RGBCreator.IRGBCreator _rgbCreatorI;
-        RGBCreator.IRGBCreator _selectedMisc;
+        IRGBCreator _current_rgb_creator;
+        IRGBCreator _selectedMisc;
 
-        CPUTemperatureRGBCreator _cpuRgbCreator;
-        AudioRGBCreator _audioRgbCreator;
-        ScreenAnalyzer _screenAnalyzer;
-        ColorChooser _colorChooser;
-        Stroboscope _stroboscope;
-        Rainbow _rainbow;
-        RunningColorChangingDot _runningDot;
-        ColorChanger _colorchanger;
-        RunningColors _runningColors;
+        readonly CPUTemperatureRGBCreator _cpuRgbCreator;
+        readonly AudioRGBCreator _audioRgbCreator;
+        readonly ScreenAnalyzer _screenAnalyzer;
+        readonly ColorChooser _colorChooser;
+        readonly Stroboscope _stroboscope;
+        readonly Rainbow _rainbow;
+        readonly RunningColorChangingDot _runningDot;
+        readonly ColorChanger _colorchanger;
+        readonly RunningColors _runningColors;
 
         public TabMainWindow()
         {
@@ -103,7 +103,7 @@ namespace AudioCPURGB
                     case 4: // Stroboscope
                         new_rgb_creator = _stroboscope;
                         break;
-                    case 5:
+                    case 5: // Misc
                         new_rgb_creator = _selectedMisc;
                         break;
                     default:
@@ -115,16 +115,16 @@ namespace AudioCPURGB
 
         private void SetNewRGBCreator(RGBCreator.IRGBCreator new_rgb_creator)
         {
-            if (_rgbCreatorI != null)
+            if (_current_rgb_creator != null)
             {
-                _rgbCreatorI.Pause(); // pause current rgbCreator
+                _current_rgb_creator.Pause(); // pause current rgbCreator
             }
 
-            if (new_rgb_creator != null && _current_interface != null)
+            if (new_rgb_creator != null && _current_rgb_output != null)
             {
                 try
                 {
-                    new_rgb_creator.SetRGBOutput(_current_interface);
+                    new_rgb_creator.SetRGBOutput(_current_rgb_output);
                     new_rgb_creator.Start(); // start new rgbCreator
                 }
                 catch (RGBCreator.RGBCreatorException ex)
@@ -132,7 +132,7 @@ namespace AudioCPURGB
                     MessageBox.Show(ex.Message, $"Error setting RGB-Creator {new_rgb_creator.GetType().Name}");
                 }
             }
-            _rgbCreatorI = new_rgb_creator;
+            _current_rgb_creator = new_rgb_creator;
         }
 
 
@@ -190,29 +190,29 @@ namespace AudioCPURGB
                     }                    
                     
                 }
-                _rgbCreatorI.Pause();
+                _current_rgb_creator.Pause();
                 // Look if interface changed or checkbox is set to false
-                if (_current_interface != null && (_current_interface.GetName() != selected_name || CkbSerial.IsChecked == false))
+                if (_current_rgb_output != null && (_current_rgb_output.GetName() != selected_name || CkbSerial.IsChecked == false))
                 {
-                    if (_current_interface.IsEnabled())
+                    if (_current_rgb_output.IsEnabled())
                     {
-                        _current_interface.Shutdown();
-                        _current_interface.SetEnable(false);
+                        _current_rgb_output.Shutdown();
+                        _current_rgb_output.SetEnable(false);
                     }
                 }
-                _current_interface = new_interface;
+                _current_rgb_output = new_interface;
 
 
                 if (CkbSerial.IsChecked == true)
                 {
-                    if (!_current_interface.IsEnabled())
+                    if (!_current_rgb_output.IsEnabled())
                     {
-                        _current_interface.Initialize();
-                        _current_interface.SetEnable(true);
+                        _current_rgb_output.Initialize();
+                        _current_rgb_output.SetEnable(true);
                     }
                 }
 
-                SetNewRGBCreator(_rgbCreatorI);
+                SetNewRGBCreator(_current_rgb_creator);
             }
             catch (RGBOutputException ex)
             {

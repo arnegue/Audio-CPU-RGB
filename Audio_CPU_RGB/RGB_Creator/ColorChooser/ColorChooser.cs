@@ -3,6 +3,9 @@ using AudioCPURGB.RGBCreator;
 
 namespace AudioCPURGB
 {
+    /// <summary>
+    /// Showing color chose on Color-Picker
+    /// </summary>
     class ColorChooser : SingleRGBCreator
     {
         readonly RGBValue new_rgb = new RGBValue();
