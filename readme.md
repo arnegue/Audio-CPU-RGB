@@ -1,5 +1,5 @@
 # Audio - CPU - RGB
-This (private created (Windows-Program (Visual-Studio C# Project) deals with decoding/analyzing Audio-Output or CPU-Temperature, calculate RGB-Values from them and sending them via Serial to any device (in my case a PIC-Microcontroller see: [PIC16F1825 PWM USART LED](https://bitbucket.org/arnegue/pic16f1825-pwm-usart-led))
+This (private created (Windows-Program (Visual-Studio C# Project) deals with decoding/analyzing Audio-Output or CPU-Temperature, calculate RGB-Values from them and sending them via Serial to any device (See: [Ardunio-RGBDriver](https://github.com/arnegue/Ardunio-RGBDriver))
 
 `
 Attention: A very big part of this code is copied from: ` [www.codeproject.com]
